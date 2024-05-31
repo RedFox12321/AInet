@@ -25,6 +25,6 @@ class Genre extends Model
 
     public function movies(): HasMany
     {
-        return $this->hasMany(Movie::class);
+        return $this->hasMany(Movie::class, 'genre_code', 'code')->withTrashed();
     }
 }

@@ -35,6 +35,6 @@ class Ticket extends Model
 
     public function seat(): BelongsTo
     {
-        return $this->belongsTo(Seat::class);
+        return $this->belongsTo(Seat::class)->withTrashed();
     }
 }

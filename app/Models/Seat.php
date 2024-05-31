@@ -24,7 +24,7 @@ class Seat extends Model
 
     public function theater(): BelongsTo
     {
-        return $this->belongsTo(Theater::class);
+        return $this->belongsTo(Theater::class)->withTrashed();
     }
 
     public function tickets(): HasMany

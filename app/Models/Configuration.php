@@ -15,4 +15,6 @@ class Configuration extends Model
     ];
 
     public $timestamps = false;
+
+    protected $table = 'configuration';
 }

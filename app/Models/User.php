@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Customer;
-use App\Models\Ticket;
 
 class User extends Authenticatable
 {
@@ -48,13 +48,13 @@ class User extends Authenticatable
         ];
     }
 
-    public function customer(): HasOne
+    public function getImageExistsAttribute()
     {
-        return $this->hasOne(Customer::class);
+        return Storage::exists("public/photos/{$this->photo_filename}");
     }
 
-    public function tickets(): HasMany
+    public function customer(): HasOne
     {
-        return $this->hasMany(Ticket::class);
+        return $this->hasOne(Customer::class, 'id', 'id')->withTrashed();
     }
 }
