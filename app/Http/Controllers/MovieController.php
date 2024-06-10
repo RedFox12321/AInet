@@ -21,6 +21,11 @@ class MovieController extends Controller
         return view('main.movies.index')->with('movies', Movie::orderBy('title')->paginate(20));
     }
 
+    // public function showcase(): View
+    // {
+    //     return view('main.movies.showcase')->with('movies', Movie::orderBy('title')->paginate(20));
+    // }
+
     /**
      * Display the specified resource.
      */
@@ -45,6 +50,7 @@ class MovieController extends Controller
         return view('main.movies.edit')->with('movie', $movie);
     }
 
+    
 
     /* CRUD operations */
     /**

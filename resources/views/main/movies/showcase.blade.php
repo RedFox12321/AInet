@@ -4,8 +4,6 @@
 
 @section('main')
 
-    @php
-        $defaultStrokeColor = '#731824';
-    @endphp
+
 
 @endsection
