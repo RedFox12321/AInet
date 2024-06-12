@@ -28,8 +28,10 @@
 
                     <div class="w-full h-full left-0 top-0 flex justify-between items-center px-4 md:px-8 lg:px-16">
 
-                        <x-menu.menu-icon href="{{ route('movies.index') }}">
+                        <x-menu.menu-icon href="{{ route('movies.showcase') }}">
+                            <x-slot:icon>
                             @include('components.application-logo')
+                        </x-slot>
                         </x-menu.menu-icon>
 
 
@@ -39,21 +41,27 @@
                             class="hidden md:flex h-full space-x-8 z-10 items-end mr-4">
                             <li class="h-full flex justify-center items-center">
                                 <x-menu.menu-icon
-                                    href="{{ Route::currentRouteName() == 'movies.index' ? '' : session('last_route', url()->previous()) }}">
+                                    href="{{ Route::currentRouteName() == 'movies.showcase' ? '' : session('last_route', url()->previous()) }}">
+                                    <x-slot:icon>
                                     @include('components.menu.goback-logo', [
                                         'strokeColor' =>
-                                            Route::currentRouteName() == 'movies.index' ? '#731824' : '#E8D8C4',
+                                            Route::currentRouteName() == 'movies.showcase' ? '#731824' : '#E8D8C4',
                                     ])
+                                    </x-slot>
                                 </x-menu.menu-icon>
                             </li>
                             <li class="h-full flex justify-center items-center">
                                 <x-menu.menu-icon href="{{ route('cart.show') }}">
+                                    <x-slot:icon>
                                     @include('components.menu.cart-logo')
+                                </x-slot>
                                 </x-menu.menu-icon>
                             </li>
                             <li class="h-full flex justify-center items-center">
                                 <x-menu.menu-icon href="{{ route('customers.index') }}">
+                                    <x-slot:icon>
                                     @include('components.menu.account-logo')
+                                </x-slot>
                                 </x-menu.menu-icon>
                             </li>
                         </ul>
@@ -73,19 +81,6 @@
 
     {{-- dropdownzinho dos generos --}}
 
-    <div class="flex justify-center mt-5">
-
-
-        @include('components.fields.search-movie')
-
-    </div>
-
-    <div class="mt-10 mb-3 ml-16 text-white opacity-90 text-5xl font-semibold font-['Khula']">
-        Filmes em cartaz:
-    </div>
-
-    <div class="mx-10 mb-10 h-[1080px] ">
-        @include('components.card-round')
-    </div>
+    
 
 </body>
