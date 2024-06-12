@@ -12,7 +12,6 @@ use App\Models\Theater;
 
 class TheaterController extends Controller
 {
-    //TODO
     /* Views */
     /**
      * Display a listing of the resource.
@@ -56,7 +55,7 @@ class TheaterController extends Controller
         $newTheater = Theater::create($request->validated());
 
         if ($request->hasFile('image_file')) {
-            $request->image_file->storeAs('public/photos', $newTheater->photo_filename);
+            $request->image_file->storeAs('public/theaters', $newTheater->photo_filename);
         }
 
         $url = route('theaters.show', ['theater' => $newTheater]);
@@ -77,13 +76,13 @@ class TheaterController extends Controller
 
         if ($request->hasFile('image_file')) {
             if ($theater->imageExists) {
-                Storage::delete("public/photos/{$theater->photo_filename}");
+                Storage::delete("public/theaters/{$theater->photo_filename}");
             }
 
-            $request->image_file->storeAs('public/photos', $theater->photo_filename);
+            $request->image_file->storeAs('public/theaters', $theater->photo_filename);
         }
 
-        $url = route('theater.show', ['theater' => $theater]);
+        $url = route('theaters.show', ['theater' => $theater]);
 
         $htmlMessage = "Theater <a href='$url'><u>{$theater}</u></a> has been updated successfully!";
 
@@ -98,28 +97,17 @@ class TheaterController extends Controller
     public function destroy(Theater $theater): RedirectResponse
     {
         try {
-            $url = route('theater.index', ['theater' => $theater]);
+            $url = route('theaters.index', ['theater' => $theater]);
 
-            $hasCustomer = DB::scalar(
-                'SELECT COUNT(*) FROM COLLUMN WHERE ID = ?',
-                [$theater->id]
-            );
+            $theater->delete();
 
-            if ($hasCustomer) {
-                $theater->delete();
-
-                if ($theater->imageExists) {
-                    Storage::delete("public/photos/{$theater->photo_filename}");
-                }
-
-                $alertType = 'success';
-                $alertMsg = "Theater {$theater} has been deleted successfully!";
-            } else {
-                $justification = "";
-
-                $alertType = 'warning';
-                $alertMsg = "Theater <a href='$url'><u>{$theater}</u></a> cannot be deleted because $justification.";
+            if ($theater->imageExists) {
+                Storage::delete("public/theaters/{$theater->photo_filename}");
             }
+
+            $alertType = 'success';
+            $alertMsg = "Theater {$theater} has been deleted successfully!";
+
         } catch (\Exception $error) {
             $alertType = 'danger';
             $alertMsg = "It was not possible to delete the theater <a href='$url'><u>{$theater}</u></a> because there was an error with the operation!";

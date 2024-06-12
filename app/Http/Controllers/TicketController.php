@@ -35,34 +35,12 @@ class TicketController extends Controller
     {
         $newTicket = Ticket::create($request->validated());
 
-        $url = route('ticket.show', ['ticket' => $newTicket]);
+        $url = route('tickets.show', ['ticket' => $newTicket]);
 
         $htmlMessage = "Ticket <a href='$url'><u>{$newTicket->id} ({$newTicket->screening->movie->name})</u></a> has been created successfully!";
 
         return redirect()->route('tickets.index')
             ->with('alert-type', 'success')
             ->with('alert-msg', $htmlMessage);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Ticket $ticket): RedirectResponse
-    {
-        try {
-            $url = route('tickets.index', ['ticket' => $ticket]);
-
-            $ticket->delete();
-
-            $alertType = 'success';
-            $alertMsg = "Ticket {$ticket->id} ({$ticket->screening->movie->name}) has been deleted successfully!";
-        } catch (\Exception $error) {
-            $alertType = 'danger';
-            $alertMsg = "It was not possible to delete the ticket <a href='$url'><u>{$ticket->id} ({$ticket->screening->movie->name})</u></a> because there was an error with the operation!";
-        }
-
-        return redirect()->route('tickets.index')
-            ->with('alert-type', $alertType)
-            ->with('alert-msg', $alertMsg);
     }
 }

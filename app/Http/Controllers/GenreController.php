@@ -2,66 +2,127 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Genre;
 use Illuminate\View\View;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+use App\Http\Requests\GenreFormRequest;
+use App\Models\Genre;
 
 class GenreController extends Controller
 {
     //TODO
+
+    /* Views */
     /**
      * Display a listing of the resource.
      */
     public function index(): View
     {
-        return view('main.genres.index')->with(Genre::orderBy('name')->paginate(20));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+        return view('main.genres.index')->with('genres', Genre::orderBy('name')->paginate(20));
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Genre $genre)
+    public function show(Genre $genre): View
     {
-        //
+        return view('main.genres.show')->with('genre', $genre);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create(): View
+    {
+        return view('main.genres.create')->with('genre', new Genre());
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Genre $genre)
+    public function edit(Genre $genre): View
     {
-        //
+        return view('main.genres.edit')->with('genre', $genre);
+    }
+
+
+    /* CRUD operations */
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(GenreFormRequest $request): RedirectResponse
+    {
+        $newGenre = Genre::create($request->validated());
+
+        $url = route('genres.show', ['genre' => $newGenre]);
+
+        $htmlMessage = "Genre <a href='$url'><u>{$newGenre}</u></a> has been created successfully!";
+
+        return redirect()->route('genre.index')
+            ->with('alert-type', 'success')
+            ->with('alert-msg', $htmlMessage);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Genre $genre)
+    public function update(GenreFormRequest $request, Genre $genre): RedirectResponse
     {
-        //
+        $genre->update($request->validated());
+
+        if ($request->hasFile('image_file')) {
+            if ($genre->imageExists) {
+                Storage::delete("public/photos/{$genre->photo_filename}");
+            }
+
+            $request->image_file->storeAs('public/photos', $genre->photo_filename);
+        }
+
+        $url = route('genres.show', ['genre' => $genre]);
+
+        $htmlMessage = "Genre <a href='$url'><u>{$genre}</u></a> has been updated successfully!";
+
+        return redirect()->route('genre.index')
+            ->with('alert-type', 'success')
+            ->with('alert-msg', $htmlMessage);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Genre $genre)
+    public function destroy(Genre $genre): RedirectResponse
     {
-        //
+        try {
+            $url = route('genres.index', ['genre' => $genre]);
+
+            $hasCustomer = DB::scalar(
+                'SELECT count(*) FROM COLLUMN WHERE ID = ?',
+                [$genre->id]
+            );
+
+            if ($hasCustomer) {
+                $genre->delete();
+
+                if ($genre->imageExists) {
+                    Storage::delete("public/photos/{$genre->photo_filename}");
+                }
+
+                $alertType = 'success';
+                $alertMsg = "Genre {$genre} has been deleted successfully!";
+            } else {
+                $justification = "";
+
+                $alertType = 'warning';
+                $alertMsg = "Genre <a href='$url'><u>{$genre}</u></a> cannot be deleted because $justification.";
+            }
+        } catch (\Exception $error) {
+            $alertType = 'danger';
+            $alertMsg = "It was not possible to delete the genre <a href='$url'><u>{$genre}</u></a> because there was an error with the operation!";
+        }
+
+        return redirect()->route('genre.index')
+            ->with('alert-type', $alertType)
+            ->with('alert-msg', $alertMsg);
     }
 }

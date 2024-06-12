@@ -58,7 +58,7 @@ class UserController extends Controller
             $request->image_file->storeAs('public/photos', $newUser->photo_filename);
         }
 
-        $url = route('user.show', ['user' => $newUser]);
+        $url = route('users.show', ['user' => $newUser]);
 
         $htmlMessage = "User <a href='$url'><u>{$newUser->name}</u></a> has been created successfully!";
 
@@ -83,7 +83,7 @@ class UserController extends Controller
         }
 
 
-        $url = route('user.show', ['user' => $user]);
+        $url = route('users.show', ['user' => $user]);
 
         $htmlMessage = "User <a href='$url'><u>{$user->name}</u></a> has been updated successfully!";
 
@@ -98,29 +98,16 @@ class UserController extends Controller
     public function destroy(User $user): RedirectResponse
     {
         try {
-            $url = route('user.index', ['user' => $user]);
+            $url = route('users.index', ['user' => $user]);
 
-            $hasCustomer = DB::scalar(
-                'SELECT count(*) FROM CUSTOMERS WHERE ID = ?',
-                [$user->id]
-            );
+            $user->delete();
 
-            if ($hasCustomer == 0) {
-                $user->delete();
-
-                if ($user->imageExists) {
-                    Storage::delete("public/photos/{$user->fileName}");
-                }
-
-                $alertType = 'success';
-                $alertMsg = "User {$user->name} has been deleted successfully!";
-            } else {
-                // TODO: Delete customer too?
-                $justification = "it is associated with a customer";
-
-                $alertType = 'warning';
-                $alertMsg = "User <a href='$url'><u>{$user->name}</u></a> cannot be deleted because $justification.";
+            if ($user->imageExists) {
+                Storage::delete("public/photos/{$user->fileName}");
             }
+
+            $alertType = 'success';
+            $alertMsg = "User {$user->name} has been deleted successfully!";
         } catch (\Exception $error) {
             $alertType = 'danger';
             $alertMsg = "It was not possible to delete the user <a href='$url'><u>{$user->name}</u></a> because there was an error with the operation!";

@@ -53,7 +53,7 @@ class ScreeningController extends Controller
     {
         $newScreening = Screening::create($request->validated());
 
-        $url = route('screening.show', ['screening' => $newScreening]);
+        $url = route('screenings.show', ['screening' => $newScreening]);
 
         $htmlMessage = "Screening <a href='$url'><u>{$newScreening}</u></a> has been created successfully!";
 
@@ -69,7 +69,7 @@ class ScreeningController extends Controller
     {
         $screening->update($request->validated());
 
-        $url = route('screening.show', ['screening' => $screening]);
+        $url = route('screenings.show', ['screening' => $screening]);
 
         $htmlMessage = "Screening <a href='$url'><u>{$screening}</u></a> has been updated successfully!";
 
@@ -84,7 +84,7 @@ class ScreeningController extends Controller
     public function destroy(Screening $screening): RedirectResponse
     {
         try {
-            $url = route('screening.index', ['screening' => $screening]);
+            $url = route('screenings.index', ['screening' => $screening]);
 
             $hasTickets = DB::scalar(
                 'SELECT count(*) FROM TICKETS WHERE SCREENING_ID = ?',

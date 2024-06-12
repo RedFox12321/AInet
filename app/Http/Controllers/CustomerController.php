@@ -93,7 +93,7 @@ class CustomerController extends Controller
         });
 
 
-        $url = route('customer.show', ['customer' => $newCustomer]);
+        $url = route('customers.show', ['customer' => $newCustomer]);
 
         $htmlMessage = "Customer <a href='$url'><u>{$newCustomer}</u></a> has been created successfully!";
 
@@ -148,7 +148,7 @@ class CustomerController extends Controller
         });
 
 
-        $url = route('customer.show', ['customer' => $customer]);
+        $url = route('customers.show', ['customer' => $customer]);
 
         $htmlMessage = "Customer <a href='$url'><u>{$customer}</u></a> has been updated successfully!";
 
@@ -163,36 +163,21 @@ class CustomerController extends Controller
     public function destroy(Customer $customer): RedirectResponse
     {
         try {
-            $url = route('customer.index', ['customer' => $customer]);
+            $url = route('customers.index', ['customer' => $customer]);
 
-            $hasPurchases = DB::scalar(
-                'SELECT COUNT(*) FROM PURCHASES WHERE CUSTOMER_ID = ?',
-                [$customer->id]
-            );
-
-            if ($hasPurchases) {
-                DB::transaction(function () use ($customer) {
-                    $fileToDelete = $customer->user->photo_filename;
-                    $customer->delete();
-                    $customer->user->delete();
-                    if ($fileToDelete) {
-                        if (Storage::fileExists("public/photos/{$fileToDelete}")) {
-                            Storage::delete("public/photos/{$fileToDelete}");
-                        }
+            DB::transaction(function () use ($customer) {
+                $fileToDelete = $customer->user->photo_filename;
+                $customer->delete();
+                $customer->user->delete();
+                if ($fileToDelete) {
+                    if (Storage::fileExists("public/photos/{$fileToDelete}")) {
+                        Storage::delete("public/photos/{$fileToDelete}");
                     }
-                });
+                }
+            });
 
-                $alertType = 'success';
-                $alertMsg = "Customer {$customer} has been deleted successfully!";
-            } else {
-                $justification = match ($hasPurchases) {
-                    1 => "there is 1 purchase related to it.",
-                    default => "there are {$hasPurchases} purchases related to it."
-                };
-
-                $alertType = 'warning';
-                $alertMsg = "Customer <a href='$url'><u>{$customer}</u></a> cannot be deleted because $justification.";
-            }
+            $alertType = 'success';
+            $alertMsg = "Customer {$customer} has been deleted successfully!";
         } catch (\Exception $error) {
             $alertType = 'danger';
             $alertMsg = "It was not possible to delete the customer <a href='$url'><u>{$customer}</u></a> because there was an error with the operation!";

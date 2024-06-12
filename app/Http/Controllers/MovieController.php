@@ -21,10 +21,10 @@ class MovieController extends Controller
         return view('main.movies.index')->with('movies', Movie::orderBy('title')->paginate(20));
     }
 
-    // public function showcase(): View
-    // {
-    //     return view('main.movies.showcase')->with('movies', Movie::orderBy('title')->paginate(20));
-    // }
+    public function showcase(): View
+    {
+        return view('main.movies.showcase')->with('movies', Movie::orderBy('title')->paginate(20));
+    }
 
     /**
      * Display the specified resource.
@@ -50,7 +50,7 @@ class MovieController extends Controller
         return view('main.movies.edit')->with('movie', $movie);
     }
 
-    
+
 
     /* CRUD operations */
     /**
@@ -64,7 +64,7 @@ class MovieController extends Controller
             $request->image_file->storeAs('public/posters', $newMovie->poster_filename);
         }
 
-        $url = route('movie.show', ['movie' => $newMovie]);
+        $url = route('movies.show', ['movie' => $newMovie]);
 
         $htmlMessage = "Movie <a href='$url'><u>{$newMovie}</u></a> has been created successfully!";
 
@@ -88,7 +88,7 @@ class MovieController extends Controller
             $request->image_file->storeAs('public/posters', $movie->poster_filename);
         }
 
-        $url = route('movie.show', ['movie' => $movie]);
+        $url = route('movies.show', ['movie' => $movie]);
 
         $htmlMessage = "Movie <a href='$url'><u>{$movie}</u></a> has been updated successfully!";
 
@@ -103,33 +103,17 @@ class MovieController extends Controller
     public function destroy(Movie $movie): RedirectResponse
     {
         try {
-            $url = route('movie.index', ['movie' => $movie]);
+            $url = route('movies.index', ['movie' => $movie]);
 
-            $hasScreenings = DB::scalar(
-                'SELECT COUNT(*) FROM SCREENINGS WHERE MOVIE_ID = ?',
-                [$movie->id]
-            );
+            $movie->delete();
 
-            if ($hasScreenings) {
-                $movie->delete();
-
-                if ($movie->imageExists) {
-                    Storage::delete("public/posters/{$movie->poster_filename}");
-                }
-
-                $alertType = 'success';
-                $alertMsg = "Movie {$movie} has been deleted successfully!";
-            } else {
-                $screeningJustif = match ($hasScreenings) {
-                    1 => "is 1 screening",
-                    default => "are {$hasScreenings} screenings",
-                };
-
-                $justification = "there {$screeningJustif} for this movie.";
-
-                $alertType = 'warning';
-                $alertMsg = "Movie <a href='$url'><u>{$movie}</u></a> cannot be deleted because $justification.";
+            if ($movie->imageExists) {
+                Storage::delete("public/posters/{$movie->poster_filename}");
             }
+
+            $alertType = 'success';
+            $alertMsg = "Movie {$movie} has been deleted successfully!";
+
         } catch (\Exception $error) {
             $alertType = 'danger';
             $alertMsg = "It was not possible to delete the movie <a href='$url'><u>{$movie}</u></a> because there was an error with the operation!";

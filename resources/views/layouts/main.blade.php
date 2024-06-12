@@ -35,11 +35,14 @@
 
 
                         <!-- Navigation links -->
-                        <ul :class="{'flex': open, 'hidden': !open}" class="hidden md:flex h-full space-x-8 z-10 items-end mr-4">
+                        <ul :class="{ 'flex': open, 'hidden': !open }"
+                            class="hidden md:flex h-full space-x-8 z-10 items-end mr-4">
                             <li class="h-full flex justify-center items-center">
-                                <x-menu.menu-icon href="{{ Route::currentRouteName() == 'movies.index' ? '' : session('last_route', url()->previous()) }}">
+                                <x-menu.menu-icon
+                                    href="{{ Route::currentRouteName() == 'movies.index' ? '' : session('last_route', url()->previous()) }}">
                                     @include('components.menu.goback-logo', [
-                                        'strokeColor' => Route::currentRouteName() == 'movies.index' ? '#731824' : '#E8D8C4',
+                                        'strokeColor' =>
+                                            Route::currentRouteName() == 'movies.index' ? '#731824' : '#E8D8C4',
                                     ])
                                 </x-menu.menu-icon>
                             </li>
@@ -49,7 +52,7 @@
                                 </x-menu.menu-icon>
                             </li>
                             <li class="h-full flex justify-center items-center">
-                                <x-menu.menu-icon href="{{ route('customer.index') }}">
+                                <x-menu.menu-icon href="{{ route('customers.index') }}">
                                     @include('components.menu.account-logo')
                                 </x-menu.menu-icon>
                             </li>
@@ -57,7 +60,9 @@
 
                         <div class="w-full h-36 left-0 top-0 absolute bg-rose-800"></div>
 
-                        <div class="w-[99px] h-[99px] pl-[11px] pr-[9.62px] pt-2 pb-[8.50px] left-[1792px] top-[25px] absolute justify-center items-center inline-flex"></div>
+                        <div
+                            class="w-[99px] h-[99px] pl-[11px] pr-[9.62px] pt-2 pb-[8.50px] left-[1792px] top-[25px] absolute justify-center items-center inline-flex">
+                        </div>
                         <div class="w-full h-2.5 left-0 top-[140px] z-10 absolute bg-rose-950"></div>
                     </div>
                 </div>
@@ -65,14 +70,14 @@
             </div>
         </main>
     </div>
-        
+
     {{-- dropdownzinho dos generos --}}
-    
+
     <div class="flex justify-center mt-5">
 
-        
+
         @include('components.fields.search-movie')
-        
+
     </div>
 
 </body>
