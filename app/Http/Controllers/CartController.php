@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\CartConfirmationFormRequest;
 use App\Models\Screening;
 use App\Models\Seat;
 
@@ -16,76 +17,81 @@ class CartController extends Controller
         return view('main.cart.show');
     }
 
-    // public function addToCart(Request $request, Screening $screening, Seat $seat): RedirectResponse
-    // {
-    //     $cart = session('cart', null);
-    //     if (!$cart) {
-    //         $cart = collect([$screening, $seat]);
-    //         $request->session()->put('cart', $cart);
-    //     } else {
-    //         if ($cart->firstWhere('id', $screening->id)) {
-    //             $alertType = 'warning';
-    //             $url = route('screenings.show', ['screening' => $screening]);
-    //             $htmlMessage = "Discipline <a href='$url'>#{$screening->id}</a>
-    //             <strong>\"{$screening->name}\"</strong> was not added to the cart because it is already there!";
-    //             return back()
-    //                 ->with('alert-msg', $htmlMessage)
-    //                 ->with('alert-type', $alertType);
-    //         } else {
-    //             $cart->push($screening);
-    //         }
-    //     }
-    //     $alertType = 'success';
-    //     $url = route('disciplines.show', ['discipline' => $screening]);
-    //     $htmlMessage = "Discipline <a href='$url'>#{$screening->id}</a>
-    //             <strong>\"{$screening->name}\"</strong> was added to the cart.";
-    //     return back()
-    //         ->with('alert-msg', $htmlMessage)
-    //         ->with('alert-type', $alertType);
-    // }
+    public function addToCart(Request $request, Screening $screening, Seat $seat): RedirectResponse
+    {
+        $cart = session('cart');
+        if (!$cart) {
+            $cart = collect([
+                'screening' => $screening,
+                'seat' => $seat
+            ]);
+            $request->session()->put('cart', $cart);
+        } else {
+            if (
+                $cart->first(function ($item) use ($screening, $seat) {
+                    return $item['screening']->id === $screening->id && $item['seat']->id === $seat->id;
+                })
+            ) {
+                $alertType = 'warning';
+                $url = route('screenings.show', ['screening' => $screening]);
+                $htmlMessage = "Screening <a href='$url'>#{$screening->id}</a> of the movie <strong>{$screening->movie->title}</strong> (seat {$seat->row}-{$seat->seat_number}) was not added to the cart because it is already there!";
+                return back()
+                    ->with('alert-msg', $htmlMessage)
+                    ->with('alert-type', $alertType);
+            } else {
+                $cart->push('screening', $screening);
+                $cart->push('seat', $seat);
+            }
+        }
+        $alertType = 'success';
+        $url = route('screenings.show', ['discipline' => $screening]);
+        $htmlMessage = "Screening <a href='$url'>#{$screening->id}</a> of the movie <strong>{$screening->movie->title}</strong> (seat {$seat->row}-{$seat->seat_number}) was added to the cart.";
+        return back()
+            ->with('alert-msg', $htmlMessage)
+            ->with('alert-type', $alertType);
+    }
 
-    // public function removeFromCart(Request $request, Discipline $discipline): RedirectResponse
-    // {
-    //     $url = route('disciplines.show', ['discipline' => $discipline]);
-    //     $cart = session('cart', null);
-    //     if (!$cart) {
-    //         $alertType = 'warning';
-    //         $htmlMessage = "Discipline <a href='$url'>#{$discipline->id}</a>
-    //             <strong>\"{$discipline->name}\"</strong> was not removed from the cart because cart is empty!";
-    //         return back()
-    //             ->with('alert-msg', $htmlMessage)
-    //             ->with('alert-type', $alertType);
-    //     } else {
-    //         $element = $cart->firstWhere('id', $discipline->id);
-    //         if ($element) {
-    //             $cart->forget($cart->search($element));
-    //             if ($cart->count() == 0) {
-    //                 $request->session()->forget('cart');
-    //             }
-    //             $alertType = 'success';
-    //             $htmlMessage = "Discipline <a href='$url'>#{$discipline->id}</a>
-    //             <strong>\"{$discipline->name}\"</strong> was removed from the cart.";
-    //             return back()
-    //                 ->with('alert-msg', $htmlMessage)
-    //                 ->with('alert-type', $alertType);
-    //         } else {
-    //             $alertType = 'warning';
-    //             $htmlMessage = "Discipline <a href='$url'>#{$discipline->id}</a>
-    //             <strong>\"{$discipline->name}\"</strong> was not removed from the cart because cart does not include it!";
-    //             return back()
-    //                 ->with('alert-msg', $htmlMessage)
-    //                 ->with('alert-type', $alertType);
-    //         }
-    //     }
-    // }
+    public function removeFromCart(Request $request, Screening $screening, Seat $seat): RedirectResponse
+    {
+        $url = route('screenings.show', ['screening' => $screening]);
+        $cart = session('cart');
+        if (!$cart) {
+            $alertType = 'warning';
+            $htmlMessage = "Screening <a href='$url'>#{$screening->id}</a> of the movie <strong>{$screening->movie->title}</strong> (seat {$seat->row}-{$seat->seat_number}) was not removed from the cart because cart is empty!";
+            return back()
+                ->with('alert-msg', $htmlMessage)
+                ->with('alert-type', $alertType);
+        } else {
+            $element = $cart->first(function ($item) use ($screening, $seat) {
+                return $item['screening']->id === $screening->id && $item['seat']->id === $seat->id;
+            });
+            if ($element) {
+                $cart->forget($cart->search($element));
+                if ($cart->count() == 0) {
+                    $request->session()->forget('cart');
+                }
+                $alertType = 'success';
+                $htmlMessage = "Screening <a href='$url'>#{$screening->id}</a> of the movie <strong>{$screening->movie->title}</strong> (seat {$seat->row}-{$seat->seat_number}) was removed from the cart.";
+                return back()
+                    ->with('alert-msg', $htmlMessage)
+                    ->with('alert-type', $alertType);
+            } else {
+                $alertType = 'warning';
+                $htmlMessage = "Screening <a href='$url'>#{$screening->id}</a> of the movie <strong>{$screening->movie->title}</strong> (seat {$seat->row}-{$seat->seat_number}) was not removed from the cart because cart does not include it!";
+                return back()
+                    ->with('alert-msg', $htmlMessage)
+                    ->with('alert-type', $alertType);
+            }
+        }
+    }
 
-    // public function destroy(Request $request): RedirectResponse
-    // {
-    //     $request->session()->forget('cart');
-    //     return back()
-    //         ->with('alert-type', 'success')
-    //         ->with('alert-msg', 'Shopping Cart has been cleared');
-    // }
+    public function destroy(Request $request): RedirectResponse
+    {
+        $request->session()->forget('cart');
+        return back()
+            ->with('alert-type', 'success')
+            ->with('alert-msg', 'Shopping Cart has been cleared');
+    }
 
 
     // public function confirm(CartConfirmationFormRequest $request): RedirectResponse
