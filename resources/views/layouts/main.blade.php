@@ -80,4 +80,12 @@
 
     </div>
 
+    <div class="mt-10 mb-3 ml-16 text-white opacity-90 text-5xl font-semibold font-['Khula']">
+        Filmes em cartaz:
+    </div>
+
+    <div class="mx-10 mb-10 h-[1080px] ">
+        @include('components.card-round')
+    </div>
+
 </body>
