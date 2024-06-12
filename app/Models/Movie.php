@@ -28,10 +28,6 @@ class Movie extends Model
     {
         return Storage::exists("public/posters/{$this->poster_filename}");
     }
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
     public function getImageUrlAttribute()
     {
         if ($this->imageExists) {
@@ -40,10 +36,6 @@ class Movie extends Model
             return asset("storage/posters/_no_poster_2.png");
         }
     }
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
     public function screenings(): HasMany
     {
         return $this->hasMany(Screening::class);
