@@ -6,8 +6,8 @@ namespace App\Http\Controllers;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
 use App\Http\Requests\MovieFormRequest;
+use Illuminate\Http\Request;
 use App\Models\Movie;
 
 class MovieController extends Controller
@@ -16,14 +16,64 @@ class MovieController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        return view('main.movies.index')->with('movies', Movie::orderBy('title')->paginate(20));
+        $filterByGenre = $request->query('genre');
+        $filterByTitleSynopsis = $request->search;
+        $movieQuery = Movie::query();
+
+        if ($filterByGenre !== null) {
+            $movieQuery->where('genre', $filterByGenre);
+        }
+        if ($filterByTitleSynopsis !== null) {
+            $movieQuery->where(function ($userQuery) use ($filterByTitleSynopsis) {
+                $userQuery->where('title', 'LIKE', '%' . $filterByTitleSynopsis . '%')
+                    ->orWhere('synopsis', 'LIKE', '%' . $filterByTitleSynopsis . '%');
+            });
+        }
+
+        $movies = $movieQuery
+            ->with('genre')
+            ->orderBy('title')
+            ->paginate(20)
+            ->withQueryString();
+
+        return view(
+            'main.movies.index',
+            compact('movies', 'filterByGenre', 'filterByTitleSynopsis')
+        );
     }
 
-    public function showcase(): View
+    public function showcase(Request $request): View
     {
-        return view('main.movies.showcase')->with('movies', Movie::orderBy('title')->paginate(20));
+        $filterByGenre = $request->query('genre');
+        $filterByTitleSynopsis = $request->search;
+        $movieQuery = Movie::query();
+
+        $movieQuery->whereHas('screenings', function ($query) {
+            $query->whereBetween('date', [now(), now()->addWeeks(2)]);
+        });
+
+        if ($filterByGenre !== null) {
+            $movieQuery->where('genre', $filterByGenre);
+        }
+        if ($filterByTitleSynopsis !== null) {
+            $movieQuery->where(function ($userQuery) use ($filterByTitleSynopsis) {
+                $userQuery->where('title', 'LIKE', '%' . $filterByTitleSynopsis . '%')
+                    ->orWhere('synopsis', 'LIKE', '%' . $filterByTitleSynopsis . '%');
+            });
+        }
+
+        $movies = $movieQuery
+            ->with(['screenings', 'genre'])
+            ->orderBy('title')
+            ->paginate(20)
+            ->withQueryString();
+
+        return view(
+            'main.movies.showcase',
+            compact('movies', 'filterByGenre', 'filterByTitleSynopsis')
+        );
     }
 
     /**
@@ -49,7 +99,6 @@ class MovieController extends Controller
     {
         return view('main.movies.edit')->with('movie', $movie);
     }
-
 
 
     /* CRUD operations */

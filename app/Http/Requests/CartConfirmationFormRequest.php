@@ -35,9 +35,9 @@ class CartConfirmationFormRequest extends FormRequest
             function (Validator $validator) {
                 if ($this->user()) {
                     if ($this->user()->type == 'C') {
-                        $userCustomerId = $this->user()?->student?->number;
-                        if ($this->student_number != $userCustomerId) {
-                            $validator->errors()->add('student_number', "Your customer number is $userCustomerId");
+                        $userCustomerId = $this->user()?->customers?->id;
+                        if ($this->customer_id != $userCustomerId) {
+                            $validator->errors()->add('customer_id', "Your customer number is $userCustomerId");
                         }
                     }
                 }
