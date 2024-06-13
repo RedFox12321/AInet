@@ -44,11 +44,11 @@ Route::middleware('auth', 'verified')->group(function () {
 
     Route::resource('seats', SeatController::class);
 
-    Route::resource('screenings', ScreeningController::class);
+    Route::resource('screenings', ScreeningController::class)->except(['index', 'show']);
 
     Route::resource('purchases', PurchaseController::class)->except(['edit', 'update']);
 
-    Route::resource('movies', MovieController::class);
+    Route::resource('movies', MovieController::class)->except('show');
 
     Route::resource('genres', GenreController::class);
 
@@ -80,8 +80,14 @@ Route::middleware('auth', 'verified')->group(function () {
 
 });
 
-Route::get('movies/showcase', [MovieController::class, 'showcase'])->name('movies.showcase');
 
+// Resource public routes
+Route::get('movies/showcase', [MovieController::class, 'showcase'])->name('movies.showcase');
+Route::resource('movies', MovieController::class)->only('show');
+Route::resource('screenings', ScreeningController::class)->only(['index', 'show']);
+
+
+// Cart
 Route::get('cart/show', [CartController::class, 'show'])->name('cart.show');
 
 Route::post('cart', [CartController::class, 'confirm'])

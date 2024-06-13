@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Theater;
 use Illuminate\View\View;
+use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\ScreeningFormRequest;
 use App\Models\Screening;
+use App\Models\Genre;
 
 class ScreeningController extends Controller
 {
@@ -15,9 +17,45 @@ class ScreeningController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        return view('main.screenings.index')->with('screenings', Screening::orderBy('date', 'desc')->orderBy('start_time')->paginate(20));
+        $filterByTitleSynopsis = $request->search;
+        $filterByGenre = $request->query('genre');
+        $filterByDate = $request->input('date');
+        $screeningQuery = Screening::query();
+
+        if ($filterByTitleSynopsis !== null) {
+            $screeningQuery->with('movies')->where(function ($userQuery) use ($filterByTitleSynopsis) {
+                $userQuery->where('title', 'LIKE', '%' . $filterByTitleSynopsis . '%')
+                    ->orWhere('synopsis', 'LIKE', '%' . $filterByTitleSynopsis . '%');
+            });
+        }
+        if ($filterByGenre !== null) {
+            $screeningQuery->with('movies')->where('genre', $filterByGenre);
+        }
+        if ($filterByDate !== null) {
+            match ($filterByDate) {
+                1 => $days = 0,
+                2 => $days = 1,
+                3 => $days = 6
+            };
+            $screeningQuery->whereBetween('date', [now(), now()->addDays($days)]);
+        }
+
+        $screenings = $screeningQuery
+            ->with(['movie.genre', 'theater'])
+            ->orderBy('date', 'desc')
+            ->orderBy('start_time')
+            ->paginate(20)
+            ->withQueryString();
+
+        $genres = Genre::all();
+        $theaters = Theater::all();
+
+        return view(
+            'main.screenings.index',
+            compact('screenings', 'filterByTitleSynopsis', 'filterByGenre', 'filterByDate', 'genres', 'theaters')
+        );
     }
 
     /**
