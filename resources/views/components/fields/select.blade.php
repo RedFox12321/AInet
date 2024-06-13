@@ -3,7 +3,7 @@
 @endphp
 
 <div class= "flex flex-wrap fit-content justify-center ">
-    <label class="text-4xl text-center w-full font-semibold">
+    <label class="text-4xl text-center font-semibold">
         {{ $label }}
     </label>
     <select id="id_{{ $name }}" name="{{ $name }}"

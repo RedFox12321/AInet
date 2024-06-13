@@ -13,8 +13,8 @@
         :theater="old('theater', $filterByTheater)"
         :genre="old('genre',$filterByGenre)"
         :date="old('date',$filterByDate)"
-        :genres="$genres->pluck('name')->toArray()"
-        :theaters="$theaters->pluck('id','name')->toArray()"
+        :genres="$genres->pluck('name','code')->toArray()"
+        :theaters="$theaters->pluck('name','id')->toArray()"
         >
             
         </x-screenings.filter-card>
