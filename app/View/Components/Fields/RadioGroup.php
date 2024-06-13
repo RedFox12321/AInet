@@ -1,6 +1,6 @@
 <?php
 
-namespace App\View\Components\Field;
+namespace App\View\Components\Fields;
 
 use Closure;
 use Illuminate\Contracts\View\View;
@@ -32,6 +32,6 @@ class RadioGroup extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.field.radio-group');
+        return view('components.fields.radio-group');
     }
 }

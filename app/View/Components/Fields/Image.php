@@ -1,6 +1,6 @@
 <?php
 
-namespace App\View\Components\Field;
+namespace App\View\Components\Fields;
 
 use Closure;
 use Illuminate\Contracts\View\View;
@@ -34,6 +34,6 @@ class Image extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.field.image');
+        return view('components.fields.image');
     }
 }

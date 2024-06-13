@@ -28,12 +28,19 @@
 
                     <div class="w-full h-full left-0 top-0 flex justify-between items-center px-4 md:px-8 lg:px-16">
 
-                        <x-menu.menu-icon href="{{ route('movies.showcase') }}">
-                            <x-slot:icon>
-                            @include('components.application-logo')
-                        </x-slot>
-                        </x-menu.menu-icon>
+                        <div class="z-10 w-full flex space-x-2 justify-start items-end">
+                            <x-menu.menu-icon href="{{ route('movies.showcase') }}">
+                                <x-slot:icon>
+                                    @include('components.application-logo')
+                                </x-slot>
+                            </x-menu.menu-icon>
 
+                            <x-menu.menu-icon href="{{ route('screenings.index') }}" >
+                                <x-slot:icon>
+                                    @include('components.menu.screenings-logo')
+                                </x-slot>
+                            </x-menu.menu-icon>
+                        </div>
 
 
                         <!-- Navigation links -->
@@ -43,25 +50,27 @@
                                 <x-menu.menu-icon
                                     href="{{ Route::currentRouteName() == 'movies.showcase' ? '' : session('last_route', url()->previous()) }}">
                                     <x-slot:icon>
-                                    @include('components.menu.goback-logo', [
-                                        'strokeColor' =>
-                                            Route::currentRouteName() == 'movies.showcase' ? '#731824' : '#E8D8C4',
-                                    ])
+                                        @include('components.menu.goback-logo', [
+                                            'strokeColor' =>
+                                                Route::currentRouteName() == 'movies.showcase'
+                                                    ? '#731824'
+                                                    : '#E8D8C4',
+                                        ])
                                     </x-slot>
                                 </x-menu.menu-icon>
                             </li>
                             <li class="h-full flex justify-center items-center">
                                 <x-menu.menu-icon href="{{ route('cart.show') }}">
                                     <x-slot:icon>
-                                    @include('components.menu.cart-logo')
-                                </x-slot>
+                                        @include('components.menu.cart-logo')
+                                    </x-slot>
                                 </x-menu.menu-icon>
                             </li>
                             <li class="h-full flex justify-center items-center">
                                 <x-menu.menu-icon href="{{ route('customers.index') }}">
                                     <x-slot:icon>
-                                    @include('components.menu.account-logo')
-                                </x-slot>
+                                        @include('components.menu.account-logo')
+                                    </x-slot>
                                 </x-menu.menu-icon>
                             </li>
                         </ul>
@@ -81,6 +90,6 @@
 
     {{-- dropdownzinho dos generos --}}
 
-    
+
 
 </body>

@@ -7,8 +7,18 @@
 
     <div class="flex justify-center mt-5">
 
+        {{-- <x-fields.select name="genre" label="Genre"
+                         value=App\Models\Genre
+                        :options="$listGenre"/> --}}
+        <x-movies.filter-card
+        :filterAction="route('movies.showcase')"
+        :resetUrl="route('movies.showcase')"
+        :title="old('title',$filterByTitleSynopsis)"
+        :genre="old('genre',$filterByGenre)"
+        :genres="$genres->pluck('name')->toArray()"
+        >
 
-        @include('components.fields.search-movie')
+        </x-movies.filter-card>
 
     </div>
 

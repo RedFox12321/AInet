@@ -1,6 +1,6 @@
 <?php
 
-namespace App\View\Components\Field;
+namespace App\View\Components\Fields;
 
 use Closure;
 use Illuminate\Contracts\View\View;
@@ -37,6 +37,6 @@ class TextArea extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.field.text-area');
+        return view('components.fields.text-area');
     }
 }

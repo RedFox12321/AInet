@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\MovieFormRequest;
 use Illuminate\Http\Request;
 use App\Models\Movie;
+use App\Models\Genre;
 
 class MovieController extends Controller
 {
@@ -38,9 +39,11 @@ class MovieController extends Controller
             ->paginate(20)
             ->withQueryString();
 
+        $genres = Genre::all();
+
         return view(
             'main.movies.index',
-            compact('movies', 'filterByGenre', 'filterByTitleSynopsis')
+            compact('movies', 'filterByGenre', 'filterByTitleSynopsis', 'genres')
         );
     }
 
@@ -70,9 +73,11 @@ class MovieController extends Controller
             ->paginate(20)
             ->withQueryString();
 
+        $genres = Genre::all();
+
         return view(
             'main.movies.showcase',
-            compact('movies', 'filterByGenre', 'filterByTitleSynopsis')
+            compact('movies', 'filterByGenre', 'filterByTitleSynopsis', 'genres')
         );
     }
 
