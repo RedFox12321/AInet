@@ -15,7 +15,7 @@
 <body class="bg-stone-700 text-white">
     <div>
         <main>
-            <div class="">
+            <div>
                 {{-- @if (session('alert-msg'))
                     <x-alert type="{{ session('alert-type') ?? 'info' }}">
                         {!! session('alert-msg') !!}
