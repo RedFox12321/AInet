@@ -2,7 +2,7 @@
     $selectedValue = array_key_exists($value, $options) ? $value : $defaultValue;
 @endphp
 
-<div class= "flex flex-wrap fit-content justify-center ">
+<div class= "flex flex-wrap fit-content justify-center flex-col px-5 ">
     <label class="text-4xl text-center font-semibold">
         {{ $label }}
     </label>

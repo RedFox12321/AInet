@@ -4,7 +4,7 @@
 
 @section('main')
 
-    <div class="flex flex-wrap">
+    <div class="flex flex-wrap justify-around">
         <div class="h-max w-max flex fit-content justify-left m-10">
 
             <x-screenings.filter-card 
@@ -28,7 +28,7 @@
     
         </div>
         
-        <div class="justify-right items-right mt-5">
+        <div class="m-10">
             <x-screenings.table :screenings="$screenings">
             </x-screenings.table>
         </div>
