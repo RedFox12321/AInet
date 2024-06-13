@@ -24,7 +24,9 @@ class MovieController extends Controller
         $movieQuery = Movie::query();
 
         if ($filterByGenre !== null) {
-            $movieQuery->where('genre', $filterByGenre);
+            $movieQuery->whereHas('genres', function ($userQuery) use ($filterByGenre) {
+                $userQuery->where('code', $filterByGenre);
+            });
         }
         if ($filterByTitleSynopsis !== null) {
             $movieQuery->where(function ($userQuery) use ($filterByTitleSynopsis) {
@@ -58,8 +60,11 @@ class MovieController extends Controller
         });
 
         if ($filterByGenre !== null) {
-            $movieQuery->where('genre', $filterByGenre);
+            $movieQuery->with('genre')->whereHas('genre', function ($query) use ($filterByGenre) {
+                $query->where('code', $filterByGenre);
+            });
         }
+
         if ($filterByTitleSynopsis !== null) {
             $movieQuery->where(function ($userQuery) use ($filterByTitleSynopsis) {
                 $userQuery->where('title', 'LIKE', '%' . $filterByTitleSynopsis . '%')

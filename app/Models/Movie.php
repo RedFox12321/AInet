@@ -43,6 +43,6 @@ class Movie extends Model
 
     public function genre(): BelongsTo
     {
-        return $this->belongsTo(Genre::class, 'code', 'genre_code')->withTrashed();
+        return $this->belongsTo(Genre::class, 'genre_code', 'code')->withTrashed();
     }
 }

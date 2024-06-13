@@ -31,16 +31,17 @@ class ScreeningController extends Controller
                     ->orWhere('synopsis', 'LIKE', '%' . $filterByTitleSynopsis . '%');
             });
         }
+
         if ($filterByGenre !== null) {
-            $screeningQuery->with('movies')->where('genre', $filterByGenre);
+            $screeningQuery->with('movies.genre')->where('code', $filterByGenre);
         }
+
         if ($filterByDate !== null) {
             match ($filterByDate) {
-                1 => $days = 0,
-                2 => $days = 1,
-                3 => $days = 6
+                1 => $screeningQuery->whereBetween('date', [today(), today()->addDay()]),
+                2 => $screeningQuery->whereBetween('date', [today()->addDay(), today()->addDays(2)]),
+                3 => $screeningQuery->whereBetween('date', [today(), today()->addDays(6)])
             };
-            $screeningQuery->whereBetween('date', [now(), now()->addDays($days)]);
         }
         if ($filterByTheater !== null) {
             $screeningQuery->with('theater')->where('name', $filterByTheater);
@@ -48,7 +49,7 @@ class ScreeningController extends Controller
 
         $screenings = $screeningQuery
             ->with(['movie.genre', 'theater'])
-            ->orderBy('date', 'desc')
+            ->orderBy('date')
             ->orderBy('start_time')
             ->paginate(20)
             ->withQueryString();
