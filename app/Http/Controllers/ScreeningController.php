@@ -22,6 +22,7 @@ class ScreeningController extends Controller
         $filterByTitleSynopsis = $request->search;
         $filterByGenre = $request->query('genre');
         $filterByDate = $request->input('date');
+        $filterByTheater = $request->input('theater');
         $screeningQuery = Screening::query();
 
         if ($filterByTitleSynopsis !== null) {
@@ -41,6 +42,9 @@ class ScreeningController extends Controller
             };
             $screeningQuery->whereBetween('date', [now(), now()->addDays($days)]);
         }
+        if ($filterByTheater !== null) {
+            $screeningQuery->with('theater')->where('name', $filterByTheater);
+        }
 
         $screenings = $screeningQuery
             ->with(['movie.genre', 'theater'])
@@ -54,7 +58,7 @@ class ScreeningController extends Controller
 
         return view(
             'main.screenings.index',
-            compact('screenings', 'filterByTitleSynopsis', 'filterByGenre', 'filterByDate', 'genres', 'theaters')
+            compact('screenings', 'filterByTitleSynopsis', 'filterByGenre', 'filterByDate', 'filterByTheater', 'genres', 'theaters')
         );
     }
 

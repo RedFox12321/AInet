@@ -9,10 +9,12 @@
         <x-screenings.filter-card 
         :filterAction="route('screenings.index')"
         :resetUrl="route('screenings.index')"
-        :title="old('title',$filterByTitle)"
+        :title="old('title',$filterByTitleSynopsis)"
         :theater="old('theater', $filterByTheater)"
         :genre="old('genre',$filterByGenre)"
         :date="old('date',$filterByDate)"
+        :genres="$genres->pluck('name')->toArray()"
+        :theaters="$theaters->pluck('id','name')->toArray()"
         >
             
         </x-screenings.filter-card>

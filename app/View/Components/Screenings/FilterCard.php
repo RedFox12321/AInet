@@ -21,15 +21,17 @@ class FilterCard extends Component
     
         public string $filterAction,
         public string $resetUrl,
+        public array $theaters,
+        public array $genres,
         public ?string $title = null,
         public ?int $theater = null,
         public ?string $genre = null,
         public ?string $date = null,
     )
     {
-        $this->listTheaters=array_merge([null=>'Any Theater'], $theater);
-        $this->listGenres=array_merge([null=>'Any Genre'], $genre);
-        $this->listDate=[
+        $this->listTheaters=array_merge([null=>'Any Theater'], $theaters);
+        $this->listGenres=array_merge([null=>'Any Genre'], $genres);
+        $this->listDates=[
             null=>'Any Date',
             1=>'Today',
             2=>'Tomorrow',
