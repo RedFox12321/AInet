@@ -5,12 +5,42 @@
 @section('main')
 
 <div class="flex justify-center">
-    <div class="my-4 p-6 bg-white dark:bg-stone-800 overflow-hidden
+
+    <div class="h-max m-10">
+        <x-card-round>
+            <x-slot:content>
+                <div class="flex justify-between items-center">
+                    <span class="text-4xl m-3">Email:</span>
+                    <x-fields.input
+                    name="email"
+                    type="email"
+                    placeHolder="exemplo@email.com"/>  
+                </div>
+            </x-slot:content>
+        </x-card-round>
+
+        <div class="flex justify-center mt-10">
+            <x-button-round>
+                <button>Realizar Pagamento</button>
+            </x-button-round>
+        </div>
+       
+
+
+
+    </div>
+        
+    
+
+    <div class="mt-10 p-2 bg-white dark:bg-stone-800 overflow-hidden
                 shadow-sm sm:rounded-lg text-gray-900 dark:text-gray-50">
         @empty($cart)
             <h3 class="text-xl w-96 text-center">Cart is Empty</h3>
         @else
-        <div class="flex justify-center text-2xl">Cart:</div>
+        
+        
+
+        <div class="flex justify-center text-2xl p-5">Cart:</div>
         <div class="font-base text-sm text-gray-700 dark:text-gray-300">
             {{-- <x-disciplines.table :disciplines="$cart"
                 :showView="false"
@@ -20,13 +50,13 @@
                 :showRemoveFromCart="true"
                 /> --}}
 
-                <div class="m-10">
+                <div class="pl-4 pr-4">
                     <x-cart.table :cart="$cart"/>
                 </div>
 
 
         </div>
-        <div class="mt-12">
+        <div class="mt-5">
             <div class="flex justify-between space-x-12 items-end">
                 <div>
                     <h3 class="mb-4 text-xl"></h3>
