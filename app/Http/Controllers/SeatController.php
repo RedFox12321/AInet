@@ -24,12 +24,12 @@ class SeatController extends Controller
 
         if ($filterByTheater !== null) {
             $allNull = false;
-            $seatQuery->with('theater')->whereHas('theater', function ($query) use ($filterByTheater) {
+            $seatQuery->withTrashed('theater')->whereHas('theater', function ($query) use ($filterByTheater) {
                 $query->where('name', 'LIKE', '%' . $filterByTheater . '%');
             });
         }
 
-        if ($allNull && $request->query()) {
+        if ($allNull && $request->query() && !$request?->page) {
             return redirect()->route('seats.index');
         }
 

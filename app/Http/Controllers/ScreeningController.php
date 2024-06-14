@@ -64,7 +64,7 @@ class ScreeningController extends Controller
             });
         }
 
-        if ($allNull && $request->query()) {
+        if ($allNull && $request->query() && !$request?->page) {
             return redirect()->route('screenings.index');
         }
 
@@ -75,8 +75,14 @@ class ScreeningController extends Controller
             ->paginate(20)
             ->withQueryString();
 
-        $genres = Genre::all();
-        $theaters = Theater::all();
+
+        if ($user?->type == 'A') {
+            $genres = Genre::withTrashed();
+            $theaters = Theater::withTrashed();
+        } else {
+            $genres = Genre::all();
+            $theaters = Theater::all();
+        }
 
         return view(
             'main.screenings.index',
@@ -90,7 +96,7 @@ class ScreeningController extends Controller
     public function show(Screening $screening): View
     {
         $seatQuery = \App\Models\Seat::query();
-        $seatQuery->with('theater')->whereHas('theater', function ($query) use ($screening) {
+        $seatQuery->withTrashed('theater')->whereHas('theater', function ($query) use ($screening) {
             $query->where('id', $screening->theater_id);
         });
 

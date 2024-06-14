@@ -18,7 +18,8 @@
             <div>
                 <div class="w-full h-36 relative flex items-center">
 
-                    <div class="w-full h-full bg-rose-800 shadow-lg shadow-rose-950 flex justify-between items-center px-4 md:px-8 lg:px-16">
+                    <div
+                        class="w-full h-full bg-rose-800 shadow-lg shadow-rose-950 flex justify-between items-center px-4 md:px-8 lg:px-16">
 
                         <div class="z-10 w-full flex space-x-2 justify-start items-end">
                             <x-menu.menu-icon href="{{ route('movies.showcase') }}">
@@ -27,7 +28,7 @@
                                 </x-slot>
                             </x-menu.menu-icon>
 
-                            <x-menu.menu-icon href="{{ route('screenings.index') }}" >
+                            <x-menu.menu-icon href="{{ route('screenings.index') }}">
                                 <x-slot:icon>
                                     @include('components.menu.screenings-logo')
                                 </x-slot>
@@ -51,13 +52,13 @@
                                 </x-menu.menu-icon>
                             </li>
                             @can('useCart')
-                            <li class="h-full flex justify-center items-center">
-                                <x-menu.menu-icon href="{{ route('cart.show') }}">
-                                    <x-slot:icon>
-                                        @include('components.menu.cart-logo')
-                                    </x-slot>
-                                </x-menu.menu-icon>
-                            </li>
+                                <li class="h-full flex justify-center items-center">
+                                    <x-menu.menu-icon href="{{ route('cart.show') }}">
+                                        <x-slot:icon>
+                                            @include('components.menu.cart-logo')
+                                        </x-slot>
+                                    </x-menu.menu-icon>
+                                </li>
                             @endcan
                             <li class="h-full flex justify-center items-center">
                                 <x-menu.menu-icon href="{{ route('login') }}">
@@ -65,6 +66,11 @@
                                         @include('components.menu.account-logo')
                                     </x-slot>
                                 </x-menu.menu-icon>
+                                <form id="form_to_logout_from_menu" method="POST" action="{{ route('logout') }}"
+                                    class="hidden">
+                                    @csrf
+                                </form>
+                                <button form="form_to_logout_from_menu">Logout</button>
                             </li>
                         </ul>
                     </div>

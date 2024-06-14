@@ -20,7 +20,7 @@ class TheaterController extends Controller
     {
         $filterByName = $request->search;
         $theaterQuery = Theater::query();
-
+        $allNull = true;
 
         if ($filterByName !== null) {
             $allNull = false;
@@ -29,7 +29,18 @@ class TheaterController extends Controller
             });
         }
 
-        return view('main.theaters.index')->with('theaters', Theater::all()->paginate(20));
+        if ($allNull && $request->query()) {
+            return redirect()->route('theaters.index');
+        }
+
+        $theaters = $theaterQuery
+            ->paginate()
+            ->withQueryString();
+
+        return view(
+            'main.theaters.index',
+            compact('theaters')
+        );
     }
 
     /**

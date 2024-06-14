@@ -39,7 +39,7 @@ class MovieController extends Controller
             });
         }
 
-        if ($allNull && $request->query()) {
+        if ($allNull && $request->query() && !$request?->page) {
             return redirect()->route('movies.index');
         }
 
@@ -83,7 +83,7 @@ class MovieController extends Controller
             });
         }
 
-        if ($allNull && $request->query()) {
+        if ($allNull && $request->query() && !$request?->page) {
             return redirect()->route('movies.showcase');
         }
 
