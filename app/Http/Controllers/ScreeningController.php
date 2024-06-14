@@ -11,6 +11,8 @@ use App\Http\Requests\ScreeningFormRequest;
 use App\Models\Screening;
 use App\Models\Genre;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Seat;
+
 
 class ScreeningController extends Controller
 {
@@ -91,7 +93,18 @@ class ScreeningController extends Controller
      */
     public function show(Screening $screening): View
     {
-        return view('main.screenings.show')->with('screening', $screening);
+        $seatsQuery = Seat::query();
+        $seatsQuery->with('theater.screenings')->whereHas('theater.screenings', function ($query) use ($screening) {
+            $query->where('id', $screening->id);
+        });
+        $seats = $seatsQuery
+            ->with(['theater', 'theater.screenings'])
+            ->get();
+            
+        return view(
+            'main.screenings.show',
+            compact('screening', 'seats')
+        );
     }
 
     /**

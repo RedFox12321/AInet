@@ -9,7 +9,7 @@
     <select id="id_{{ $name }}" name="{{ $name }}"
         class="appearance-none block
             mt-1 fit-content
-            bg-white bg-stone-800
+            bg-white dark:bg-neutral-800
             ring-rose-950
             text-black dark:text-white
             @error($name)

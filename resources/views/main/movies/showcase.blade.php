@@ -35,7 +35,10 @@
             </x-slot>
         </x-card-round>
     </div>
-    
+
+    <div class="flex mt-4 justify-center">
+        {{ $movies->links() }}
+    </div>
 
 
 
