@@ -6,12 +6,11 @@ use App\Models\Theater;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\ScreeningFormRequest;
 use App\Models\Screening;
 use App\Models\Genre;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Seat;
 
 
 class ScreeningController extends Controller
@@ -93,17 +92,26 @@ class ScreeningController extends Controller
      */
     public function show(Screening $screening): View
     {
-        $seatsQuery = Seat::query();
-        $seatsQuery->with('theater.screenings')->whereHas('theater.screenings', function ($query) use ($screening) {
-            $query->where('id', $screening->id);
+        $seatQuery = \App\Models\Seat::query();
+        $seatQuery->with('theater')->whereHas('theater', function ($query) use ($screening) {
+            $query->where('id', $screening->theater_id);
         });
-        $seats = $seatsQuery
-            ->with(['theater', 'theater.screenings'])
+        $seats = $seatQuery
+            ->with(['theater'])
             ->get();
-            
+
+
+        $rows = $seats->unique('row')->pluck('row')->sort();
+        $numbers = $seats->unique('seat_number')->pluck('seat_number')->sort();
+
+        $seatsByNumbers = $seats->groupBy('row')->map(function ($group) {
+            return $group->sortBy('seat_number');
+        });
+
+
         return view(
             'main.screenings.show',
-            compact('screening', 'seats')
+            compact('screening', 'seatsByNumbers', 'rows', 'numbers')
         );
     }
 

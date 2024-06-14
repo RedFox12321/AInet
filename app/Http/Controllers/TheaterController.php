@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 
 use Illuminate\View\View;
+use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
 use App\Http\Requests\TheaterFormRequest;
 use App\Models\Theater;
 
@@ -16,8 +16,9 @@ class TheaterController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
+        $filterByName = $request->search;
         return view('main.theaters.index')->with('theaters', Theater::all()->paginate(20));
     }
 

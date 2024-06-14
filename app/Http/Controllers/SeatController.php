@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 
 use Illuminate\View\View;
+use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
 use App\Http\Requests\SeatFormRequest;
+use App\Models\Theater;
 use App\Models\Seat;
 
 class SeatController extends Controller
@@ -16,9 +16,36 @@ class SeatController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(Request $request): View|RedirectResponse
     {
-        return view('main.seats.index')->with('seats', Seat::orderBy('seat_number')->orderBy('row')->paginate(20));
+        $filterByTheater = $request->query('theater');
+        $seatQuery = Seat::query();
+        $allNull = true;
+
+        if ($filterByTheater !== null) {
+            $allNull = false;
+            $seatQuery->with('theater')->whereHas('theater', function ($query) use ($filterByTheater) {
+                $query->where('name', 'LIKE', '%' . $filterByTheater . '%');
+            });
+        }
+
+        if ($allNull && $request->query()) {
+            return redirect()->route('seats.index');
+        }
+
+        $seats = $seatQuery
+            ->with('theater')
+            ->orderBy('row')
+            ->orderBy('seat_number')
+            ->paginate(20)
+            ->withQueryString();
+
+        $theaters = Theater::all();
+
+        return view(
+            'main.seats.index',
+            compact('seats', 'filterByTheater', 'theaters')
+        );
     }
 
     /**

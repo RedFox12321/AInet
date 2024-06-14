@@ -17,22 +17,29 @@ class MovieController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): View
+    public function index(Request $request): View|RedirectResponse
     {
         $filterByGenre = $request->query('genre');
         $filterByTitleSynopsis = $request->search;
         $movieQuery = Movie::query();
+        $allNull = true;
 
         if ($filterByGenre !== null) {
+            $allNull = false;
             $movieQuery->whereHas('genres', function ($userQuery) use ($filterByGenre) {
                 $userQuery->where('code', $filterByGenre);
             });
         }
         if ($filterByTitleSynopsis !== null) {
+            $allNull = false;
             $movieQuery->where(function ($userQuery) use ($filterByTitleSynopsis) {
                 $userQuery->where('title', 'LIKE', '%' . $filterByTitleSynopsis . '%')
                     ->orWhere('synopsis', 'LIKE', '%' . $filterByTitleSynopsis . '%');
             });
+        }
+
+        if ($allNull && $request->query()) {
+            return redirect()->route('movies.index');
         }
 
         $movies = $movieQuery
@@ -49,27 +56,34 @@ class MovieController extends Controller
         );
     }
 
-    public function showcase(Request $request): View
+    public function showcase(Request $request): View|RedirectResponse
     {
         $filterByGenre = $request->query('genre');
         $filterByTitleSynopsis = $request->search;
         $movieQuery = Movie::query();
+        $allNull = true;
 
         $movieQuery->whereHas('screenings', function ($query) {
             $query->whereBetween('date', [today(), today()->addWeeks(2)]);
         });
 
         if ($filterByGenre !== null) {
+            $allNull = false;
             $movieQuery->with('genre')->whereHas('genre', function ($query) use ($filterByGenre) {
                 $query->where('code', $filterByGenre);
             });
         }
 
         if ($filterByTitleSynopsis !== null) {
+            $allNull = false;
             $movieQuery->where(function ($userQuery) use ($filterByTitleSynopsis) {
                 $userQuery->where('title', 'LIKE', '%' . $filterByTitleSynopsis . '%')
                     ->orWhere('synopsis', 'LIKE', '%' . $filterByTitleSynopsis . '%');
             });
+        }
+
+        if ($allNull && $request->query()) {
+            return redirect()->route('movies.showcase');
         }
 
         $movies = $movieQuery

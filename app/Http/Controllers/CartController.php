@@ -9,7 +9,6 @@ use App\Http\Requests\CartConfirmationFormRequest;
 use App\Models\Screening;
 use App\Models\Seat;
 
-
 class CartController extends Controller
 {
     public function show(): View
@@ -21,7 +20,8 @@ class CartController extends Controller
     {
         $cart = session('cart');
         if (!$cart) {
-            $cart = collect([
+            $cart = collect();
+            $cart->push([
                 'screening' => $screening,
                 'seat' => $seat
             ]);
@@ -29,7 +29,8 @@ class CartController extends Controller
         } else {
             if (
                 $cart->first(function ($item) use ($screening, $seat) {
-                    return $item['screening']->id === $screening->id && $item['seat']->id === $seat->id;
+                    return $item['screening']->id === $screening->id
+                        && $item['seat']->id === $seat->id;
                 })
             ) {
                 $alertType = 'warning';
@@ -39,12 +40,11 @@ class CartController extends Controller
                     ->with('alert-msg', $htmlMessage)
                     ->with('alert-type', $alertType);
             } else {
-                $cart->push('screening', $screening);
-                $cart->push('seat', $seat);
+                $cart->push(['screening' => $screening, 'seat' => $seat]);
             }
         }
         $alertType = 'success';
-        $url = route('screenings.show', ['discipline' => $screening]);
+        $url = route('screenings.show', ['screening' => $screening]);
         $htmlMessage = "Screening <a href='$url'>#{$screening->id}</a> of the movie <strong>{$screening->movie->title}</strong> (seat {$seat->row}-{$seat->seat_number}) was added to the cart.";
         return back()
             ->with('alert-msg', $htmlMessage)

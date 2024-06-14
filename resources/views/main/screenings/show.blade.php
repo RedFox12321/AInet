@@ -20,10 +20,11 @@
             </table>
         </div>
 
-
-        <a href="" class=" bg-rose-900 rounded-3xl border-4 border-rose-950 mr-5 fit-content p-5">
-            <div class="flex justify-center items-center text-2xl">Realizar Compra</div>
-        </a>
+        @can('useCart')
+            <a href="{{ route('cart.show') }}" class=" bg-rose-900 rounded-3xl border-4 border-rose-950 mr-5 fit-content p-5">
+                <div class="flex justify-center items-center text-2xl">Realizar Compra</div>
+            </a>
+        @endcan
     </div>
 
 
@@ -34,34 +35,36 @@
         </div>
     </div>
 
-    @dump($seats)
+
 
     <div class="flex w-full justify-center">
         <table>
             <thead>
                 <tr>
                     <th></th>
-                    @foreach ($seats as $seat)
-                        <th class="text-2xl">{{ $seat->seat_number }}</th>
+                    @foreach($numbers as $num)
+                        <th class="text-2xl">{{ $num }}</th>
                     @endforeach
                 </tr>
             </thead>
             <tbody>
-                @foreach ($seats as $seat)
+                @foreach($rows as $row)
                     <tr>
-                        
-                        <td class="text-2xl">{{ $seat->row}}</td>
-                        @foreach ($seat->row as $row_index=>$row)
-                        
-                            <td>
-                                <div class="ml-2 mr-2">
-                                    <x-menu.menu-icon href="rwar">
-                                        <x-slot:icon>
-                                            @include('components.seatA')
-                                        </x-slot:icon>
-                                    </x-menu.menu-icon>
+                        <th class="text-2xl">{{ $row }}</th>
+                        @foreach($seatsByNumbers[$row] as $seat)
+                            <td class="ml-2 mr-2">
+                                <div>
+                                    @can('useCart' )
+                                        <form method="POST" action="{{ route('cart.add', ['screening' => $screening, 'seat' => $seat]) }}">
+                                            @csrf
+                                            <button type="submit" name="add_cart">
+                                                @include('components.seatA')
+                                            </button>
+                                        </form>
+                                    @else
+                                        @include('components.seatA')
+                                    @endcan
                                 </div>
-
                             </td>
                         @endforeach
                     </tr>
@@ -69,7 +72,5 @@
             </tbody>
         </table>
     </div>
-
-
 
 @endsection
