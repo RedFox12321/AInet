@@ -18,7 +18,7 @@
             <div>
                 <div class="w-full h-36 relative flex items-center">
 
-                    <div class="w-full h-full left-0 top-0 flex justify-between items-center px-4 md:px-8 lg:px-16">
+                    <div class="w-full h-full bg-rose-800 shadow-lg shadow-rose-950 flex justify-between items-center px-4 md:px-8 lg:px-16">
 
                         <div class="z-10 w-full flex space-x-2 justify-start items-end">
                             <x-menu.menu-icon href="{{ route('movies.showcase') }}">
@@ -33,7 +33,6 @@
                                 </x-slot>
                             </x-menu.menu-icon>
                         </div>
-
 
                         <!-- Navigation links -->
                         <ul :class="{ 'flex': open, 'hidden': !open }"
@@ -68,13 +67,6 @@
                                 </x-menu.menu-icon>
                             </li>
                         </ul>
-
-                        <div class="w-full h-36 left-0 top-0 absolute bg-rose-800"></div>
-
-                        <div
-                            class="w-[99px] h-[99px] pl-[11px] pr-[9.62px] pt-2 pb-[8.50px] left-[1792px] top-[25px] absolute justify-center items-center inline-flex">
-                        </div>
-                        <div class="w-full h-2.5 left-0 top-[140px] z-10 absolute bg-rose-950"></div>
                     </div>
                 </div>
                 @if (session('alert-msg'))
@@ -89,9 +81,5 @@
             </div>
         </main>
     </div>
-
     {{-- dropdownzinho dos generos --}}
-
-
-
 </body>
