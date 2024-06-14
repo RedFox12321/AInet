@@ -22,10 +22,6 @@ use Illuminate\Support\Facades\Route;
 /* Brezee Routes */
 Route::redirect('/', '/movies/showcase');
 
-Route::get('movies/showcase', [MovieController::class, 'showcase'])
-    ->name('movies.showcase')
-    ->can('viewShowcase', Movie::class);
-
 /* ----- Non-Verified users ----- */
 Route::middleware('auth')->group(function () {
     Route::get('/password', [ProfileController::class, 'editPassword'])->name('profile.edit.password');
@@ -74,9 +70,10 @@ Route::middleware('auth', 'verified')->group(function () {
         ->name('customers.image.destroy')
         ->can('update', Customer::class);
 
+
+    // Configuration
     Route::get('configurations/edit', [ConfigurationController::class, 'edit'])->name('configurations.edit');
     Route::put('configurations', [ConfigurationController::class, 'update'])->name('configurations.update');
-
 
 });
 
@@ -88,12 +85,6 @@ Route::resource('screenings', ScreeningController::class)->only(['index', 'show'
 
 
 // Cart
-Route::get('cart/show', [CartController::class, 'show'])->name('cart.show');
-
-Route::post('cart', [CartController::class, 'confirm'])
-    ->name('cart.confirm')
-    ->can('confirmCart');
-
 Route::middleware('can:useCart')->group(function () {
     Route::post('cart/{screening}/{seat}', [CartController::class, 'addToCart'])
         ->name('cart.add');
@@ -102,10 +93,16 @@ Route::middleware('can:useCart')->group(function () {
         ->name('cart.remove');
 
     // Show the cart:
-    Route::get('cart', [CartController::class, 'show'])->name('cart.show');
+    Route::get('cart', [CartController::class, 'show'])
+        ->name('cart.show');
 
     // Clear the cart:
-    Route::delete('cart', [CartController::class, 'destroy'])->name('cart.destroy');
+    Route::delete('cart', [CartController::class, 'destroy'])
+        ->name('cart.destroy');
+
+    Route::post('cart', [CartController::class, 'confirm'])
+        ->name('cart.confirm')
+        ->can('confirmCart');
 });
 
 require __DIR__ . '/auth.php';

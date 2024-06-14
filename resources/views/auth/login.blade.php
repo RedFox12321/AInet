@@ -42,7 +42,7 @@
             @endif
 
             <x-primary-button class="ms-3">
-                <a href="{{ route('movies.showcase') }}">Log in</a>
+                <a href="{{ route('dashboard') }}">Log in</a>
             </x-primary-button>
         </div>
     </form>

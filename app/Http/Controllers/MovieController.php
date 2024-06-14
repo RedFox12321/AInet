@@ -56,7 +56,7 @@ class MovieController extends Controller
         $movieQuery = Movie::query();
 
         $movieQuery->whereHas('screenings', function ($query) {
-            $query->whereBetween('date', [now(), now()->addWeeks(2)]);
+            $query->whereBetween('date', [today(), today()->addWeeks(2)]);
         });
 
         if ($filterByGenre !== null) {

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\ScreeningFormRequest;
 use App\Models\Screening;
 use App\Models\Genre;
+use Illuminate\Support\Facades\Auth;
 
 class ScreeningController extends Controller
 {
@@ -17,34 +18,56 @@ class ScreeningController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): View
+    public function index(Request $request): View|RedirectResponse
     {
         $filterByTitleSynopsis = $request->search;
         $filterByGenre = $request->query('genre');
         $filterByDate = $request->input('date');
-        $filterByTheater = $request->input('theater');
+        $filterByTheater = $request->query('theater');
         $screeningQuery = Screening::query();
+        $user = Auth::user();
+
+        $allNull = true;
+
+        if ($user === null || $user->type == 'C') {
+            $screeningQuery->whereBetween('date', [today(), today()->addWeeks(2)]);
+        }
 
         if ($filterByTitleSynopsis !== null) {
-            $screeningQuery->with('movies')->where(function ($userQuery) use ($filterByTitleSynopsis) {
+            $allNull = false;
+            $screeningQuery->with('movie')->whereHas('movie', function ($userQuery) use ($filterByTitleSynopsis) {
                 $userQuery->where('title', 'LIKE', '%' . $filterByTitleSynopsis . '%')
                     ->orWhere('synopsis', 'LIKE', '%' . $filterByTitleSynopsis . '%');
             });
         }
 
         if ($filterByGenre !== null) {
-            $screeningQuery->with('movies.genre')->where('code', $filterByGenre);
+            $allNull = false;
+            $screeningQuery->with('movie.genre')->whereHas('movie.genre', function ($query) use ($filterByGenre) {
+                $query->where('code', $filterByGenre);
+            });
         }
 
         if ($filterByDate !== null) {
-            match ($filterByDate) {
-                1 => $screeningQuery->whereBetween('date', [today(), today()->addDay()]),
-                2 => $screeningQuery->whereBetween('date', [today()->addDay(), today()->addDays(2)]),
+            $allNull = false;
+            match ((int) $filterByDate) {
+                1 => $screeningQuery->whereBetween('date', [today(), today()->addHours(23.59)]),
+                2 => $screeningQuery->whereBetween('date', [today()->addDay(), today()->addDay()->addHours(23.59)]),
                 3 => $screeningQuery->whereBetween('date', [today(), today()->addDays(6)])
             };
         }
         if ($filterByTheater !== null) {
-            $screeningQuery->with('theater')->where('name', $filterByTheater);
+            $allNull = false;
+            // $screeningQuery->with('theater')->whereHas('theater', function ($query) use ($filterByTheater) {
+            //     $query->where('id', $filterByTheater);
+            // });
+            $screeningQuery->with('theater')->whereHas('theater', function ($query) use ($filterByTheater) {
+                $query->where('name', 'LIKE', '%' . $filterByTheater . '%');
+            });
+        }
+
+        if ($allNull && $request->query()) {
+            return redirect()->route('screenings.index');
         }
 
         $screenings = $screeningQuery

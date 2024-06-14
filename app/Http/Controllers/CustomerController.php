@@ -18,7 +18,7 @@ class CustomerController extends Controller
      */
     public function index(): View
     {
-        return view('main.customers.index')->with('customers', Customer::all()->paginate(20));
+        return view('main.customers.index')->with('customers', Customer::all());
     }
 
     /**
