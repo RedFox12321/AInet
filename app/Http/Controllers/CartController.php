@@ -13,7 +13,11 @@ class CartController extends Controller
 {
     public function show(): View
     {
-        return view('main.cart.show');
+        $cart = session('cart', null);
+        return view(
+            'main.cart.show',
+            compact('cart')
+        );
     }
 
     public function addToCart(Request $request, Screening $screening, Seat $seat): RedirectResponse
@@ -40,7 +44,10 @@ class CartController extends Controller
                     ->with('alert-msg', $htmlMessage)
                     ->with('alert-type', $alertType);
             } else {
-                $cart->push(['screening' => $screening, 'seat' => $seat]);
+                $cart->push([
+                    'screening' => $screening,
+                    'seat' => $seat
+                ]);
             }
         }
         $alertType = 'success';
