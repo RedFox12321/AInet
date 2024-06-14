@@ -19,6 +19,16 @@ class TheaterController extends Controller
     public function index(Request $request): View
     {
         $filterByName = $request->search;
+        $theaterQuery = Theater::query();
+
+
+        if ($filterByName !== null) {
+            $allNull = false;
+            $theaterQuery->where(function ($userQuery) use ($filterByName) {
+                $userQuery->where('name', 'LIKE', '%' . $filterByName . '%');
+            });
+        }
+
         return view('main.theaters.index')->with('theaters', Theater::all()->paginate(20));
     }
 

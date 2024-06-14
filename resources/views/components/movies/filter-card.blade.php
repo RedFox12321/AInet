@@ -6,18 +6,18 @@
             <x-slot:content>
                 <div class="flex w-full h-full items-center space-x-16 px-5" >
 
-                        <x-fields.select name="genre" :options="$listGenres" label="Genre" value="genre"/>
-                            
-                        
-                        <x-fields.input name="search" placeHolder="Movie Title" value="search"/>
-                    
+                        <x-fields.select name="genre" :options="$listGenres" label="Genre" value="{{ $genre }}"/>
+
+
+                        <x-fields.input name="search" placeHolder="Movie Title" value="{{ $title }}"/>
+
                         <x-button-round>
                             <button>Search</button>
                         </x-button-round>
                 </div>
             </x-slot>
         </x-card-round>
-        
+
     </div>
 
 </form>

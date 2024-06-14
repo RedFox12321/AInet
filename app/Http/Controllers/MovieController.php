@@ -24,6 +24,7 @@ class MovieController extends Controller
         $movieQuery = Movie::query();
         $allNull = true;
 
+
         if ($filterByGenre !== null) {
             $allNull = false;
             $movieQuery->whereHas('genres', function ($userQuery) use ($filterByGenre) {
@@ -105,7 +106,22 @@ class MovieController extends Controller
      */
     public function show(Movie $movie): View
     {
-        return view('main.movies.show')->with('movie', $movie);
+        $screeningsQuery = \App\Models\Screening::query();
+
+        $screeningsQuery->whereBetween('date', [today(), today()->addHours(23.59)]);
+
+        $screeningsQuery->with('movie')->whereHas('movie', function ($userQuery) use ($movie) {
+            $userQuery->where('title', 'LIKE', '%' . $movie->title . '%');
+        });
+
+        $screenings = $screeningsQuery
+            ->with('movie')
+            ->get();
+
+        return view(
+            'main.movies.show',
+            compact('movie', 'screenings')
+        );
     }
 
     /**
