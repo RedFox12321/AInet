@@ -4,13 +4,10 @@
             <thead>
                 <tr class="border-b-2 border-b-gray-400 bg-stone-900 ">
                     <th class="px-2 py-2 text-left">Name</th>
-                    {{-- @if ($showCourse)
-                    <th class="px-2 py-2 text-left hidden md:table-cell">Course</th>
-                @endif --}}
-                    <th class="px-2 py-2 text-center">Theater</th>
-                    <th class="px-2 py-2 text-center">Date</th>
+                    <th class="px-2 py-2 text-center hidden md:table-cell">Theater</th>
+                    <th class="px-2 py-2 text-center hidden lg:table-cell">Date</th>
                     <th class="px-2 py-2 text-center">Start Time</th>
-                    <th class="px-2 py-2 text-center"> </th>
+                    <th class="px-2 py-2 text-center"></th>
                     {{-- @if ($showView)
                     <th></th>
                 @endif
@@ -35,8 +32,8 @@
                     <tr class="border-b border-b-gray-400 bg-zinc-800">
                             <td class="px-2 py-2 text-left">{{ $screening->movie->title }}</td>
                             <td class="px-2 py-2 text-center hidden md:table-cell">{{ $screening->theater->name }}</td>
-                            <td class="px-2 py-2 text-right hidden md:table-cell">{{ $screening->date }}</td>
-                            <td class="px-2 py-2 text-left hidden lg:table-cell">{{ $screening->start_time }}</td>
+                            <td class="px-2 py-2 text-right hidden lg:table-cell">{{ $screening->date }}</td>
+                            <td class="px-2 py-2 text-left">{{ $screening->start_time }}</td>
                             <td>
                                 <x-table.icon-show class="ps-3 px-0.5"
                                 href="{{ route('screenings.show', ['screening' => $screening]) }}"/>

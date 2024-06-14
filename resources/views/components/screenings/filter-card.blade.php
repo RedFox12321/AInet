@@ -3,8 +3,7 @@
 
     <div class="mt-5 h-max w-max">
         <div class="mb-5">
-            <x-fields.input name="search" placeHolder="Movie Title">
-            </x-fields.input>
+            <x-fields.input name="search" placeHolder="Movie Title"/>
         </div>
 
         <x-card-round>
