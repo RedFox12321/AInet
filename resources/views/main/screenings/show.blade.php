@@ -53,14 +53,21 @@
                         <th class="text-2xl">{{ $row }}</th>
                         @foreach($seatsByNumbers[$row] as $seat)
                             <td class="ml-2 mr-2">
+                                @php
+                                    $isTaken = $seatsTaken->contains($seat->id);
+                                @endphp
                                 <div>
-                                    @can('useCart' )
-                                        <form method="POST" action="{{ route('cart.add', ['screening' => $screening, 'seat' => $seat]) }}">
-                                            @csrf
-                                            <button type="submit" name="add_cart">
-                                                @include('components.seatA')
-                                            </button>
-                                        </form>
+                                    @can('useCart')
+                                        @if ($isTaken)
+                                            @include('components.seatA', ['taken' => true])
+                                        @else
+                                            <form method="POST" action="{{ route('cart.add', ['screening' => $screening, 'seat' => $seat]) }}">
+                                                @csrf
+                                                <button type="submit" name="add_cart">
+                                                    @include('components.seatA')
+                                                </button>
+                                            </form>
+                                        @endif
                                     @else
                                         @include('components.seatA')
                                     @endcan

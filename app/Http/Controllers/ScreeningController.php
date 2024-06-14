@@ -59,9 +59,6 @@ class ScreeningController extends Controller
         }
         if ($filterByTheater !== null) {
             $allNull = false;
-            // $screeningQuery->with('theater')->whereHas('theater', function ($query) use ($filterByTheater) {
-            //     $query->where('id', $filterByTheater);
-            // });
             $screeningQuery->with('theater')->whereHas('theater', function ($query) use ($filterByTheater) {
                 $query->where('name', 'LIKE', '%' . $filterByTheater . '%');
             });
@@ -96,10 +93,19 @@ class ScreeningController extends Controller
         $seatQuery->with('theater')->whereHas('theater', function ($query) use ($screening) {
             $query->where('id', $screening->theater_id);
         });
+
         $seats = $seatQuery
             ->with(['theater'])
             ->get();
 
+        $seatQuery->with('tickets')->whereHas('tickets', function ($query) use ($screening) {
+            $query->where('screening_id', $screening->id);
+        });
+
+        $seatsTaken = $seatQuery
+            ->with(['theater', 'tickets'])
+            ->get()
+            ->pluck('id');
 
         $rows = $seats->unique('row')->pluck('row')->sort();
         $numbers = $seats->unique('seat_number')->pluck('seat_number')->sort();
@@ -109,9 +115,10 @@ class ScreeningController extends Controller
         });
 
 
+
         return view(
             'main.screenings.show',
-            compact('screening', 'seatsByNumbers', 'rows', 'numbers')
+            compact('screening', 'seatsByNumbers', 'rows', 'numbers', 'seatsTaken')
         );
     }
 
