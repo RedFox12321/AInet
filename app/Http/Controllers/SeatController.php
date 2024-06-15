@@ -33,18 +33,32 @@ class SeatController extends Controller
             return redirect()->route('seats.index');
         }
 
-        $seats = $seatQuery
-            ->with('theater')
-            ->orderBy('row')
-            ->orderBy('seat_number')
-            ->paginate(20)
-            ->withQueryString();
+        // $seats = $seatQuery
+        //     ->with('theater')
+        //     ->orderBy('row')
+        //     ->orderBy('seat_number')
+        //     ->paginate(20)
+        //     ->withQueryString();
 
-        $theaters = Theater::all();
+        $theaters = Theater::withTrashed();
+
+        $seats = $seatQuery
+            ->with(['theater'])
+            ->get();
+
+        $rows = $seats->unique('row')->pluck('row')->sort()->toArray();
+        $numbers = $seats->unique('seat_number')->pluck('seat_number')->sort()->toArray();
+
+        $seatsByNumbers = $seats->groupBy('row')->map(function ($group) {
+            return $group->sortBy('seat_number');
+        });
+
+
+
 
         return view(
             'main.seats.index',
-            compact('seats', 'filterByTheater', 'theaters')
+            compact('filterByTheater', 'theaters', 'rows', 'numbers', 'seatsByNumbers')
         );
     }
 

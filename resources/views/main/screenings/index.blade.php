@@ -25,7 +25,7 @@
         </div>
 
         <div class="flex flex-col">
-            <div class="m-10">
+            <div class="m-10 flex fit-content">
                 <x-screenings.table :screenings="$screenings"/>
             </div>
             <div>

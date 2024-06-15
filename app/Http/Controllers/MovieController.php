@@ -27,7 +27,7 @@ class MovieController extends Controller
 
         if ($filterByGenre !== null) {
             $allNull = false;
-            $movieQuery->whereHas('genres', function ($userQuery) use ($filterByGenre) {
+            $movieQuery->whereHas('genre', function ($userQuery) use ($filterByGenre) {
                 $userQuery->where('code', $filterByGenre);
             });
         }
