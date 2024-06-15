@@ -13,11 +13,15 @@
         <x-movies.filter-card :filterAction="route('movies.showcase')" :resetUrl="route('movies.showcase')" :title="old('title', $filterByTitleSynopsis)" :genre="old('genre', $filterByGenre)" :genres="$genres->pluck('name', 'code')->toArray()" />
 
     </div>
+
+    @can('view-any', App\Models\Movie::class)
     <a class="w-full justify-center flex text-white opacity-90 text-5xl font-semibold font-['Khula']" href="{{ route('movies.index') }}">
         <x-button-round>
             See movie list
         </x-button-round>
     </a>
+    @endcan
+
     <div class="mt-10 mb-3 ml-16 text-white opacity-90 text-5xl font-semibold font-['Khula']">
         Movies on display:
     </div>

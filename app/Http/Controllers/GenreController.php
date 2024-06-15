@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\GenreFormRequest;
 use App\Models\Genre;
+use Illuminate\Http\Request;
 
 class GenreController extends Controller
 {
@@ -17,9 +18,33 @@ class GenreController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(Request $request): View | RedirectResponse
     {
-        return view('main.genres.index')->with('genres', Genre::orderBy('name')->paginate(20));
+        $filterByName = $request->search;
+        $genreQuery = Genre::query();
+        $allNull = true;
+
+        if ($filterByName !== null) {
+            $allNull = false;
+            $genreQuery->where(function ($userQuery) use ($filterByName) {
+                $userQuery->where('name', 'LIKE', '%' . $filterByName . '%');
+            });
+        }
+
+        if ($allNull && $request->query() && !$request?->page)  {
+            return redirect()->route('genres.index');
+        }
+
+        $genres = $genreQuery
+            ->paginate(20)
+            ->withQueryString();
+
+
+
+        return view(
+        'main.genres.index', 
+        compact('genres', 'filterByName')
+    );
     }
 
     /**

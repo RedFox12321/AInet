@@ -9,7 +9,7 @@ class MoviePolicy
 {
     public function before(?User $user, string $ability): bool|null
     {
-        if ($user->type == 'A') {
+        if ($user?->type == 'A') {
             return true;
         }
 
@@ -18,7 +18,7 @@ class MoviePolicy
 
     public function viewAny(?User $user): bool
     {
-        return $user?->type == 'A';
+        return false;
     }
     public function viewShowcase(?User $user): bool
     {
