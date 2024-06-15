@@ -16,7 +16,7 @@ class TicketController extends Controller
      */
     public function index(): View
     {
-        return view('main.tickets.index')->with('tickets', Ticket::all()->paginate(20));
+        return view('main.tickets.index')->with('tickets', Ticket::all());
     }
 
     /**
@@ -27,6 +27,10 @@ class TicketController extends Controller
         return view('main.tickets.show')->with('ticket', $ticket);
     }
 
+    public function myTickets(Ticket $ticket): View
+    {
+        return view('main.tickets.show')->with('ticket', $ticket);
+    }
     /* CRUD operations */
     /**
      * Store a newly created resource in storage.

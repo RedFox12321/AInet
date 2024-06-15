@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications\PurchasePaid;
 use Illuminate\View\View;
+use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Collection;
 use App\Http\Requests\PurchaseFormRequest;
 use App\Models\Purchase;
+use Illuminate\Support\Facades\Auth;
 
 class PurchaseController extends Controller
 {
@@ -20,12 +22,41 @@ class PurchaseController extends Controller
         return view('main.purchases.index')->with('purchases', Purchase::orderBy('date', 'desc')->paginate(20));
     }
 
+    public function myPurchases(Request $request): View
+    {
+        if ($request->user()?->type == 'C') {
+            $idPurchases = $request->user()?->customer?->purchases?->pluck('id')?->toArray();
+            if (empty($idPurchases)) {
+                return view('main.purchases.index')->with('disciplines', new Collection);
+            }
+        }
+
+        $purchases = Purchase::whereIntegerInRaw('id', $idPurchases)
+            ->orderBy('date', 'desc')
+            ->get();
+
+        return view(
+            'main.purchases.index',
+            compact('purchases')
+        );
+    }
+
     /**
      * Display the specified resource.
      */
     public function show(Purchase $purchase): View
     {
-        return view('main.purchases.show')->with('purchase', $purchase);
+        $ticketQuery = \App\Models\Ticket::query();
+
+        $ticketQuery->where('purchase_id', $purchase->id);
+
+        $tickets = $ticketQuery
+            ->get();
+
+        return view(
+            'main.purchases.show',
+            compact('purchase', 'tickets')
+        );
     }
 
     /* CRUD operations */
@@ -37,6 +68,9 @@ class PurchaseController extends Controller
         $newPurchase = Purchase::create($request->validated());
 
         $url = route('purchases.show', ['purchase' => $newPurchase]);
+
+        $newPurchase->generatePDF();
+        Auth::user()->notify(new PurchasePaid($newPurchase));
 
         $htmlMessage = "Purchase <a href='$url'><u>{$newPurchase}</u></a> has been created successfully!";
 

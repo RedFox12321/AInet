@@ -11,7 +11,6 @@ class ConfigurationFormRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // TODO: Configuration only for admins
         return true;
     }
 
