@@ -17,9 +17,38 @@ class PurchaseController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(Request $request): View | RedirectResponse
     {
-        return view('main.purchases.index')->with('purchases', Purchase::orderBy('date', 'desc')->paginate(20));
+        $filterByType = $request->query('payType');
+        $filterByIdName = $request->search;
+        $purchaseQuery = purchase::query();
+        $allNull = true;
+
+        if ($filterByType !== null && $filterByType != 'BOTH') {
+            $allNull = false;
+            $purchaseQuery->where('payment_type', $filterByType);
+        }
+
+        if ($filterByIdName !== null) {
+            $allNull = false;
+            $purchaseQuery->where('id', 'LIKE', '%' . $filterByIdName . '%')
+                  ->orWhere('customer_name', 'LIKE', '%' . $filterByIdName . '%');
+            };
+
+        if ($allNull && $request->query() && !$request?->page) {
+            return redirect()->route('purchases.index');
+        }
+
+        $purchases=$purchaseQuery
+        ->orderBy('id', 'desc')
+        ->paginate(20)
+        ->withQueryString();
+
+
+        return view(
+            'main.purchases.index',
+        compact('purchases','filterByIdName','filterByType')
+    );
     }
 
     public function myPurchases(Request $request): View
@@ -46,16 +75,16 @@ class PurchaseController extends Controller
      */
     public function show(Purchase $purchase): View
     {
-        $ticketQuery = \App\Models\Ticket::query();
+        $purchaseQuery = \App\Models\purchase::query();
 
-        $ticketQuery->where('purchase_id', $purchase->id);
+        $purchaseQuery->where('purchase_id', $purchase->id);
 
-        $tickets = $ticketQuery
+        $purchases = $purchaseQuery
             ->get();
 
         return view(
             'main.purchases.show',
-            compact('purchase', 'tickets')
+            compact('purchase', 'purchases')
         );
     }
 
