@@ -11,7 +11,6 @@ class CustomerFormRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // TODO
         return true;
     }
 
@@ -22,10 +21,23 @@ class CustomerFormRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'nif' => 'string|regex:^\d{9}$|max:9',
-            'payment_type' => 'string|in:VISA,PAYPAL,MBWAY',
-            'payment_ref' => 'string|max:255'
+        $rules = [
+            'nif' => 'nullable|digits:9',
+            'payType' => 'string|uppercase|in:PAYPAL,MBWAY,VISA'
         ];
+
+        match ($this->payType) {
+            'PAYPAL' => $rules = array_merge($rules, [
+                'payRef' => 'required|string|max:255'
+            ]),
+            'MBWAY' => $rules = array_merge($rules, [
+                'payRef' => 'required|digits:9|regex:/^9/'
+            ]),
+            'VISA' => $rules = array_merge($rules, [
+                'payRef' => 'required|digits:16'
+            ])
+        };
+        return $rules;
+
     }
 }

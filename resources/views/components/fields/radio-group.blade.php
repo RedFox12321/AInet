@@ -28,10 +28,6 @@
     }
 @endphp
 <div {{ $attributes->merge(['class' => "$widthClass"]) }}>
-    <input name="{{ $name }}" type="hidden" value="">
-    <label class="block font-medium text-sm text-gray-700 dark:text-gray-300">
-        {{ $label }}
-    </label>
     <div class="flex flex-wrap ps-2">
         @foreach ($options as $key => $optionText)
             <div class="h-10 pe-12 inline-flex items-center">
@@ -40,14 +36,14 @@
                     class="appearance-none
                         mt-0.5 w-6 h-6
                         bg-white dark:bg-gray-900
-                        text-black dark:text-gray-50
+                        text-black dark:text-rose-700
                         @error($name)
                             border-red-500 dark:border-red-500
                         @else
                             border-gray-300 dark:border-gray-700
                         @enderror
-                        focus:border-indigo-500 dark:focus:border-indigo-400
-                        focus:ring-indigo-500 dark:focus:ring-indigo-400
+                        focus:border-indigo-500 dark:focus:border-rose-950
+                        focus:ring-indigo-500 dark:focus:ring-rose-950
                         rounded-full shadow-sm
                         disabled:text-gray-500
                         disabled:shadow-none

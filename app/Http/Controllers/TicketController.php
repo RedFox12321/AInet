@@ -6,6 +6,7 @@ use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\TicketFormRequest;
 use App\Models\Ticket;
+use Illuminate\Http\Request;
 
 class TicketController extends Controller
 {
@@ -14,9 +15,42 @@ class TicketController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(Request $request): View | RedirectResponse
     {
-        return view('main.tickets.index')->with('tickets', Ticket::all()->paginate(20));
+        $filterByStatus = $request->query('status');
+        $filterByIdName = $request->search;
+        $ticketQuery = Ticket::query();
+        $allNull = true;
+
+        if ($filterByStatus !== null) {
+            $allNull = false;
+            $ticketQuery->where('status', $filterByStatus);
+        }
+
+        if ($filterByIdName !== null) {
+            $allNull = false;
+            $ticketQuery->where(function ($query) use ($filterByIdName) {
+            $query->where('id', 'LIKE', '%' . $filterByIdName . '%')
+                  ->orWhereHas('purchase', function ($purchaseQuery) use ($filterByIdName) {
+                      $purchaseQuery->where('customer_name', 'LIKE', '%' . $filterByIdName . '%');
+                  });
+            });
+      }
+
+        if ($allNull && $request->query() && !$request?->page) {
+            return redirect()->route('tickets.index');
+        }
+
+        $tickets=$ticketQuery
+        ->with('purchase')
+        ->orderBy('id', 'desc')
+        ->paginate(20)
+        ->withQueryString();
+
+        return view(
+            'main.tickets.index',
+            compact('tickets','filterByStatus','filterByIdName')
+        );
     }
 
     /**
@@ -27,6 +61,10 @@ class TicketController extends Controller
         return view('main.tickets.show')->with('ticket', $ticket);
     }
 
+    public function myTickets(Ticket $ticket): View
+    {
+        return view('main.tickets.show')->with('ticket', $ticket);
+    }
     /* CRUD operations */
     /**
      * Store a newly created resource in storage.
@@ -37,7 +75,7 @@ class TicketController extends Controller
 
         $url = route('tickets.show', ['ticket' => $newTicket]);
 
-        $htmlMessage = "Ticket <a href='$url'><u>{$newTicket->id} ({$newTicket->screening->movie->name})</u></a> has been created successfully!";
+        $htmlMessage = "Ticket <a href='$url'><u>{$newTicket->id} ({$newTicket->screening->ticket->name})</u></a> has been created successfully!";
 
         return redirect()->route('tickets.index')
             ->with('alert-type', 'success')

@@ -22,26 +22,25 @@ class CartConfirmationFormRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'customer_id' => 'exists:customers',
-            'payment_type' => 'required|',
-            'payment_ref' => 'required|'
+        $rules = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|string|lowercase|max:255',
+            'nif' => 'nullable|digits:9',
+            'payType' => 'required|string|uppercase|in:PAYPAL,MBWAY,VISA',
         ];
-    }
 
-    public function after(): array
-    {
-        return [
-            function (Validator $validator) {
-                if ($this->user()) {
-                    if ($this->user()->type == 'C') {
-                        $userCustomerId = $this->user()?->customers?->id;
-                        if ($this->customer_id != $userCustomerId) {
-                            $validator->errors()->add('customer_id', "Your customer number is $userCustomerId");
-                        }
-                    }
-                }
-            }
-        ];
+        match ($this->payType) {
+            'PAYPAL' => $rules = array_merge($rules, [
+                'payRef' => 'required|string|max:255'
+            ]),
+            'MBWAY' => $rules = array_merge($rules, [
+                'payRef' => 'required|digits:9|regex:/^9/'
+            ]),
+            'VISA' => $rules = array_merge($rules, [
+                'payRef' => 'required|digits:19'
+            ])
+        };
+
+        return $rules;
     }
 }

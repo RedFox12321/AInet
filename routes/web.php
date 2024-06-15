@@ -13,10 +13,12 @@ use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CartController;
 
+use App\Http\Middleware\PaymentSanitizer;
 use App\Models\Theater;
 use App\Models\Movie;
 use App\Models\User;
 use App\Models\Customer;
+use App\Models\Purchase;
 use Illuminate\Support\Facades\Route;
 
 /* Brezee Routes */
@@ -52,8 +54,11 @@ Route::middleware('auth', 'verified')->group(function () {
 
     Route::resource('users', UserController::class);
 
-    /* Destroy photos */
+    /* My routes */
+    Route::get('purchases/my', [PurchaseController::class, 'myPurchases'])
+        ->name('purchases.my');
 
+    /* Destroy photos */
     Route::delete('users/{user}/image', [UserController::class, 'destroyImage'])
         ->name('users.image.destroy')
         ->can('update', User::class);
@@ -78,6 +83,14 @@ Route::middleware('auth', 'verified')->group(function () {
 });
 
 
+/* PUBLIC ROUTES */
+Route::get('storage/{pdf}', function ($pdf) {
+    $path = storage_path('app' . DIRECTORY_SEPARATOR . 'pdf_purchases' . DIRECTORY_SEPARATOR . $pdf);
+    return response()->file($path);
+})
+    ->name('storage.pdf')
+    ->can('viewPDF', Purchase::class);
+
 // Resource public routes
 Route::get('movies/showcase', [MovieController::class, 'showcase'])->name('movies.showcase');
 Route::resource('movies', MovieController::class)->only('show');
@@ -100,8 +113,10 @@ Route::middleware('can:useCart')->group(function () {
     Route::delete('cart', [CartController::class, 'destroy'])
         ->name('cart.destroy');
 
+
     Route::post('cart', [CartController::class, 'confirm'])
         ->name('cart.confirm')
+        ->middleware(PaymentSanitizer::class)
         ->can('confirmCart');
 });
 
