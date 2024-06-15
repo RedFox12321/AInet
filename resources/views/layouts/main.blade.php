@@ -33,6 +33,16 @@
                                     @include('components.menu.screenings-logo')
                                 </x-slot>
                             </x-menu.menu-icon>
+
+                            @can('admin')
+                                <x-menu.submenu :selectable="0" uniqueName="submenu_manage" content="Manage">
+                                    <x-menu.submenu-item content="Admins" :selectable="0" href="#" />
+                                    <x-menu.submenu-item content="Employees" :selectable="0" href="#" />
+                                    <x-menu.submenu-item content="Theathers" :selectable="0" href="#" />
+                                    <x-menu.submenu-item content="Customers" :selectable="0" href="#" />
+                                </x-menu.submenu>
+                            @endcan
+
                         </div>
 
                         <!-- Navigation links -->
@@ -60,17 +70,60 @@
                                     </x-menu.menu-icon>
                                 </li>
                             @endcan
+                            @can('admin')
+                                <li class="h-full flex justify-center items-center">
+                                    <x-menu.menu-icon href="{{ route('configurations.edit') }}">
+                                        <x-slot:icon>
+                                            @include('components.menu.config-logo')
+                                        </x-slot>
+                                    </x-menu.menu-icon>
+                                </li>
+                            @endcan
                             <li class="h-full flex justify-center items-center">
-                                <x-menu.menu-icon href="{{ route('login') }}">
-                                    <x-slot:icon>
-                                        @include('components.menu.account-logo')
-                                    </x-slot>
-                                </x-menu.menu-icon>
-                                <form id="form_to_logout_from_menu" method="POST" action="{{ route('logout') }}"
-                                    class="hidden">
-                                    @csrf
-                                </form>
-                                <button form="form_to_logout_from_menu">Logout</button>
+                                @guest
+                                    <div class="flex flex-col items-center">
+                                        <x-menu.menu-icon href="{{ route('login') }}">
+                                            <x-slot:icon>
+                                                @include('components.menu.account-logo')
+                                            </x-slot>
+                                        </x-menu.menu-icon>
+                                        <a href="{{ route('login') }}" class="-mt-5">Login</a>
+                                    </div>
+                                @endguest
+
+                                @auth
+                                    <x-menu.submenu selectable="0" uniqueName="submenu_user">
+                                        <x-slot:content>
+                                            <div class="pe-1">
+                                                <img src="{{ Auth::user()->getImageUrlAttribute() }}"
+                                                    class="w-11 h-11 min-w-11 min-h-11 rounded-full">
+                                            </div>
+                                            <div class="truncate sm:hidden md:hidden">
+                                                {{ Auth::user()->name }}
+                                            </div>
+                                        </x-slot>
+                                        @auth
+                                            <hr>
+                                            <x-menu.submenu-item content="Profile" :selectable="0" href="#" />
+                                            <x-menu.submenu-item content="Change Password" selectable="0"
+                                                href="{{ route('profile.edit.password') }}" />
+                                        @endauth
+                                        <hr>
+                                        @can('viewPurchase')
+                                            <x-menu.submenu-item content="Purchases" :selectable="0" href="#" />
+                                        @endcan
+                                        @can('viewTicket')
+                                            <x-menu.submenu-item content="Purchases" :selectable="0" href="#" />
+                                        @endcan
+                                        <hr>
+                                        <form id="form_to_logout_from_menu" method="POST" action="{{ route('logout') }}"
+                                            class="hidden">
+                                            @csrf
+                                        </form>
+                                        <x-menu.submenu-item content="Log Out" selectable="0"
+                                            form="form_to_logout_from_menu" />
+                                    </x-menu.submenu>
+                                @endauth
                             </li>
                         </ul>
                     </div>

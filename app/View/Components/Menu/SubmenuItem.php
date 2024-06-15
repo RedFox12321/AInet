@@ -12,7 +12,11 @@ class SubMenuItem extends Component
      * Create a new component instance.
      */
     public function __construct(
-        public string $content = 'Submenu Item'
+        public string $content = 'Submenu Item',
+        public string $href = '#',
+        public bool $selectable = true,
+        public bool $selected = false,
+        public string $form = '',
     ) {
     }
 
