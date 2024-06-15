@@ -14,7 +14,7 @@ class ConfigurationController extends Controller
      */
     public function edit(): View
     {
-        return view('main.configurations.edit')->with('configuration', Configuration::whereId('1'));
+        return view('main.configurations.edit')->with('configuration', Configuration::find('1'));
     }
 
     /**
