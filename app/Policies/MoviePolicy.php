@@ -18,7 +18,7 @@ class MoviePolicy
 
     public function viewAny(?User $user): bool
     {
-        return $user?->type == 'C';
+        return $user?->type == 'A';
     }
     public function viewShowcase(?User $user): bool
     {

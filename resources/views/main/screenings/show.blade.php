@@ -22,7 +22,7 @@
 
         @can('useCart')
             <a href="{{ route('cart.show') }}" class=" bg-rose-900 rounded-3xl border-4 border-rose-950 mr-5 fit-content p-5">
-                <div class="flex justify-center items-center text-2xl">Realizar Compra</div>
+                <div class="flex justify-center items-center text-2xl">Proceed to payment</div>
             </a>
         @endcan
     </div>

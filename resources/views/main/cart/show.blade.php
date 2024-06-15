@@ -21,7 +21,7 @@
 
         <div class="flex justify-center mt-10">
             <x-button-round>
-                <button>Realizar Pagamento</button>
+                <button>Buy Ticket(s)</button>
             </x-button-round>
         </div>
        
