@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\TheaterFormRequest;
 use App\Models\Theater;
+//use App\Models\Seats;
 
 class TheaterController extends Controller
 {
@@ -16,7 +17,7 @@ class TheaterController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): View
+    public function index(Request $request): View | RedirectResponse
     {
         $filterByName = $request->search;
         $theaterQuery = Theater::query();
@@ -29,17 +30,17 @@ class TheaterController extends Controller
             });
         }
 
-        if ($allNull && $request->query()) {
+        if ($allNull && $request->query() && !$request?->page) {
             return redirect()->route('theaters.index');
         }
 
         $theaters = $theaterQuery
-            ->paginate()
+            ->paginate(20)
             ->withQueryString();
 
         return view(
             'main.theaters.index',
-            compact('theaters')
+            compact('theaters', 'filterByName')
         );
     }
 

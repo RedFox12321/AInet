@@ -24,12 +24,15 @@
 
         </div>
 
-        <div class="m-10">
-            <x-screenings.table :screenings="$screenings"/>
+        <div class="flex flex-col">
+            <div class="m-10 flex fit-content">
+                <x-screenings.table :screenings="$screenings"/>
+            </div>
+            <div>
+                {{ $screenings->links() }}
+            </div>
         </div>
-        <div class="mt-4">
-            {{ $screenings->links() }}
-        </div>
+        
     </div>
 
 @endsection
