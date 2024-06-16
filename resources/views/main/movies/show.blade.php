@@ -39,7 +39,7 @@
             <div class="bg-stone-900 p-8 rounded-[45px] border-2 border-rose-900 shadow-lg">
                 <h2 class="text-2xl font-semibold mb-4">Next Sessions:</h2>
                 <ul class="list-disc list-inside">
-                    <x-screenings.table :screenings="$screenings" />
+                    <x-screenings.table :screenings="$screenings" :showHeader="false" :showPrivilege="false" />
                 </ul>
             </div>
         </div>

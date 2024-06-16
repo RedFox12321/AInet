@@ -33,6 +33,14 @@
                                 </x-slot>
                             </x-menu.menu-icon>
 
+                            @can('viewAny', \App\Models\Ticket::class)
+                            <x-menu.menu-icon href="{{ route('tickets.index') }}">
+                                <x-slot:icon>
+                                    @include('components.menu.tickets-logo')
+                                </x-slot>
+                            </x-menu.menu-icon>
+                            @endcan
+
                             @can('admin')
                                 <x-menu.submenu :selectable="0" uniqueName="submenu_manage" content="Manage">
                                     <x-menu.submenu-item content="Admins" :selectable="0"

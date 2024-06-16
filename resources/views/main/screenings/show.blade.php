@@ -50,7 +50,7 @@
                     <tr>
                         <th class="text-2xl">{{ $row }}</th>
                         @foreach ($seatsByNumbers[$row] as $seat)
-                            @if ($seat == null)
+                            {{-- @if ($seat == null) --}}
                                 <td class="ml-2 mr-2">
                                     @php
                                         $isTaken = $seatsTaken->contains($seat->id);
@@ -73,7 +73,7 @@
                                         @endcan
                                     </div>
                                 </td>
-                            @endif
+                            {{-- @endif --}}
                         @endforeach
                     </tr>
                 @endforeach

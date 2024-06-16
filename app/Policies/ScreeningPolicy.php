@@ -19,7 +19,7 @@ class ScreeningPolicy
     {
         return $user === null || $user->type == 'C';
     }
-    public function view(?User $user, Screening $screening): bool
+    public function view(?User $user): bool
     {
         return $user === null || $user->type == 'C';
     }
@@ -27,11 +27,11 @@ class ScreeningPolicy
     {
         return false;
     }
-    public function update(User $user, Screening $screening): bool
+    public function update(User $user): bool
     {
         return false;
     }
-    public function delete(User $user, Screening $screening): bool
+    public function delete(User $user): bool
     {
         return false;
     }
