@@ -4,10 +4,6 @@
 
 @section('main')
 
-
-
-
-
     <div class="flex justify-center mt-5">
 
         <x-movies.filter-card :filterAction="route('movies.showcase')" :resetUrl="route('movies.showcase')" :title="old('title', $filterByTitleSynopsis)" :genre="old('genre', $filterByGenre)" :genres="$genres->pluck('name', 'code')->toArray()" />

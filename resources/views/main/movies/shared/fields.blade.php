@@ -11,6 +11,8 @@
                             :deleteAllow="($mode == 'edit') && ($movie->imageExists)" deleteForm="form_to_delete_image" :imageUrl="$movie->poster_filename" :readonly="($mode == 'show')" />
                     </div>
                     <div class="mx-5">
+                        <div class="text-2xl flex w-full my-3">Change Genre</div>
+                        <x-fields.select name="genre" :options="$genres->pluck('name', 'code')->toArray()" label="Genre" :value=" old('genre', $movie->genre->code) "/>
                         <div class="text-2xl flex w-full my-3">Change Synopsis</div>
                         <x-fields.text-area name="" :value="$movie->synopsis" />
                             <div class="text-2xl flex w-full my-3">Change Url</div>
