@@ -38,8 +38,14 @@
                                 <x-menu.submenu :selectable="0" uniqueName="submenu_manage" content="Manage">
                                     <x-menu.submenu-item content="Admins" :selectable="0" href="#" />
                                     <x-menu.submenu-item content="Employees" :selectable="0" href="#" />
-                                    <x-menu.submenu-item content="Theathers" :selectable="0" href="#" />
                                     <x-menu.submenu-item content="Customers" :selectable="0" href="#" />
+                                    <hr>
+                                    <x-menu.submenu-item content="Theaters" :selectable="0" href="{{ route('theaters.index') }}" />
+                                    <x-menu.submenu-item content="Movies" :selectable="0" href="{{ route('movies.index') }}" />
+                                    <x-menu.submenu-item content="Genres" :selectable="0" href="{{ route('genres.index') }}" />
+                                    <x-menu.submenu-item content="Seats" :selectable="0" href="{{ route('seats.index') }}" />
+                                    <hr>
+                                    <x-menu.submenu-item content="Purchases" :selectable="0" href="{{ route('purchases.index') }}" />
                                 </x-menu.submenu>
                             @endcan
 
@@ -79,6 +85,9 @@
                                     </x-menu.menu-icon>
                                 </li>
                             @endcan
+                            {{-- @can('viewAny', \App\Models\Ticket::class)
+                                <x-menu.submenu-item content="Purchases" :selectable="0" href="#" />
+                            @endcan --}}
                             <li class="h-full flex justify-center items-center">
                                 @guest
                                     <div class="flex flex-col items-center">
@@ -110,13 +119,6 @@
                                             <x-menu.submenu-item content="Change Password" selectable="0"
                                                 href="{{ route('profile.edit.password') }}" />
                                         @endauth
-                                        <hr>
-                                        @can('viewPurchase')
-                                            <x-menu.submenu-item content="Purchases" :selectable="0" href="#" />
-                                        @endcan
-                                        @can('viewTicket')
-                                            <x-menu.submenu-item content="Purchases" :selectable="0" href="#" />
-                                        @endcan
                                         <hr>
                                         <form id="form_to_logout_from_menu" method="POST" action="{{ route('logout') }}"
                                             class="hidden">

@@ -41,29 +41,29 @@
     <textarea id="id_{{ $name }}" name="{{ $name }}"
         class="appearance-none block
             mt-1 w-full {{ $heightClass }}
-            bg-white dark:bg-gray-900
-            text-black dark:text-gray-50
+            bg-white dark:bg-neutral-800
+            text-black dark:text-gray-200
+            placeholder-stone-700 dark:placeholder-stone-200
             @error($name)
                 border-red-500 dark:border-red-500
             @else
                 border-gray-300 dark:border-gray-700
             @enderror
-            focus:border-indigo-500 dark:focus:border-indigo-400
-            focus:ring-indigo-500 dark:focus:ring-indigo-400
-            rounded-md shadow-sm
+            focus:border-rose-500 dark:focus:border-rose-900
+            focus:ring-rose-500 dark:focus:ring-rose-900
+            rounded-xl shadow-sm
             disabled:rounded-none disabled:shadow-none
-            disabled:border-transparent
+            disabled:border-t-transparent disabled:border-x-transparent
+            disabled:border-dashed
             disabled:opacity-100
             disabled:select-none
             {{ !$resizable || $readonly ? 'resize-none' : 'resize-y' }}"
             autofocus="autofocus"
             @required($required)
             @disabled($readonly)
-        >
-        {{ $value }}
-    </textarea>
-    @error( $name )
-        <div class="text-sm text-red-500">
+        >{{ $value }}</textarea>
+    @error($name)
+        <div class="text-sm text-red-600">
             {{ $message }}
         </div>
     @enderror
