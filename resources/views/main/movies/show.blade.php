@@ -10,8 +10,7 @@
             <div class="col-span-1 row-span-2 w-full h-full relative">
                 <div class="w-full h-full absolute bg-white opacity-90 border-8 border-stone-300">
                     <figure class="h-full w-full flex flex-col">
-                        <a class="h-full w-full flex items-center justify-center"
-                            href="{{ route('movies.show', ['movie' => $movie]) }}">
+                        <a class="h-full w-full flex items-center justify-center" href="{{ $movie->trailer_url }}">
                             <img class="h-full w-auto" src="{{ $movie->imageUrl }}" alt="{{ $movie->title }}">
                         </a>
                     </figure>
