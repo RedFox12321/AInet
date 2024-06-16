@@ -11,10 +11,9 @@
                         <x-fields.input name="name" :value="$theater->name" />
 
                         <x-fields.image name="image_file" label="Theater Image" width="md" deleteTitle="Delete Image"
-                            :deleteAllow="($mode == 'edit') && ($theater->imageExists)" deleteForm="form_to_delete_image" :imageUrl="$theater->imageUrl" />
+                            :deleteAllow="($mode == 'edit') && ($theater->imageExists)" deleteForm="form_to_delete_image" :imageUrl="$theater->imageUrl" :readonly="($mode == 'show')" />
 
 
-                        {{-- <x-fields.input name="seat" :value="$theater->seat" /> --}}
                     </div>
                 </div>
             </div>
@@ -22,11 +21,13 @@
         </x-slot>
     </x-card-round>
 
+
+    @if($mode == 'edit')
     <div class="mt-10 w-full flex flex-0 justify-center items-end mb-5 fit-content">
         <x-button-round>
             <button>Submit Changes</button>
         </x-button-round>
     </div>
-
+    @endif
 
 </div>
