@@ -114,6 +114,19 @@ class TicketController extends \Illuminate\Routing\Controller
         return view('main.tickets.show')->with('ticket', $ticket);
     }
 
+    public function update(Ticket $ticket, Request $request): RedirectResponse
+    {
+        $ticket->update($request->validated());
+
+        $url = route('tickets.index', ['theater' => $ticket]);
+
+        $htmlMessage = "Ticket <a href='$url'><u>#{$ticket->id}</u></a> has been updated successfully!";
+
+        return redirect()->route('tickets.index')
+            ->with('alert-type', 'success')
+            ->with('alert-msg', $htmlMessage);
+    }
+
     public static function generatePDF(Collection $tickets)
     {
         $base64Image = [];

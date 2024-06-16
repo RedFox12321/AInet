@@ -22,12 +22,7 @@ class TicketFormRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'screening_id' => 'required|exists:screenings',
-            'seat_id' => 'required|exists:seats',
-            'purchase_id' => 'required|exists:purchases',
-            'price' => 'required|decimal:0,2|min:0',
-            'qrcode_url' => 'required|string|lowercase|max:255',
-            'status' => 'required|string|in:valid,invalid'
+            'status' => 'required|string|in:valid,invalid',
         ];
     }
 }

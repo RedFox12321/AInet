@@ -37,7 +37,7 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::view('/dashboard', 'dashboard')->name('dashboard');
 
     /* User made Routes */
-    Route::resource('tickets', TicketController::class)->only(['show', 'index']);
+    Route::resource('tickets', TicketController::class)->only(['show', 'index', 'update']);
 
     Route::resource('theaters', TheaterController::class);
 
