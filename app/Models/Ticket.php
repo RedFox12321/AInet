@@ -2,9 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Collection;
+use Barryvdh\DomPDF\Facade\Pdf;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Screening;
 use App\Models\Purchase;
 use App\Models\Seat;
@@ -36,5 +40,14 @@ class Ticket extends Model
     public function seat(): BelongsTo
     {
         return $this->belongsTo(Seat::class)->withTrashed();
+    }
+
+    public function generateQRCode(): void
+    {
+        $qrCode = QrCode::format('png')->size(200)->generate(url(route('tickets.show', ['ticket' => $this])));
+        $this->qrcode_url = "ticket-$this->id-qrcode.png";
+        $filePath = "ticket_qrcodes/$this->qrcode_url";
+
+        Storage::put($filePath, $qrCode);
     }
 }

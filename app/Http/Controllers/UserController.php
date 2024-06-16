@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
@@ -9,8 +10,14 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\UserFormRequest;
 use App\Models\User;
 
-class UserController extends Controller
+class UserController extends \Illuminate\Routing\Controller
 {
+    use AuthorizesRequests;
+
+    public function __construct()
+    {
+        $this->authorizeResource(User::class);
+    }
     /* Views */
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
@@ -11,8 +12,14 @@ use Illuminate\Http\Request;
 use App\Models\Movie;
 use App\Models\Genre;
 
-class MovieController extends Controller
+class MovieController extends \Illuminate\Routing\Controller
 {
+    use AuthorizesRequests;
+
+    public function __construct()
+    {
+        $this->authorizeResource(Movie::class);
+    }
     /* Views */
     /**
      * Display a listing of the resource.

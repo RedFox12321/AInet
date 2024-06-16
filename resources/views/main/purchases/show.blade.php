@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('header-title', 'Purchase of ' . $purchase->customer->user->name)
+@section('header-title', 'Purchase of ' . $purchase->customer_name)
 
 @section('main')
 

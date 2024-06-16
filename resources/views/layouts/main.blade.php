@@ -94,12 +94,14 @@
                                 @auth
                                     <x-menu.submenu selectable="0" uniqueName="submenu_user">
                                         <x-slot:content>
-                                            <div class="pe-1">
-                                                <img src="{{ Auth::user()->getImageUrlAttribute() }}"
-                                                    class="w-11 h-11 min-w-11 min-h-11 rounded-full">
-                                            </div>
-                                            <div class="truncate sm:hidden md:hidden">
-                                                {{ Auth::user()->name }}
+                                            <div class="flex flex-row items-center">
+                                                <div class="truncate hidden md:w-40 md:block">
+                                                    {{ Auth::user()->name }}
+                                                </div>
+                                                <div class="flex w-16">
+                                                    <img src="{{ Auth::user()->getImageUrlAttribute() }}"
+                                                        class="w-30 h-full min-w-11 min-h-11 rounded-full">
+                                                </div>
                                             </div>
                                         </x-slot>
                                         @auth

@@ -3,18 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\Configuration;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use App\Http\Requests\ConfigurationFormRequest;
 
-class ConfigurationController extends Controller
+class ConfigurationController extends \Illuminate\Routing\Controller
 {
+    use AuthorizesRequests;
+
+    public function __construct()
+    {
+        $this->authorizeResource(Configuration::class);
+    }
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(): View
     {
-        return view('main.configurations.edit')->with('configuration', Configuration::whereId('1'));
+        return view('main.configurations.edit')->with('configuration', Configuration::find('1'));
     }
 
     /**

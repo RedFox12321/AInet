@@ -17,11 +17,7 @@ class PurchasePolicy
     }
     public function view(User $user, Purchase $purchase): bool
     {
-        return $user->type == 'A' || ($user->type == 'C' && $user->id === $purchase->customer->user->id);
-    }
-    public function store(?User $user): bool
-    {
-        return $user == null || $user?->type == 'C';
+        return $user->type == 'A' || ($user->type == 'C' && $user->id === $purchase->customer->id);
     }
     public function generatePDF(?User $user): bool
     {

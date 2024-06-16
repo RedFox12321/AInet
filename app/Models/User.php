@@ -63,7 +63,7 @@ class User extends Authenticatable
         if ($this->photo_url && Storage::exists("public/photos/{$this->photo_url}")) {
             return asset("storage/photos/{$this->photo_filename}");
         } else {
-            return asset("storage/photos/anonymous.png");
+            return asset("storage/photos/anonymous.jpg");
         }
     }
 }

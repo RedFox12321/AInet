@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Theater;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
@@ -13,8 +14,14 @@ use App\Models\Screening;
 use App\Models\Genre;
 
 
-class ScreeningController extends Controller
+class ScreeningController extends \Illuminate\Routing\Controller
 {
+    use AuthorizesRequests;
+
+    public function __construct()
+    {
+        $this->authorizeResource(Screening::class);
+    }
     /* Views */
     /**
      * Display a listing of the resource.
@@ -23,7 +30,7 @@ class ScreeningController extends Controller
     {
         $filterByTitleSynopsis = $request->search;
         $filterByGenre = $request->query('genre');
-        $filterByDate = $request->input('date');
+        $filterByDate = $request->query('date');
         $filterByTheater = $request->query('theater');
         $screeningQuery = Screening::query();
         $user = Auth::user();

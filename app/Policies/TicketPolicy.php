@@ -8,7 +8,7 @@ use App\Models\User;
 
 class TicketPolicy
 {
-    public function viewAny(User $user, Ticket $ticket): bool
+    public function viewAny(User $user): bool
     {
         return $user->type == 'A' || $user->type == 'E';
     }
@@ -24,4 +24,13 @@ class TicketPolicy
     {
         return $user->type == 'C';
     }
+    public function generateQRCode(?User $user): bool
+    {
+        return $user == null || $user?->type == 'C';
+    }
+    public function viewQRCode(?User $user): bool
+    {
+        return $user->type == 'C' || $user->type == 'A';
+    }
+
 }
