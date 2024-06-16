@@ -3,21 +3,29 @@
 namespace App\Http\Controllers;
 
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\TheaterFormRequest;
 use App\Models\Theater;
+
 //use App\Models\Seats;
 
-class TheaterController extends Controller
+class TheaterController extends \Illuminate\Routing\Controller
 {
+    use AuthorizesRequests;
+
+    public function __construct()
+    {
+        $this->authorizeResource(Theater::class);
+    }
     /* Views */
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): View | RedirectResponse
+    public function index(Request $request): View|RedirectResponse
     {
         $filterByName = $request->search;
         $theaterQuery = Theater::query();

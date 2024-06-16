@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
@@ -10,15 +11,20 @@ use App\Http\Requests\GenreFormRequest;
 use App\Models\Genre;
 use Illuminate\Http\Request;
 
-class GenreController extends Controller
+class GenreController extends \Illuminate\Routing\Controller
 {
-    //TODO
+    use AuthorizesRequests;
+
+    public function __construct()
+    {
+        $this->authorizeResource(Genre::class);
+    }
 
     /* Views */
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): View | RedirectResponse
+    public function index(Request $request): View|RedirectResponse
     {
         $filterByName = $request->search;
         $genreQuery = Genre::query();
@@ -31,7 +37,7 @@ class GenreController extends Controller
             });
         }
 
-        if ($allNull && $request->query() && !$request?->page)  {
+        if ($allNull && $request->query() && !$request?->page) {
             return redirect()->route('genres.index');
         }
 
@@ -42,9 +48,9 @@ class GenreController extends Controller
 
 
         return view(
-        'main.genres.index', 
-        compact('genres', 'filterByName')
-    );
+            'main.genres.index',
+            compact('genres', 'filterByName')
+        );
     }
 
     /**

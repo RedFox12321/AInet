@@ -16,6 +16,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Middleware\PaymentSanitizer;
 use App\Models\Theater;
 use App\Models\Movie;
+use App\Models\Ticket;
 use App\Models\User;
 use App\Models\Customer;
 use App\Models\Purchase;
@@ -36,7 +37,7 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::view('/dashboard', 'dashboard')->name('dashboard');
 
     /* User made Routes */
-    Route::resource('tickets', TicketController::class)->except(['edit', 'update']);
+    Route::resource('tickets', TicketController::class)->only(['show', 'index']);
 
     Route::resource('theaters', TheaterController::class);
 
@@ -44,7 +45,7 @@ Route::middleware('auth', 'verified')->group(function () {
 
     Route::resource('screenings', ScreeningController::class)->except(['index', 'show']);
 
-    Route::resource('purchases', PurchaseController::class)->except(['edit', 'update']);
+    Route::resource('purchases', PurchaseController::class)->only(['show', 'index']);
 
     Route::resource('movies', MovieController::class)->except('show');
 
@@ -56,7 +57,13 @@ Route::middleware('auth', 'verified')->group(function () {
 
     /* My routes */
     Route::get('purchases/my', [PurchaseController::class, 'myPurchases'])
-        ->name('purchases.my');
+        ->name('purchases.my')
+        ->can('viewMy', Purchase::class);
+
+    Route::get('tickets/my', [TicketController::class, 'myTickets'])
+        ->name('tickets.my')
+        ->can('viewMy', Ticket::class);
+
 
     /* Destroy photos */
     Route::delete('users/{user}/image', [UserController::class, 'destroyImage'])
@@ -91,11 +98,20 @@ Route::get('storage/{pdf}', function ($pdf) {
     ->name('storage.pdf')
     ->can('viewPDF', Purchase::class);
 
+Route::get('storage/{qrcode}', function ($qr_code) {
+    $path = storage_path('app' . DIRECTORY_SEPARATOR . 'ticket_qrcodes' . DIRECTORY_SEPARATOR . $qr_code);
+    return response()->file($path);
+})
+    ->name('storage.qrcode')
+    ->can('viewQRCode', Ticket::class);
+
+
 // Resource public routes
 Route::get('movies/showcase', [MovieController::class, 'showcase'])->name('movies.showcase');
 Route::resource('movies', MovieController::class)->only('show');
 Route::resource('screenings', ScreeningController::class)->only(['index', 'show']);
 
+Route::get('tickets/pdf/{ticket}', [TicketController::class, 'generatePDF'])->name('pdf.generate');
 
 // Cart
 Route::middleware('can:useCart')->group(function () {

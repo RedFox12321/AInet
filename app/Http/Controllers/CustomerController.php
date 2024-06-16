@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
@@ -10,8 +11,14 @@ use App\Http\Requests\CustomerFormRequest;
 use App\Models\Customer;
 use App\Models\User;
 
-class CustomerController extends Controller
+class CustomerController extends \Illuminate\Routing\Controller
 {
+    use AuthorizesRequests;
+
+    public function __construct()
+    {
+        $this->authorizeResource(Customer::class);
+    }
     /* Views */
     /**
      * Display a listing of the resource.

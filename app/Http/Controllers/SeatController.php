@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
@@ -10,8 +11,14 @@ use App\Http\Requests\SeatFormRequest;
 use App\Models\Theater;
 use App\Models\Seat;
 
-class SeatController extends Controller
+class SeatController extends \Illuminate\Routing\Controller
 {
+    use AuthorizesRequests;
+
+    public function __construct()
+    {
+        $this->authorizeResource(Seat::class);
+    }
     /* Views */
     /**
      * Display a listing of the resource.
