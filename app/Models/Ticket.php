@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Collection;
-use Barryvdh\DomPDF\Facade\Pdf;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -44,8 +42,9 @@ class Ticket extends Model
 
     public function generateQRCode(): void
     {
-        $qrCode = QrCode::format('png')->size(200)->generate(url(route('tickets.show', ['ticket' => $this])));
+        $qrCode = QrCode::format('png')->size(200)->generate(route('tickets.show', ['ticket' => $this]));
         $this->qrcode_url = "ticket-$this->id-qrcode.png";
+        $this->update();
         $filePath = "ticket_qrcodes/$this->qrcode_url";
 
         Storage::put($filePath, $qrCode);

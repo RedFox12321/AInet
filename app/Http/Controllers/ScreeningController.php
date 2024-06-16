@@ -162,7 +162,7 @@ class ScreeningController extends \Illuminate\Routing\Controller
 
         $url = route('screenings.show', ['screening' => $newScreening]);
 
-        $htmlMessage = "Screening <a href='$url'><u>{$newScreening}</u></a> has been created successfully!";
+        $htmlMessage = "Screening <a href='$url'><u>#{$newScreening->id}</u></a> has been created successfully!";
 
         return redirect()->route('screening.index')
             ->with('alert-type', 'success')
@@ -174,15 +174,33 @@ class ScreeningController extends \Illuminate\Routing\Controller
      */
     public function update(ScreeningFormRequest $request, Screening $screening): RedirectResponse
     {
-        $screening->update($request->validated());
-
         $url = route('screenings.show', ['screening' => $screening]);
 
-        $htmlMessage = "Screening <a href='$url'><u>#{$screening->id}</u></a> has been updated successfully!";
+        $hasTickets = DB::scalar(
+            'SELECT count(*) FROM TICKETS WHERE SCREENING_ID = ?',
+            [$screening->id]
+        );
+
+        if ($hasTickets == 0) {
+            $screening->update($request->validated());
+
+            $alertType = 'success';
+            $alertMsg = "Screening {$screening} has been updated successfully!";
+        } else {
+            $ticketJustif = match ($hasTickets) {
+                1 => "is 1 ticket",
+                default => "are {$hasTickets} tickets",
+            };
+
+            $justification = "there {$ticketJustif} for this screening.";
+
+            $alertType = 'warning';
+            $alertMsg = "Screening <a href='$url'><u>#{$screening->id}</u></a> cannot be updated because $justification.";
+        }
 
         return redirect()->route('screenings.edit', ['screening' => $screening])
-            ->with('alert-type', 'success')
-            ->with('alert-msg', $htmlMessage);
+            ->with('alert-type', $alertType)
+            ->with('alert-msg', $alertMsg);
     }
 
     /**
@@ -209,14 +227,14 @@ class ScreeningController extends \Illuminate\Routing\Controller
                     default => "are {$hasTickets} tickets",
                 };
 
-                $justification = "there {$ticketJustif} for this .";
+                $justification = "there {$ticketJustif} for this screening.";
 
                 $alertType = 'warning';
                 $alertMsg = "Screening <a href='$url'><u>{$screening}</u></a> cannot be deleted because $justification.";
             }
         } catch (\Exception $error) {
             $alertType = 'danger';
-            $alertMsg = "It was not possible to delete the screening <a href='$url'><u>{$screening}</u></a> because there was an error with the operation!";
+            $alertMsg = "It was not possible to delete the screening <a href='$url'><u>#{$screening->id}</u></a> because there was an error with the operation!";
         }
 
         return redirect()->route('screenings.index')

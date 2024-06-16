@@ -2,21 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Purchase;
+use App\Models\Ticket;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\CartConfirmationFormRequest;
 use App\Models\Screening;
 use App\Models\Seat;
+use App\Services\Payment;
+use App\Notifications\PurchasePaid;
 
 class CartController extends Controller
 {
     public function show(): View
     {
-        $cart = session('cart', null);
+        $cart = session('cart');
+        $payment_types = [
+            'PAYPAL' => 'PayPal',
+            'MBWAY' => 'MBWay',
+            'VISA' => 'Visa credit card'
+        ];
+
         return view(
             'main.cart.show',
-            compact('cart')
+            compact('cart', 'payment_types')
         );
     }
 
@@ -70,7 +82,8 @@ class CartController extends Controller
                 ->with('alert-type', $alertType);
         } else {
             $element = $cart->first(function ($item) use ($screening, $seat) {
-                return $item['screening']->id === $screening->id && $item['seat']->id === $seat->id;
+                return $item['screening']->id === $screening->id
+                    && $item['seat']->id === $seat->id;
             });
             if ($element) {
                 $cart->forget($cart->search($element));
@@ -94,6 +107,13 @@ class CartController extends Controller
 
     public function destroy(Request $request): RedirectResponse
     {
+        $cart = session('cart');
+        if (!$cart) {
+            return back()
+                ->with('alert-type', 'danger')
+                ->with('alert-msg', 'Nothing to clear. Shopping cart is empty');
+        }
+
         $request->session()->forget('cart');
         return back()
             ->with('alert-type', 'success')
@@ -101,67 +121,125 @@ class CartController extends Controller
     }
 
 
-    // public function confirm(CartConfirmationFormRequest $request): RedirectResponse
-    // {
-    //     $cart = session('cart', null);
-    //     if (!$cart || ($cart->count() == 0)) {
-    //         return back()
-    //             ->with('alert-type', 'danger')
-    //             ->with('alert-msg', "Cart was not confirmed, because cart is empty!");
-    //     } else {
-    //         $student = Student::where('number', $request->validated()['student_number'])->first();
-    //         if (!$student) {
-    //             return back()
-    //                 ->with('alert-type', 'danger')
-    //                 ->with('alert-msg', "Student number does not exist on the database!");
-    //         }
-    //         $insertDisciplines = [];
-    //         $disciplinesOfStudent = $student->disciplines;
-    //         $ignored = 0;
-    //         foreach ($cart as $discipline) {
-    //             $exist = $disciplinesOfStudent->where('id', $discipline->id)->count();
-    //             if ($exist) {
-    //                 $ignored++;
-    //             } else {
-    //                 $insertDisciplines[$discipline->id] = [
-    //                     "discipline_id" => $discipline->id,
-    //                     "repeating" => 0,
-    //                     "grade" => null,
-    //                 ];
-    //             }
-    //         }
-    //         $ignoredStr = match ($ignored) {
-    //             0 => "",
-    //             1 => "<br>(1 discipline was ignored because student was already enrolled in it)",
-    //             default => "<br>($ignored disciplines were ignored because student was already enrolled on them)"
-    //         };
-    //         $totalInserted = count($insertDisciplines);
-    //         $totalInsertedStr = match ($totalInserted) {
-    //             0 => "",
-    //             1 => "1 discipline registration was added to the student",
-    //             default => "$totalInserted disciplines registrations were added to the student",
+    public function confirm(CartConfirmationFormRequest $request): RedirectResponse
+    {
+        $cart = session('cart');
+        if (!$cart || ($cart->count() == 0)) {
+            return back()
+                ->with('alert-type', 'danger')
+                ->with('alert-msg', "Cart was not confirmed, because cart is empty!");
+        } else {
+            $ticketsAlreadyBought = new Collection();
+            foreach ($cart as $ticket) {
+                $ticketQuery = \App\Models\Ticket::query()->with('screening')->whereHas('screening', function ($query) use ($ticket) {
+                    return $query->where('id', $ticket['screening']->id);
+                });
+                $ticketQuery->with('seat')->whereHas('seat', function ($query) use ($ticket) {
+                    return $query->where('id', $ticket['seat']->id);
+                });
+                if (!$ticketQuery->with(['screening', 'seat'])->get()->isEmpty()) {
+                    $ticketsAlreadyBought->push($ticket);
+                }
+            }
 
-    //         };
-    //         if ($totalInserted == 0) {
-    //             $request->session()->forget('cart');
-    //             return back()
-    //                 ->with('alert-type', 'danger')
-    //                 ->with('alert-msg', "No registration was added to the student!$ignoredStr");
-    //         } else {
-    //             DB::transaction(function () use ($student, $insertDisciplines) {
-    //                 $student->disciplines()->attach($insertDisciplines);
-    //             });
-    //             $request->session()->forget('cart');
-    //             if ($ignored == 0) {
-    //                 return redirect()->route('students.show', ['student' => $student])
-    //                     ->with('alert-type', 'success')
-    //                     ->with('alert-msg', "$totalInsertedStr.");
-    //             } else {
-    //                 return redirect()->route('students.show', ['student' => $student])
-    //                     ->with('alert-type', 'warning')
-    //                     ->with('alert-msg', "$totalInsertedStr. $ignoredStr");
-    //             }
-    //         }
-    //     }
-    // }
+            if (!$ticketsAlreadyBought->isEmpty()) {
+                $ticketsRemoved = '';
+                foreach ($ticketsAlreadyBought as $ticket) {
+                    $cart->forget($cart->search($ticket));
+                    if ($ticketsRemoved == '')
+                        $ticketsRemoved = $ticketsRemoved . 'Screening <a href="' . route('screenings.show', ['screening' => $ticket['screening']->id]) . '">#' . $ticket['screening']->id . '</a> with seat ' . $ticket['seat']->row . '-' . $ticket['seat']->seat_number;
+                    else
+                        $ticketsRemoved = $ticketsRemoved . ' and Screening #' . $ticket['screening']->id . ' with seat ' . $ticket['seat']->row . '-' . $ticket['seat']->seat_number;
+                }
+                if ($cart->count() == 0) {
+                    $request->session()->forget('cart');
+                }
+                return back()
+                    ->with('alert-type', 'warning')
+                    ->with('alert-msg', "Some tickets in the cart were bought while finishing the payment. $ticketsRemoved");
+            }
+
+            match ($request->payType) {
+                'PAYPAL' => $paymentSuccess = Payment::payWithPaypal($request->payRef),
+                'MBWAY' => $paymentSuccess = Payment::payWithMBway($request->payRef),
+                'VISA' => $paymentSuccess = Payment::payWithVisa(substr($request->payRef, 0, 16), substr($request->payRef, 16))
+            };
+
+            if (!$paymentSuccess) {
+                return back()
+                    ->with('alert-type', 'danger')
+                    ->with('alert-msg', "Payment was not successfull.");
+            }
+
+            $totalTickets = match ($cart->count()) {
+                1 => "1 ticket was purchased.",
+                default => $cart->count() . " tickets were purchased",
+            };
+
+            $user = $request?->user();
+            $validatedData = $request->validated();
+            $newPurchase = DB::transaction(function () use ($validatedData, $user, $cart) {
+                $newPurchase = new Purchase();
+                if ($user?->customer) {
+                    $newPurchase->customer_id = $user->customer->id;
+                }
+
+                $newPurchase->customer_name = $validatedData['name'];
+                $newPurchase->customer_email = $validatedData['email'];
+
+                $newPurchase->nif = $validatedData['nif'];
+                $newPurchase->payment_type = $validatedData['payType'];
+                if ($validatedData['payType'] == 'VISA') {
+                    $newPurchase->payment_ref = substr($validatedData['payRef'], 0, 16);
+                } else {
+                    $newPurchase->payment_ref = $validatedData['payRef'];
+                }
+
+                $newPurchase->total_price = 0;
+                $newPurchase->date = now();
+                $newPurchase->save();
+
+                $total = 0;
+                $tickets = [];
+
+                $config = \App\Models\Configuration::find(1);
+                foreach ($cart as $ticket) {
+                    $newTicket = new Ticket();
+
+                    $newTicket->purchase_id = $newPurchase->id;
+                    $newTicket->screening_id = $ticket['screening']->id;
+                    $newTicket->seat_id = $ticket['seat']->id;
+
+                    $newTicket->price = $config->ticket_price;
+                    if ($user?->customer) {
+                        $newTicket->price -= $config->registered_customer_ticket_discount;
+                    }
+
+                    $newTicket->status = 'valid';
+                    $newTicket->save();
+
+                    $newTicket->generateQRCode();
+
+                    $total += $newTicket->price;
+                    $tickets[] = $newTicket;
+                }
+                $newPurchase->total_price = $total;
+                $newPurchase->generatePDF();
+                $newPurchase->update();
+
+                $user->notify(new PurchasePaid($newPurchase, collect($tickets)));
+                return $newPurchase;
+            });
+
+            $request->session()->forget('cart');
+            if ($user) {
+                $route = ['movies.showcase'];
+            } else {
+                $route = ['movies.showcase'];
+            }
+            return redirect()->route(...$route)
+                ->with('alert-type', 'success')
+                ->with('alert-msg', "Your receipt has been sent to email and a total of $totalTickets.");
+        }
+    }
 }
