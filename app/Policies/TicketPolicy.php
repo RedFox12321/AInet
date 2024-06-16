@@ -10,7 +10,7 @@ class TicketPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->type == 'A' || $user->type == 'E';
+        return $user->type == 'A' || $user->type == 'E' ;
     }
     public function viewMy(User $user, Ticket $ticket): bool
     {

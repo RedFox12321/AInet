@@ -24,9 +24,8 @@ class CustomerController extends \Illuminate\Routing\Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): View | RedirectResponse
+    public function index(Request $request): View|RedirectResponse
     {
-        $filterByStatus;
         $filterByIdName = $request->search;
         $customerQuery = Customer::query();
         $allNull = true;
@@ -49,8 +48,8 @@ class CustomerController extends \Illuminate\Routing\Controller
             ->withQueryString();
 
         return view(
-        'main.customers.index',
-        compact('customers', 'filterByIdName')
+            'main.customers.index',
+            compact('customers', 'filterByIdName')
         );
     }
 
@@ -140,7 +139,7 @@ class CustomerController extends \Illuminate\Routing\Controller
      */
     public function update(CustomerFormRequest $request, Customer $customer): RedirectResponse
     {
-        
+
         $customer->user->update($request->validated());
 
         // $customer = DB::transaction(function () use ($validatedData, $customer, $request) {

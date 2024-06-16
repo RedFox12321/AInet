@@ -12,6 +12,8 @@ use App\Http\Controllers\TheaterController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\EmployeeController;
 
 use App\Http\Middleware\PaymentSanitizer;
 use App\Models\Theater;
@@ -32,7 +34,7 @@ Route::middleware('auth')->group(function () {
 
 
 /* ----- Verified users ----- */
-Route::middleware('auth', 'verified')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::view('/dashboard', 'dashboard')->name('dashboard');
 
@@ -54,6 +56,10 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::resource('customers', CustomerController::class);
 
     Route::resource('users', UserController::class);
+
+    Route::resource('admins', AdminController::class);
+
+    Route::resource('employees', EmployeeController::class);
 
     /* My routes */
     Route::get('purchases/my', [PurchaseController::class, 'myPurchases'])
@@ -85,8 +91,8 @@ Route::middleware('auth', 'verified')->group(function () {
 
     // Configuration
     Route::middleware('can:admin')->group(function () {
-        Route::get('/configurations/edit', [ConfigurationController::class, 'edit'])->name('configurations.edit');
-        Route::put('/configurations', [ConfigurationController::class, 'update'])->name('configurations.update');
+        Route::get('configurations/edit', [ConfigurationController::class, 'edit'])->name('configurations.edit');
+        Route::put('configurations', [ConfigurationController::class, 'update'])->name('configurations.update');
     });
 });
 

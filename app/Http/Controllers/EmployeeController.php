@@ -27,7 +27,7 @@ class EmployeeController extends \Illuminate\Routing\Controller
     {
         $userQuery = User::query();
 
-        $userQuery->where('type','A');
+        $userQuery->where('type','E');
 
         $employees = $userQuery
             ->orderBy('id')
