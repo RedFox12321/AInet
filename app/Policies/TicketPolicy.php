@@ -12,17 +12,21 @@ class TicketPolicy
     {
         return $user->type == 'A' || $user->type == 'E';
     }
-    public function viewMy(User $user, Ticket $ticket): bool
+    public function viewMy(User $user): bool
     {
         return $user->type == 'C' && $user->id === $ticket->purchase->customer->id;
     }
-    public function view(?User $user, Ticket $ticket): bool
+    public function view(?User $user): bool
     {
         return $user->type == 'E' || ($user?->type == 'C' && $user->id === $ticket->purchase->customer->id);
     }
-    public function store(User $user, Ticket $ticket): bool
+    public function store(User $user): bool
     {
         return $user->type == 'C';
+    }
+    public function update(User $user): bool
+    {
+        return $user->type == 'E' || $user->type == 'A';
     }
     public function generateQRCode(?User $user): bool
     {
