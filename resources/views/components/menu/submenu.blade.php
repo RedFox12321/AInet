@@ -4,27 +4,29 @@
             <button data-submenu="{{$uniqueName}}"
             class="grow inline-flex items-center h-16
                  px-3 sm:px-0.5 md:px-1 lg:px-2 pt-1
-                text-4xl font-medium font-['Khula'] text-stone-500 dark:text-stone-400
-                border-b-2 border-transparent hover:text-stone-700 dark:hover:text-stone-300
-                focus:outline-none focus:text-stone-700 dark:focus:text-stone-300
-                hover:bg-stone-100 dark:hover:bg-stone-800 sm:hover:bg-white dark:sm:hover:bg-stone-900">
+                text-4xl font-medium font-['Khula'] text-stone-500 dark:text-stone-900
+                border-b-2 border-transparent hover:text-stone-700 dark:hover:text-stone-700
+                focus:outline-none focus:text-stone-700 dark:focus:text-stone-600
+                hover:rounded-lg
+                hover:bg-rose-300 dark:hover:bg-rose-300 sm:hover:bg-rose-300 dark:sm:hover:bg-rose-300">
         @else
             <button data-submenu="{{$uniqueName}}"
             class="grow inline-flex items-center h-16
                  px-3 sm:px-0.5 md:px-1 lg:px-2 pt-1
-                text-4xl font-medium font-['Khula'] text-stone-500 dark:text-stone-400
-                border-b-2 border-transparent hover:text-stone-700 dark:hover:text-stone-300
-                focus:outline-none focus:text-stone-700 dark:focus:text-stone-300
-                hover:bg-stone-100 dark:hover:bg-stone-800 sm:hover:bg-white dark:sm:hover:bg-stone-900">
+                text-4xl font-medium font-['Khula'] text-stone-500 dark:text-stone-900
+                border-b-2 border-transparent hover:text-stone-700 dark:hover:text-stone-700
+                hover:rounded-lg
+                focus:outline-none focus:text-stone-700 dark:focus:text-stone-600
+                hover:bg-rose-300 dark:hover:bg-rose-300 sm:hover:bg-rose-300 dark:sm:hover:bg-rose-300">
         @endif
     @else
         <button data-submenu="{{$uniqueName}}"
             class="grow inline-flex items-center h-16
                 px-3 sm:px-0.5 md:px-1 lg:px-2 pt-1
-                text-4xl font-medium font-['Khula'] text-stone-500 dark:text-stone-400
-                border-b-2 border-transparent hover:text-stone-700 dark:hover:text-stone-300
-                focus:outline-none focus:text-stone-700 dark:focus:text-stone-300
-                hover:bg-stone-100 dark:hover:bg-stone-800 sm:hover:bg-white dark:sm:hover:bg-stone-900">
+                text-4xl font-medium font-['Khula'] text-stone-500 dark:text-stone-900 hover:rounded-lg
+                border-b-2 border-transparent hover:text-stone-700 dark:hover:text-stone-700
+                focus:outline-none focus:text-stone-700 dark:focus:text-stone-600
+                hover:bg-rose-300 dark:hover:bg-rose-300 sm:hover:bg-rose-300 dark:sm:hover:bg-rose-300">
     @endif
             {{$content}}
             <div>
@@ -36,7 +38,7 @@
                 </svg>
             </div>
         </button>
-    <div id="{{$uniqueName}}" class="sm:absolute sm:-right-2 sm:top-14 sm:origin-bottom-right
+    <div id="{{$uniqueName}}" class="sm:absolute sm:left-0 sm:top-14 sm:origin-top-left
                 w-full sm:w-48 bg-white dark:bg-stone-900
                 grid grid-cols-1
                 sm:rounded-md sm:ring-1 sm:ring-black sm:ring-opacity-5 sm:shadow-lg
