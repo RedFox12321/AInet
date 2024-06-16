@@ -112,9 +112,9 @@ class GenreController extends \Illuminate\Routing\Controller
 
         $url = route('genres.show', ['genre' => $genre]);
 
-        $htmlMessage = "Genre <a href='$url'><u>{$genre}</u></a> has been updated successfully!";
+        $htmlMessage = "Genre <a href='$url'><u>{$genre->code}</u></a> has been updated successfully!";
 
-        return redirect()->route('genre.index')
+        return redirect()->route('genres.index')
             ->with('alert-type', 'success')
             ->with('alert-msg', $htmlMessage);
     }

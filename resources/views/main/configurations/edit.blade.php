@@ -4,6 +4,6 @@
 
 @section('main')
 
-    @include('main..shared.fields')
+    @include('main.configurations.shared.fields')
 
 @endsection

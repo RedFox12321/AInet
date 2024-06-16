@@ -4,8 +4,6 @@
 
 @section('main')
 
-    @include('main.screenings.shared.fields')
-
     <div class="w-full flex justify-between mt-5 ">
         <div class="overflow-hidden rounded-xl border-4 border-rose-950 flex w-max ml-5">
             <table class="table-auto">

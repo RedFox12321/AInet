@@ -21,10 +21,10 @@ class ScreeningFormRequest extends FormRequest
      */
     public function rules(): array
     {
+        
+
         return [
-            'movie_id' => 'required|exists:movies',
-            'theater_id' => 'required|exists:theaters',
-            'date' => 'required|date|after_or_equal:today',
+            
             'start_time' => 'required|date_format:H:i'
         ];
     }
