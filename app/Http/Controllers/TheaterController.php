@@ -57,7 +57,28 @@ class TheaterController extends \Illuminate\Routing\Controller
      */
     public function show(Theater $theater): View
     {
-        return view('main.theaters.show')->with('theater', $theater);
+        $seatQuery = \App\Models\Seat::query();
+        $seatQuery->withTrashed('theater')->whereHas('theater', function ($query) use ($theater) {
+            $query->where('id', $theater->id);
+        });
+
+        $seats = $seatQuery
+            ->with(['theater'])
+            ->get();
+
+        $rows = $seats->unique('row')->pluck('row')->sort();
+        $numbers = $seats->unique('seat_number')->pluck('seat_number')->sort();
+
+        $seatsByNumbers = $seats->groupBy('row')->map(function ($group) {
+            return $group->sortBy('seat_number');
+        });
+
+
+
+        return view(
+            'main.theaters.show',
+            compact('theater', 'seatsByNumbers', 'rows', 'numbers')
+        );
     }
 
     /**
