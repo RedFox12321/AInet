@@ -144,7 +144,12 @@ class MovieController extends \Illuminate\Routing\Controller
      */
     public function edit(Movie $movie): View
     {
-        return view('main.movies.edit')->with('movie', $movie);
+        $genres = Genre::all();
+
+        return view(
+            'main.movies.edit',
+            compact('movie','genres')
+        );
     }
 
 
