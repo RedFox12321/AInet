@@ -14,6 +14,7 @@ use App\Models\Screening;
 use App\Models\Seat;
 use App\Services\Payment;
 use App\Notifications\PurchasePaid;
+use Illuminate\Support\Facades\Notification;
 
 class CartController extends Controller
 {
@@ -131,7 +132,7 @@ class CartController extends Controller
         } else {
             $ticketsAlreadyBought = new Collection();
             foreach ($cart as $ticket) {
-                $ticketQuery = \App\Models\Ticket::query()->with('screening')->whereHas('screening', function ($query) use ($ticket) {
+                $ticketQuery = Ticket::query()->with('screening')->whereHas('screening', function ($query) use ($ticket) {
                     return $query->where('id', $ticket['screening']->id);
                 });
                 $ticketQuery->with('seat')->whereHas('seat', function ($query) use ($ticket) {
@@ -227,13 +228,15 @@ class CartController extends Controller
                 $newPurchase->generatePDF();
                 $newPurchase->update();
 
-                $user->notify(new PurchasePaid($newPurchase, collect($tickets)));
+                Notification::route('mail', $validatedData['email'])
+                    ->notify(new PurchasePaid($newPurchase, collect($tickets)));
+
                 return $newPurchase;
             });
 
             $request->session()->forget('cart');
             if ($user) {
-                $route = ['movies.showcase'];
+                $route = ['purchases.show', ['purchase' => $newPurchase]];
             } else {
                 $route = ['movies.showcase'];
             }
