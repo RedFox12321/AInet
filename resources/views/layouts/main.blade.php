@@ -36,9 +36,9 @@
 
                             @can('admin')
                                 <x-menu.submenu :selectable="0" uniqueName="submenu_manage" content="Manage">
-                                    <x-menu.submenu-item content="Admins" :selectable="0" href="#" />
-                                    <x-menu.submenu-item content="Employees" :selectable="0" href="#" />
-                                    <x-menu.submenu-item content="Customers" :selectable="0" href="#" />
+                                    <x-menu.submenu-item content="Admins" :selectable="0" href="{{ route('admins.index') }}" />
+                                    <x-menu.submenu-item content="Employees" :selectable="0" href="{{ route('employees.index') }}" />
+                                    <x-menu.submenu-item content="Customers" :selectable="0" href="{{ route('customers.index') }}" />
                                     <hr>
                                     <x-menu.submenu-item content="Theaters" :selectable="0"
                                         href="{{ route('theaters.index') }}" />
