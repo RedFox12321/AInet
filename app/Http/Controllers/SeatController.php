@@ -104,7 +104,7 @@ class SeatController extends \Illuminate\Routing\Controller
 
         $url = route('seats.show', ['seat' => $newSeat]);
 
-        $htmlMessage = "Seat <a href='$url'><u>{$newSeat}</u></a> has been created successfully!";
+        $htmlMessage = "Seat <a href='$url'><u>{$newSeat->row}-{$newSeat->seat_number}</u></a> has been created successfully!";
 
         return redirect()->route('seat.index')
             ->with('alert-type', 'success')
@@ -120,7 +120,7 @@ class SeatController extends \Illuminate\Routing\Controller
 
         $url = route('seats.show', ['seat' => $seat]);
 
-        $htmlMessage = "Seat <a href='$url'><u>{$seat}</u></a> has been updated successfully!";
+        $htmlMessage = "Seat <a href='$url'><u>{$seat->row}-{$seat->seat_number}</u></a> has been updated successfully!";
 
         return redirect()->route('seat.index')
             ->with('alert-type', 'success')
@@ -138,10 +138,10 @@ class SeatController extends \Illuminate\Routing\Controller
             $seat->delete();
 
             $alertType = 'success';
-            $alertMsg = "Seat {$seat} has been deleted successfully!";
+            $alertMsg = "Seat {$seat->row}-{$seat->seat_number} has been deleted successfully!";
         } catch (\Exception $error) {
             $alertType = 'danger';
-            $alertMsg = "It was not possible to delete the seat <a href='$url'><u>{$seat}</u></a> because there was an error with the operation!";
+            $alertMsg = "It was not possible to delete the seat <a href='$url'><u>{$seat->row}-{$seat->seat_number}</u></a> because there was an error with the operation!";
         }
 
         return redirect()->route('seat.index')

@@ -220,7 +220,7 @@ class ScreeningController extends \Illuminate\Routing\Controller
                 $screening->delete();
 
                 $alertType = 'success';
-                $alertMsg = "Screening {$screening} has been deleted successfully!";
+                $alertMsg = "Screening #{$screening->id} has been deleted successfully!";
             } else {
                 $ticketJustif = match ($hasTickets) {
                     1 => "is 1 ticket",
@@ -230,7 +230,7 @@ class ScreeningController extends \Illuminate\Routing\Controller
                 $justification = "there {$ticketJustif} for this screening.";
 
                 $alertType = 'warning';
-                $alertMsg = "Screening <a href='$url'><u>{$screening}</u></a> cannot be deleted because $justification.";
+                $alertMsg = "Screening <a href='$url'><u>#{$screening->id}</u></a> cannot be deleted because $justification.";
             }
         } catch (\Exception $error) {
             $alertType = 'danger';

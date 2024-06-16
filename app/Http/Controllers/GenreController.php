@@ -88,7 +88,7 @@ class GenreController extends \Illuminate\Routing\Controller
 
         $url = route('genres.show', ['genre' => $newGenre]);
 
-        $htmlMessage = "Genre <a href='$url'><u>{$newGenre}</u></a> has been created successfully!";
+        $htmlMessage = "Genre <a href='$url'><u>{$newGenre->code}</u></a> has been created successfully!";
 
         return redirect()->route('genre.index')
             ->with('alert-type', 'success')
@@ -140,16 +140,16 @@ class GenreController extends \Illuminate\Routing\Controller
                 }
 
                 $alertType = 'success';
-                $alertMsg = "Genre {$genre} has been deleted successfully!";
+                $alertMsg = "Genre {$genre->code} has been deleted successfully!";
             } else {
                 $justification = "";
 
                 $alertType = 'warning';
-                $alertMsg = "Genre <a href='$url'><u>{$genre}</u></a> cannot be deleted because $justification.";
+                $alertMsg = "Genre <a href='$url'><u>{$genre->code}</u></a> cannot be deleted because $justification.";
             }
         } catch (\Exception $error) {
             $alertType = 'danger';
-            $alertMsg = "It was not possible to delete the genre <a href='$url'><u>{$genre}</u></a> because there was an error with the operation!";
+            $alertMsg = "It was not possible to delete the genre <a href='$url'><u>{$genre->code}</u></a> because there was an error with the operation!";
         }
 
         return redirect()->route('genre.index')

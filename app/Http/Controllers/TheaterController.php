@@ -118,7 +118,7 @@ class TheaterController extends \Illuminate\Routing\Controller
 
         $url = route('theaters.show', ['theater' => $newTheater]);
 
-        $htmlMessage = "Theater <a href='$url'><u>{$newTheater}</u></a> has been created successfully!";
+        $htmlMessage = "Theater <a href='$url'><u>#{$newTheater->id}</u></a> has been created successfully!";
 
         return redirect()->route('theater.index')
             ->with('alert-type', 'success')
@@ -169,11 +169,11 @@ class TheaterController extends \Illuminate\Routing\Controller
             }
 
             $alertType = 'success';
-            $alertMsg = "Theater {$theater} has been deleted successfully!";
+            $alertMsg = "Theater #{$theater->id} has been deleted successfully!";
 
         } catch (\Exception $error) {
             $alertType = 'danger';
-            $alertMsg = "It was not possible to delete the theater <a href='$url'><u>{$theater}</u></a> because there was an error with the operation!";
+            $alertMsg = "It was not possible to delete the theater <a href='$url'><u>#{$theater->id}</u></a> because there was an error with the operation!";
         }
 
         return redirect()->route('theater.index')
