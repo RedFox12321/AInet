@@ -15,14 +15,13 @@ class ScreeningPolicy
 
         return null;
     }
-
     public function viewAny(?User $user): bool
     {
-        return $user->type == 'C';
+        return $user === null || $user->type == 'C';
     }
     public function view(?User $user, Screening $screening): bool
     {
-        return $user->type == 'C';
+        return $user === null || $user->type == 'C';
     }
     public function store(User $user): bool
     {

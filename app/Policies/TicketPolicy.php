@@ -14,9 +14,9 @@ class TicketPolicy
     }
     public function viewMy(User $user): bool
     {
-        return $user->type == 'C' && $user->id === $ticket->purchase->customer->id;
+        return $user->type == 'C';
     }
-    public function view(?User $user): bool
+    public function view(?User $user, Ticket $ticket): bool
     {
         return $user?->type == 'A' || $user?->type == 'E' || ($user?->type == 'C' && $user->id === $ticket->purchase->customer->id);
     }
