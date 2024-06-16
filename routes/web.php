@@ -89,18 +89,25 @@ Route::middleware('auth', 'verified')->group(function () {
 
 });
 
-
 /* PUBLIC ROUTES */
-Route::get('storage/{pdf}', function ($pdf) {
-    $path = storage_path('app' . DIRECTORY_SEPARATOR . 'pdf_purchases' . DIRECTORY_SEPARATOR . $pdf);
+// Storage routing to get private files
+Route::get('storage/pdf/{pdf}', function ($pdf) {
+    $path = storage_path('app/pdf_purchases/' . $pdf);
+    if (!Storage::exists('pdf_purchases/' . $pdf)) {
+        abort(404);
+    }
     return response()->file($path);
 })
     ->name('storage.pdf')
     ->can('viewPDF', Purchase::class);
 
-Route::get('storage/{qrcode}', function ($qr_code) {
-    $path = storage_path('app' . DIRECTORY_SEPARATOR . 'ticket_qrcodes' . DIRECTORY_SEPARATOR . $qr_code);
-    return response()->file($path);
+Route::get('storage/qrcode/{qrcode}', function ($qr_code) {
+    if (!Storage::exists('ticket_qrcodes/' . $qr_code)) {
+        abort(404);
+    }
+    $file = Storage::get('ticket_qrcodes/' . $qr_code);
+
+    return Response::make($file, 200, ['Content-Type' => 'image/png']);
 })
     ->name('storage.qrcode')
     ->can('viewQRCode', Ticket::class);
@@ -110,8 +117,6 @@ Route::get('storage/{qrcode}', function ($qr_code) {
 Route::get('movies/showcase', [MovieController::class, 'showcase'])->name('movies.showcase');
 Route::resource('movies', MovieController::class)->only('show');
 Route::resource('screenings', ScreeningController::class)->only(['index', 'show']);
-
-Route::get('tickets/pdf/{ticket}', [TicketController::class, 'generatePDF'])->name('pdf.generate');
 
 // Cart
 Route::middleware('can:useCart')->group(function () {

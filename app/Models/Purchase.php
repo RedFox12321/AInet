@@ -42,6 +42,7 @@ class Purchase extends Model
         $this->receipt_pdf_filename = "purchase-details-$this->id.pdf";
         $filePath = "pdf_purchases/$this->receipt_pdf_filename";
 
+        $purchase = $this;
         $pdf = Pdf::loadView('main.purchases.pdf', compact('purchase'));
         Storage::put($filePath, $pdf->output());
     }

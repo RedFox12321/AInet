@@ -23,7 +23,7 @@
             </div>
             <p class="total text-right mt-4 font-semibold">Price: {{ number_format($ticket->price, 2) }}€</p>
         </div>
-        <img src="{{ route('storage.qrcode', ['qrcode' => $ticket->qrcode_url]) }}" alt="ticket-qrcode">
+        <img src="{{ $base64Image["$ticket->id"] }}" alt="QR Code">
     @endforeach
     <div class="footer mt-4">
         <p>&copy; {{ date('Y') }} - CineMagic</p>
