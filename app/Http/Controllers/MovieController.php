@@ -144,7 +144,12 @@ class MovieController extends \Illuminate\Routing\Controller
      */
     public function edit(Movie $movie): View
     {
-        return view('main.movies.edit')->with('movie', $movie);
+        $genres = Genre::all();
+
+        return view(
+            'main.movies.edit',
+            compact('movie','genres')
+        );
     }
 
 
@@ -162,7 +167,7 @@ class MovieController extends \Illuminate\Routing\Controller
 
         $url = route('movies.show', ['movie' => $newMovie]);
 
-        $htmlMessage = "Movie <a href='$url'><u>{$newMovie}</u></a> has been created successfully!";
+        $htmlMessage = "Movie <a href='$url'><u>#{$newMovie->id}</u></a> has been created successfully!";
 
         return redirect()->route('movie.index')
             ->with('alert-type', 'success')
@@ -186,7 +191,7 @@ class MovieController extends \Illuminate\Routing\Controller
 
         $url = route('movies.show', ['movie' => $movie]);
 
-        $htmlMessage = "Movie <a href='$url'><u>{$movie}</u></a> has been updated successfully!";
+        $htmlMessage = "Movie <a href='$url'><u>#{$movie->id}</u></a> has been updated successfully!";
 
         return redirect()->route('movie.index')
             ->with('alert-type', 'success')
@@ -208,11 +213,11 @@ class MovieController extends \Illuminate\Routing\Controller
             }
 
             $alertType = 'success';
-            $alertMsg = "Movie {$movie} has been deleted successfully!";
+            $alertMsg = "Movie #{$movie->id} has been deleted successfully!";
 
         } catch (\Exception $error) {
             $alertType = 'danger';
-            $alertMsg = "It was not possible to delete the movie <a href='$url'><u>{$movie}</u></a> because there was an error with the operation!";
+            $alertMsg = "It was not possible to delete the movie <a href='$url'><u>#{$movie->id}</u></a> because there was an error with the operation!";
         }
 
         return redirect()->route('movie.index')

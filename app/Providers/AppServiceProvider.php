@@ -31,20 +31,12 @@ class AppServiceProvider extends ServiceProvider
             return $user === null || $user->type == 'C';
         });
 
-        Gate::define('confirmCart', function (User $user) {
+        Gate::define('confirmCart', function (?User $user) {
             return $user === null || $user->type == 'C';
         });
 
         Gate::define('admin', function (User $user) {
             return $user->type == 'A';
-        });
-
-        Gate::define('viewPurchase', function (User $user) {
-            return $user->type == 'A' || $user->type == 'C';
-        });
-
-        Gate::define('viewTicket', function (User $user) {
-            return $user->type == 'E' || $user->type == 'C';
         });
 
         try {

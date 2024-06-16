@@ -12,7 +12,9 @@ class LastRoute
     {
         // Store the current URL in the session
         if ($request->route() && !$request->ajax()) {
-            session(['last_route' => url()->current()]);
+            if (url()->current() != session('last_route')) {
+                session(['last_route' => url()->current()]);
+            }
         }
 
         return $next($request);

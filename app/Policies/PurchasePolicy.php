@@ -25,6 +25,6 @@ class PurchasePolicy
     }
     public function viewPDF(User $user): bool
     {
-        return $user->type == 'C' || $user->type == 'A';
+        return $user == null || $user->type == 'C' || $user->type == 'A';
     }
 }

@@ -11,17 +11,16 @@ class ConfigurationController extends Controller
 {
     public function edit(): View
     {
-        return view('main.configurations.edit')->with('configuration', Configuration::find('1'));
+        return view('main.configurations.edit')->with('configuration', Configuration::find(1));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(ConfigurationFormRequest $request, Configuration $configuration): RedirectResponse
+    public function update(ConfigurationFormRequest $request): RedirectResponse
     {
         // Update
-        $configuration->update($request->validated());
-
+        Configuration::find(1)->update($request->validated());
         // Message
         $htmlMessage = "The configurations have been updated successfully!";
 

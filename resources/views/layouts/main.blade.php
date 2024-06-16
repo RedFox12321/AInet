@@ -40,12 +40,17 @@
                                     <x-menu.submenu-item content="Employees" :selectable="0" href="#" />
                                     <x-menu.submenu-item content="Customers" :selectable="0" href="#" />
                                     <hr>
-                                    <x-menu.submenu-item content="Theaters" :selectable="0" href="{{ route('theaters.index') }}" />
-                                    <x-menu.submenu-item content="Movies" :selectable="0" href="{{ route('movies.index') }}" />
-                                    <x-menu.submenu-item content="Genres" :selectable="0" href="{{ route('genres.index') }}" />
-                                    <x-menu.submenu-item content="Seats" :selectable="0" href="{{ route('seats.index') }}" />
+                                    <x-menu.submenu-item content="Theaters" :selectable="0"
+                                        href="{{ route('theaters.index') }}" />
+                                    <x-menu.submenu-item content="Movies" :selectable="0"
+                                        href="{{ route('movies.index') }}" />
+                                    <x-menu.submenu-item content="Genres" :selectable="0"
+                                        href="{{ route('genres.index') }}" />
+                                    <x-menu.submenu-item content="Seats" :selectable="0"
+                                        href="{{ route('seats.index') }}" />
                                     <hr>
-                                    <x-menu.submenu-item content="Purchases" :selectable="0" href="{{ route('purchases.index') }}" />
+                                    <x-menu.submenu-item content="Purchases" :selectable="0"
+                                        href="{{ route('purchases.index') }}" />
                                 </x-menu.submenu>
                             @endcan
 

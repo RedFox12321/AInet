@@ -26,7 +26,7 @@ class MoviePolicy
     }
     public function view(?User $user, Movie $movie): bool
     {
-        return $user?->type == 'C';
+        return $user === null || $user->type == 'C';
     }
     public function store(User $user): bool
     {
