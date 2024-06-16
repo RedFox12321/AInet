@@ -108,17 +108,13 @@ class TheaterController extends \Illuminate\Routing\Controller
 
         if ($request->hasFile('image_file')) {
 
-            if ($theater->photo_filename) {
-                $theater->photo_filename = $theater->id."_theater_image";
+            if ($newTheater->photo_filename) {
+                $newTheater->photo_filename = $newTheater->id . "_theater_image.jpg";
             }
 
+            $request->image_file->storeAs('public/theater', $newTheater->photo_filename);
 
-            $request->image_file->storeAs('public/theaters', $newTheater->photo_filename);
-            
         }
-
-        
-
 
         $url = route('theaters.show', ['theater' => $newTheater]);
 
@@ -138,10 +134,15 @@ class TheaterController extends \Illuminate\Routing\Controller
 
         if ($request->hasFile('image_file')) {
             if ($theater->imageExists) {
-                Storage::delete("public/theaters/{$theater->photo_filename}");
+                Storage::delete("public/theater/{$theater->photo_filename}");
             }
 
-            $request->image_file->storeAs('public/theaters/', $theater->photo_filename ?? $theater->id."_theater_image");
+            if (empty($theater->photo_filename)) {
+                $theater->photo_filename = $theater->id . "_theater_image";
+                $theater->update();
+            }
+
+            $request->image_file->storeAs('public/theater/', $theater->photo_filename);
         }
 
         $url = route('theaters.show', ['theater' => $theater]);

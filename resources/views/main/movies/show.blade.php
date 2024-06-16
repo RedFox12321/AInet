@@ -28,11 +28,11 @@
 
                 <!-- Button -->
                 <div class="mt-8 flex justify-center">
-                    <x-button-round>
-                        <a href="{{ route('screenings.index', ['search' => $movie->title]) }}">
+                    <a href="{{ route('screenings.index', ['search' => $movie->title]) }}">
+                        <x-button-round>
                             See all sessions
-                        </a>
-                    </x-button-round>
+                        </x-button-round>
+                    </a>
                 </div>
             </div>
 
