@@ -23,7 +23,7 @@ class TheaterFormRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'photo_filename' => 'sometimes|image|max:4096'
+            'image_file' => 'sometimes|image|max:4096'
         ];
     }
 }

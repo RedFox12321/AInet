@@ -178,9 +178,9 @@ class ScreeningController extends \Illuminate\Routing\Controller
 
         $url = route('screenings.show', ['screening' => $screening]);
 
-        $htmlMessage = "Screening <a href='$url'><u>{$screening}</u></a> has been updated successfully!";
+        $htmlMessage = "Screening <a href='$url'><u>#{$screening->id}</u></a> has been updated successfully!";
 
-        return redirect()->route('screening.index')
+        return redirect()->route('screenings.edit', ['screening' => $screening])
             ->with('alert-type', 'success')
             ->with('alert-msg', $htmlMessage);
     }
@@ -219,7 +219,7 @@ class ScreeningController extends \Illuminate\Routing\Controller
             $alertMsg = "It was not possible to delete the screening <a href='$url'><u>{$screening}</u></a> because there was an error with the operation!";
         }
 
-        return redirect()->route('screening.index')
+        return redirect()->route('screenings.index')
             ->with('alert-type', $alertType)
             ->with('alert-msg', $alertMsg);
     }

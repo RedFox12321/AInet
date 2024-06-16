@@ -23,7 +23,7 @@ class Theater extends Model
 
     public function getImageExistsAttribute()
     {
-        return Storage::exists("public/photos/{$this->photo_filename}");
+        return Storage::exists("public/theater/{$this->photo_filename}");
     }
 
     public function seats(): HasMany
@@ -35,4 +35,14 @@ class Theater extends Model
     {
         return $this->hasMany(Screening::class);
     }
+
+    public function getImageUrlAttribute()
+    {
+        if ($this->photo_filename && Storage::exists("public/theater/{$this->photo_filename}")) {
+            return asset("storage/theater/{$this->photo_filename}");
+        } else {
+            return asset("storage/theater/no_theater.jpg");
+        }
+    }
+
 }

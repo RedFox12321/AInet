@@ -4,9 +4,11 @@
             <thead>
                 <tr class="border-b-2 border-b-gray-400 bg-stone-900 ">
                     <th class="px-2 py-2 text-left">Name</th>
-                    <th class="px-2 py-2 text-center hidden md:table-cell">Theater</th>
-                    <th class="px-2 py-2 text-center hidden lg:table-cell">Date</th>
-                    <th class="px-2 py-2 text-center">Start Time</th>
+                    <th class="px-2 py-2 text-center">Theater</th>
+                    <th class="px-2 py-2 text-center">Date</th>
+                    <th class="px-2 py-2 text-left">Start Time</th>
+                    <th class="px-2 py-2 text-center"></th>
+                    <th class="px-2 py-2 text-center"></th>
                     <th class="px-2 py-2 text-center"></th>
                     {{-- @if ($showView)
                     <th></th>
@@ -39,43 +41,18 @@
                                 href="{{ route('screenings.show', ['screening' => $screening]) }}"/>
                             </td>
 
-                    {{--
-                    @if ($showEdit)
-                        @can('update', $screening)
+                            
+
                             <td>
-                                <x-table.icon-edit class="px-0.5"
+                                <x-table.icon-edit class="px-0.5 flex justify-center"
                                 href="{{ route('screenings.edit', ['screening' => $screening]) }}"/>
                             </td>
-                        @else
-                            <td></td>
-                        @endcan
-                    @endif
-                    @if ($showDelete)
-                        @can('delete', $screening)
                             <td>
-                                <x-table.icon-delete class="px-0.5"
+                                <x-table.icon-delete class="px-0.5 flex justify-center"
                                 action="{{ route('screenings.destroy', ['screening' => $screening]) }}"/>
                             </td>
-                        @else
-                            <td></td>
-                        @endcan
-                    @endif
-                    @can('use-cart')
-                        @if ($showAddToCart)
-                            <td>
-                                <x-table.icon-add-cart class="px-0.5"
-                                    method="post"
-                                    action="{{ route('cart.add', ['screening' => $screening]) }}"/>
-                            </td>
-                        @endif
-                        @if ($showRemoveFromCart)
-                            <td>
-                                <x-table.icon-minus class="px-0.5"
-                                    method="delete"
-                                    action="{{ route('cart.remove', ['screening' => $screening]) }}"/>
-                            </td>
-                        @endif
-                    @endcan --}}
+
+
                     </tr>
                 @endforeach
             </tbody>

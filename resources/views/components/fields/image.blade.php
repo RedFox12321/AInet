@@ -76,16 +76,6 @@
                     </div>
                 @enderror
             </div>
-            @if($deleteAllow)
-            <div>
-                <x-button
-                    element="submit"
-                    :text="$deleteTitle"
-                    type="danger"
-                    form="{{ $deleteForm }}"
-                    />
-            </div>
-            @endif
         </div>
         @endif
     </div>

@@ -86,8 +86,18 @@ class TheaterController extends \Illuminate\Routing\Controller
         $newTheater = Theater::create($request->validated());
 
         if ($request->hasFile('image_file')) {
+
+            if ($theater->photo_filename) {
+                $theater->photo_filename = $theater->id."_theater_image";
+            }
+
+
             $request->image_file->storeAs('public/theaters', $newTheater->photo_filename);
+            
         }
+
+        
+
 
         $url = route('theaters.show', ['theater' => $newTheater]);
 
@@ -110,14 +120,14 @@ class TheaterController extends \Illuminate\Routing\Controller
                 Storage::delete("public/theaters/{$theater->photo_filename}");
             }
 
-            $request->image_file->storeAs('public/theaters', $theater->photo_filename);
+            $request->image_file->storeAs('public/theaters/', $theater->photo_filename ?? $theater->id."_theater_image");
         }
 
         $url = route('theaters.show', ['theater' => $theater]);
 
-        $htmlMessage = "Theater <a href='$url'><u>{$theater}</u></a> has been updated successfully!";
+        $htmlMessage = "Theater <a href='$url'><u>#{$theater->id}</u></a> has been updated successfully!";
 
-        return redirect()->route('theater.index')
+        return redirect()->route('theaters.edit', ['theater' => $theater])
             ->with('alert-type', 'success')
             ->with('alert-msg', $htmlMessage);
     }
