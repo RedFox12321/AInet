@@ -19,7 +19,7 @@
                 @csrf
                 @method('PUT')
                 <div>
-                    <x-fields.input-label for="ticket_price" :value="__('Ticket Price')" />
+                    <x-fields.input-label for="ticket_price" :value="('Ticket Price')" />
                     <x-fields.input class="block mt-1 w-full" name="ticket_price" placeHolder="Ticket Price"
                         :value="old('ticket_price', $configuration->ticket_price)" />
                     <x-fields.input-label for="registered_customer_ticket_discount" :value="__('Customer Discount')" />
@@ -31,7 +31,9 @@
                 </div>
                 <div class="flex justify-end items-center mt-6">
                     <x-button-round>
-                        Save
+                        <a href="{{ route('configurations.edit') }}">
+                            Save
+                        </a>
                     </x-button-round>
                 </div>
             </form>
