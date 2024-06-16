@@ -8,14 +8,14 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use App\Http\Requests\ConfigurationFormRequest;
 
-class ConfigurationController extends \Illuminate\Routing\Controller
+class ConfigurationController extends Controller
 {
-    use AuthorizesRequests;
+    // use AuthorizesRequests;
 
-    public function __construct()
-    {
-        $this->authorizeResource(Configuration::class);
-    }
+    // public function __construct()
+    // {
+    //     $this->authorizeResource(Configuration::class);
+    // }
     /**
      * Show the form for editing the specified resource.
      */
