@@ -11,13 +11,11 @@
     </div>
 
     @can('view-any', App\Models\Movie::class)
-    <div class="flex justify-center">
-        <a class="flex text-white opacity-90 text-5xl font-semibold font-['Khula']" href="{{ route('movies.index') }}">
-            <x-button-round>
-                See movie list
-            </x-button-round>
-        </a>
-    </div>
+    <a class="w-full justify-center flex text-white opacity-90 text-5xl font-semibold font-['Khula']" href="{{ route('movies.index') }}">
+        <x-button-round>
+            See movie list
+        </x-button-round>
+    </a>
     @endcan
 
     <div class="mt-10 mb-3 ml-16 text-white opacity-90 text-5xl font-semibold font-['Khula']">

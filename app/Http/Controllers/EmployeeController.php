@@ -7,10 +7,10 @@ use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\UserFormRequest;
+use App\Http\Requests\EmployeeFormRequest;
 use App\Models\User;
 
-class UserController extends \Illuminate\Routing\Controller
+class EmployeeController extends \Illuminate\Routing\Controller
 {
     use AuthorizesRequests;
 
@@ -21,11 +21,23 @@ class UserController extends \Illuminate\Routing\Controller
     /* Views */
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of the resource.  ->with('employees', User::all()->paginate(20))
      */
     public function index(): View
     {
-        return view('main.users.index')->with('users', User::all()->paginate(20));
+        $userQuery = User::query();
+
+        $userQuery->where('type','A');
+
+        $employees = $userQuery
+            ->orderBy('id')
+            ->paginate(20)
+            ->withQueryString();
+
+        return view(
+            'main.employees.index',
+            compact('employees')
+    );
     }
 
     /**
@@ -33,7 +45,7 @@ class UserController extends \Illuminate\Routing\Controller
      */
     public function show(User $user): View
     {
-        return view('main.users.show')->with('user', $user);
+        return view('main.employees.show')->with('user', $user);
     }
 
     /**
@@ -41,7 +53,7 @@ class UserController extends \Illuminate\Routing\Controller
      */
     public function create(): View
     {
-        return view('main.users.create')->with('user', new User());
+        return view('main.employees.create')->with('user', new User());
     }
 
     /**
@@ -49,7 +61,7 @@ class UserController extends \Illuminate\Routing\Controller
      */
     public function edit(User $user): View
     {
-        return view('main.users.edit')->with('user', $user);
+        return view('main.employees.edit')->with('user', $user);
     }
 
 
@@ -57,7 +69,7 @@ class UserController extends \Illuminate\Routing\Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UserFormRequest $request): RedirectResponse
+    public function store(EmployeeFormRequest $request): RedirectResponse
     {
         $newUser = User::create($request->validated());
 
@@ -65,9 +77,9 @@ class UserController extends \Illuminate\Routing\Controller
             $request->image_file->storeAs('public/photos', $newUser->photo_filename);
         }
 
-        $url = route('users.show', ['user' => $newUser]);
+        $url = route('employees.show', ['user' => $newUser]);
 
-        $htmlMessage = "User <a href='$url'><u>{$newUser->name}</u></a> has been created successfully!";
+        $htmlMessage = "Employee <a href='$url'><u>{$newUser->name}</u></a> has been created successfully!";
 
         return redirect()->route('user.index')
             ->with('alert-type', 'success')
@@ -77,7 +89,7 @@ class UserController extends \Illuminate\Routing\Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserFormRequest $request, User $user): RedirectResponse
+    public function update(EmployeeFormRequest $request, User $user): RedirectResponse
     {
         $user->update($request->validated());
 
@@ -90,9 +102,9 @@ class UserController extends \Illuminate\Routing\Controller
         }
 
 
-        $url = route('users.show', ['user' => $user]);
+        $url = route('employees.show', ['user' => $user]);
 
-        $htmlMessage = "User <a href='$url'><u>{$user->name}</u></a> has been updated successfully!";
+        $htmlMessage = "Employee <a href='$url'><u>{$user->name}</u></a> has been updated successfully!";
 
         return redirect()->route('user.index')
             ->with('alert-type', 'success')
@@ -105,7 +117,7 @@ class UserController extends \Illuminate\Routing\Controller
     public function destroy(User $user): RedirectResponse
     {
         try {
-            $url = route('users.index', ['user' => $user]);
+            $url = route('employees.index', ['user' => $user]);
 
             $user->delete();
 
@@ -114,13 +126,13 @@ class UserController extends \Illuminate\Routing\Controller
             }
 
             $alertType = 'success';
-            $alertMsg = "User {$user->name} has been deleted successfully!";
+            $alertMsg = "Employee {$user->name} has been deleted successfully!";
         } catch (\Exception $error) {
             $alertType = 'danger';
-            $alertMsg = "It was not possible to delete the user <a href='$url'><u>{$user->name}</u></a> because there was an error with the operation!";
+            $alertMsg = "It was not possible to delete the employee <a href='$url'><u>{$user->name}</u></a> because there was an error with the operation!";
         }
 
-        return redirect()->route('user.index')
+        return redirect()->route('employees.index')
             ->with('alert-type', $alertType)
             ->with('alert-msg', $alertMsg);
     }

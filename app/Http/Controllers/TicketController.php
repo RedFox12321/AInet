@@ -11,7 +11,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
 use App\Models\Ticket;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Requests\TicketFormRequest;
 
 class TicketController extends \Illuminate\Routing\Controller
 {
@@ -115,7 +114,7 @@ class TicketController extends \Illuminate\Routing\Controller
         return view('main.tickets.show')->with('ticket', $ticket);
     }
 
-    public function update(TicketFormRequest $request, Ticket $ticket): RedirectResponse
+    public function update(Ticket $ticket, Request $request): RedirectResponse
     {
         $ticket->update($request->validated());
 

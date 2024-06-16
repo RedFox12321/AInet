@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('header-title', 'Ticket for ' . $ticket->screening->movie->title)
+@section('header-title', 'New ticket')
 
 @section('main')
 
