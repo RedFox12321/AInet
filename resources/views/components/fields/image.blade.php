@@ -37,8 +37,8 @@
         '1/3', '2/3', '1/4', '2/4', '3/4', '1/5', '2/5', '3/5', '4/5'  => 'max-h-full',
     };
 @endphp
-<div {{ $attributes }}>
-    <div class="flex-col">
+<div {{ $attributes }} class="flex justify-center">
+    <div class="flex-col flex items-center">
         <div class="block font-medium text-sm text-gray-700 dark:text-gray-300 mt-6">
             {{ $label }}
         </div>
@@ -47,7 +47,7 @@
         @if(!$readonly)
         <div class="{{$widthClass}} flex-col space-y-4 items-stretch mt-4">
             <div>
-                <div class="flex flex-row items-center">
+                <div class="flex flex-row items-center justify-center">
                     <input id="id_{{ $name }}" name="{{ $name }}" type="file"
                         accept="image/png, image/jpeg"
                         onchange="document.getElementById('id_{{ $name }}_selected_file').innerHTML= document.getElementById('id_{{ $name }}').files[0].name ?? ''"
