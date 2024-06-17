@@ -26,7 +26,7 @@ class GenreFormRequest extends FormRequest
         ];
         if (empty($this->genre)) {
             $rules = array_merge($rules, [
-                'code' => 'required|string|max:20|unique:genres,code'
+                'code' => 'string|max:20|unique:genres,code|uppercase'
             ]);
         }
         return $rules;

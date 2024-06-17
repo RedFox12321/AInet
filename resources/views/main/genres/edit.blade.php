@@ -5,26 +5,22 @@
 @section('main')
 
 
-    
-<div class="w-full flex justify-between mt-5 ">
-    <div class="overflow-hidden rounded-xl border-4 border-rose-950 flex h-max mt-10 ml-5">
-        <table class="table-auto">
-            <tbody>
-                <tr class="border-b border-b-gray-400 bg-zinc-800">
-                    <td class="px-2 py-2 text-left"> {{ $genre->code }} </td>
-                    <td class="px-2 py-2 text-left">{{ $genre->name }}</td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="flex justify-center items-center h-screen mt-3">
+        <div class="bg-stone-900 p-8 rounded-[45px] border-2 border-rose-900 shadow-lg">
+            <header>
+                <h2 class="text-3xl font-semibold font-[Khula] text-stone-900 dark:text-stone-300">
+                    Change Genre
+                </h2>
+                <p class="mt-1 text-xl font-[Khula] text-stone-800 dark:text-stone-300  mb-6">
+                    Click on "Submit" button to store the information.
+                </p>
+            </header>
+            <form action="{{ route('genres.update', ['genre' => $genre]) }}" method="POST">
+                @csrf
+                @method('PUT')
+                @include('main.genres.shared.fields', ['mode' => 'edit'])
+            </form>
+        </div>
     </div>
-
-
-
-
-    @include('main.genres.shared.fields', ['filterAction'=>route('genres.update',['genre'=>$genre])])
-
-</div>
-
-
 
 @endsection

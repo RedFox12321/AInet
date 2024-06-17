@@ -59,7 +59,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('movies', MovieController::class)->except('show');
 
-    Route::resource('genres', GenreController::class);
+    Route::resource('genres', GenreController::class)->except('show');
 
     Route::resource('users', UserController::class);
 
