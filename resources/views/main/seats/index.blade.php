@@ -8,11 +8,11 @@
     <div class="h-max w-max flex fit-content justify-left m-10">
 
         <div class="flex flex-col items-center ">
-            <a href="{{route('seats.create')}}" class="flex w-max h-max mb-5">
+            {{-- <a href="https://www.youtube.com/watch?v=xvFZjo5PgG0" class="flex w-max h-max mb-5">
                 <x-button-round>
                     Create new seat
                 </x-button-round>    
-            </a>
+            </a> --}}
 
         <x-seats.filter-card
         :filterAction="route('seats.index')"

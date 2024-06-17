@@ -3,7 +3,7 @@
     <x-card-round>
         <x-slot:content>
             <div class="h-full flex flex-wrap items-center">
-                <div class="text-2xl flex w-full justify-center mb-3">Change Name</div>
+                <div class="text-2xl flex w-full justify-center mb-3">Name</div>
 
                 <div class="w-full flex justify-center px-5">
 
@@ -25,7 +25,7 @@
     @if($mode == 'edit')
     <div class="mt-10 w-full flex flex-0 justify-center items-end mb-5 fit-content">
         <x-button-round>
-            <button>Submit Changes</button>
+            <button>Submit</button>
         </x-button-round>
     </div>
     @endif

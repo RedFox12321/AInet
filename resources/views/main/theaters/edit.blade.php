@@ -14,12 +14,32 @@
                 </p>
             </header>
 
-            <form action="{{ route('theaters.update', ['theater' => $theater]) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('theaters.update', ['theater' => $theater]) }}" method="POST"
+                enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 @include('main.theaters.shared.fields', ['mode' => 'edit'])
             </form>
+
+            @if ($theater->imageExists)
+            <div class="mt-5 w-full flex justify-end">
+                <form id="form_to_delete_photo" method="POST"
+                    action="{{ route('theaters.image.destroy', ['theater' => $theater]) }}">
+                    @csrf
+                    @method('DELETE')
+                    <div class="flex items-center gap-4">
+                        <x-danger-button>{{ __('Delete photo') }}</x-danger-button>
+
+                        @if (session('status') === 'profile-updated')
+                            <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
+                                class="text-sm text-gray-600 dark:text-gray-400">{{ __('Saved.') }}</p>
+                        @endif
+                    </div>
+                </form>
+            </div>
+            @endif
         </div>
+
     </div>
 
 @endsection
