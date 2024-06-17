@@ -17,7 +17,6 @@
         <main>
             <div>
                 <div class="w-full h-36 flex items-center fixed t-0 z-30">
-
                     <div
                         class="w-full h-full bg-rose-800 shadow-lg shadow-rose-950 flex justify-between items-center px-4 md:px-8 lg:px-16">
 
@@ -164,7 +163,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="mt-36">
+                <div class="pt-36">
                     @if (session('alert-msg'))
                         <x-alert type="{{ session('alert-type') ?? 'info' }}">
                             {!! session('alert-msg') !!}
