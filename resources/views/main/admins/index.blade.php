@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('header-title', 'Movies')
+@section('header-title', 'Admins')
 
 @section('main')
 

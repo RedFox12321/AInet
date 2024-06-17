@@ -17,22 +17,22 @@
             </thead>
             <tbody>
                 @can('admin')
-                    @foreach ($admins as $admin)
+                    @foreach ($employees as $employee)
                         <tr
                             class="@if (!$loop->last) border  border-b-gray-400 border-r-0 @endif bg-zinc-800">
-                            <td class="px-2 py-2 text-left">{{ $admin->id }}</td>
-                            <td class="px-2 py-2 text-left">{{ $admin->name }}</td>
-                            <td class="px-2 py-2 text-left">{{ $admin->email }}</td>
+                            <td class="px-2 py-2 text-left">{{ $employee->id }}</td>
+                            <td class="px-2 py-2 text-left">{{ $employee->name }}</td>
+                            <td class="px-2 py-2 text-left">{{ $employee->email }}</td>
                             <td>
                                 <x-table.icon-show class="ps-3 px-0.5"
-                                    href="{{ route('admins.show', ['admin' => $admin]) }}" />
+                                    href="{{ route('employees.show', ['employee' => $employee]) }}" />
                             </td>
 
 
                             {{-- @if ($showEdit) --}}
                             {{-- @can('update', $movie) --}}
                             <td>
-                                <x-table.icon-edit class="px-0.5" href="{{ route('admins.edit', ['admin' => $admin]) }}" />
+                                <x-table.icon-edit class="px-0.5" href="{{ route('employees.edit', ['employee' => $employee]) }}" />
                             </td>
                             {{-- @else
                             <td></td>
@@ -42,7 +42,7 @@
                         @can('delete', $movie) --}}
                             <td>
                                 <x-table.icon-delete class="px-0.5"
-                                    action="{{ route('admins.destroy', ['admin' => $admin]) }}" />
+                                    action="{{ route('employees.destroy', ['employee' => $employee]) }}" />
                             </td>
                             {{-- @else
                             <td></td>
