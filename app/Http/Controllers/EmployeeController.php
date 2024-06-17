@@ -16,7 +16,7 @@ class EmployeeController extends \Illuminate\Routing\Controller
 
     public function __construct()
     {
-        $this->authorizeResource(User::class);
+        $this->authorizeResource(User::class,'employee');
     }
     /* Views */
 

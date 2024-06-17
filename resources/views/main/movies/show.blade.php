@@ -10,7 +10,8 @@
             <div class="col-span-1 row-span-2 w-full h-full relative">
                 <div class="w-full h-full absolute bg-white opacity-90 border-8 border-stone-300">
                     <figure class="h-full w-full flex flex-col">
-                        <a class="h-full w-full flex items-center justify-center" href="{{ $movie->trailer_url }}">
+                        <a class="h-full w-full flex items-center justify-center"
+                            href="{{ route('movies.show', ['movie' => $movie]) }}">
                             <img class="h-full w-auto" src="{{ $movie->imageUrl }}" alt="{{ $movie->title }}">
                         </a>
                     </figure>
@@ -39,7 +40,7 @@
             <div class="bg-stone-900 p-8 rounded-[45px] border-2 border-rose-900 shadow-lg">
                 <h2 class="text-2xl font-semibold mb-4">Next Sessions:</h2>
                 <ul class="list-disc list-inside">
-                    <x-screenings.table :screenings="$screenings" :showHeader="false" :showPrivilege="false" />
+                    <x-screenings.table :screenings="$screenings" />
                 </ul>
             </div>
         </div>

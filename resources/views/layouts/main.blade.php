@@ -16,7 +16,8 @@
     <div>
         <main>
             <div>
-                <nav class="w-full h-36 flex items-center fixed t-0 z-30">
+                <div class="w-full h-36 relative flex items-center">
+
                     <div
                         class="w-full h-full bg-rose-800 shadow-lg shadow-rose-950 flex justify-between items-center px-4 md:px-8 lg:px-16">
 
@@ -32,14 +33,6 @@
                                     @include('components.menu.screenings-logo')
                                 </x-slot>
                             </x-menu.menu-icon>
-
-                            @can('viewAny', \App\Models\Ticket::class)
-                            <x-menu.menu-icon href="{{ route('tickets.index') }}">
-                                <x-slot:icon>
-                                    @include('components.menu.tickets-logo')
-                                </x-slot>
-                            </x-menu.menu-icon>
-                            @endcan
 
                             @can('admin')
                                 <x-menu.submenu :selectable="0" uniqueName="submenu_manage" content="Manage">
@@ -146,18 +139,16 @@
                             </li>
                         </ul>
                     </div>
-                </nav>
-                <div class="flex-1 overflow-y-auto pt-36">
-                    @if (session('alert-msg'))
-                        <x-alert type="{{ session('alert-type') ?? 'info' }}">
-                            {!! session('alert-msg') !!}
-                        </x-alert>
-                    @endif
-                    @if (!$errors->isEmpty())
-                        <x-alert type="warning" message="Operation failed because there are validation errors!" />
-                    @endif
-                    @yield('main')
                 </div>
+                @if (session('alert-msg'))
+                    <x-alert type="{{ session('alert-type') ?? 'info' }}">
+                        {!! session('alert-msg') !!}
+                    </x-alert>
+                @endif
+                @if (!$errors->isEmpty())
+                    <x-alert type="warning" message="Operation failed because there are validation errors!" />
+                @endif
+                @yield('main')
             </div>
         </main>
     </div>

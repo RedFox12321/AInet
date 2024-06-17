@@ -4,7 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 
-class CustomerPolicy
+class EmployeePolicy
 {
     public function before(?User $user, string $ability): bool|null
     {

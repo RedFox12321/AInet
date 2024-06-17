@@ -165,7 +165,7 @@ class TheaterController extends \Illuminate\Routing\Controller
             $theater->delete();
 
             if ($theater->imageExists) {
-                Storage::delete("public/theater/{$theater->photo_filename}");
+                Storage::delete("public/theaters/{$theater->photo_filename}");
             }
 
             $alertType = 'success';

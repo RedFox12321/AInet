@@ -23,8 +23,11 @@ use App\Models\User;
 use App\Models\Customer;
 use App\Models\Purchase;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Response;
 
 /* Brezee Routes */
+
 Route::redirect('/', '/movies/showcase');
 
 /* ----- Non-Verified users ----- */
@@ -34,7 +37,7 @@ Route::middleware('auth')->group(function () {
 
 
 /* ----- Verified users ----- */
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware('auth', 'verified')->group(function () {
 
     Route::view('/dashboard', 'dashboard')->name('dashboard');
 
@@ -53,13 +56,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('genres', GenreController::class);
 
-    Route::resource('customers', CustomerController::class);
-
     Route::resource('users', UserController::class);
 
     Route::resource('admins', AdminController::class);
 
     Route::resource('employees', EmployeeController::class);
+
+    Route::resource('customers', CustomerController::class);
+
+
 
     /* My routes */
     Route::get('purchases/my', [PurchaseController::class, 'myPurchases'])
@@ -91,8 +96,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Configuration
     Route::middleware('can:admin')->group(function () {
-        Route::get('configurations/edit', [ConfigurationController::class, 'edit'])->name('configurations.edit');
-        Route::put('configurations', [ConfigurationController::class, 'update'])->name('configurations.update');
+        Route::get('/configurations/edit', [ConfigurationController::class, 'edit'])->name('configurations.edit');
+        Route::put('/configurations', [ConfigurationController::class, 'update'])->name('configurations.update');
     });
 });
 

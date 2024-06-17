@@ -16,7 +16,7 @@ class AdminController extends \Illuminate\Routing\Controller
 
     public function __construct()
     {
-        $this->authorizeResource(User::class);
+        $this->authorizeResource(User::class,'admin');
     }
     /* Views */
 

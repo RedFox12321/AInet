@@ -40,40 +40,37 @@
             <thead>
                 <tr>
                     <th></th>
-                    @foreach ($numbers as $num)
+                    @foreach($numbers as $num)
                         <th class="text-2xl">{{ $num }}</th>
                     @endforeach
                 </tr>
             </thead>
             <tbody>
-                @foreach ($rows as $row)
+                @foreach($rows as $row)
                     <tr>
                         <th class="text-2xl">{{ $row }}</th>
-                        @foreach ($seatsByNumbers[$row] as $seat)
-                            {{-- @if ($seat == null) --}}
-                                <td class="ml-2 mr-2">
-                                    @php
-                                        $isTaken = $seatsTaken->contains($seat->id);
-                                    @endphp
-                                    <div>
-                                        @can('useCart')
-                                            @if ($isTaken)
-                                                @include('components.seatA', ['taken' => true])
-                                            @else
-                                                <form method="POST"
-                                                    action="{{ route('cart.add', ['screening' => $screening, 'seat' => $seat]) }}">
-                                                    @csrf
-                                                    <button type="submit" name="add_cart">
-                                                        @include('components.seatA')
-                                                    </button>
-                                                </form>
-                                            @endif
+                        @foreach($seatsByNumbers[$row] as $seat)
+                            <td class="ml-2 mr-2">
+                                @php
+                                    $isTaken = $seatsTaken->contains($seat->id);
+                                @endphp
+                                <div>
+                                    @can('useCart')
+                                        @if ($isTaken)
+                                            @include('components.seatA', ['taken' => true])
                                         @else
-                                            @include('components.seatA')
-                                        @endcan
-                                    </div>
-                                </td>
-                            {{-- @endif --}}
+                                            <form method="POST" action="{{ route('cart.add', ['screening' => $screening, 'seat' => $seat]) }}">
+                                                @csrf
+                                                <button type="submit" name="add_cart">
+                                                    @include('components.seatA')
+                                                </button>
+                                            </form>
+                                        @endif
+                                    @else
+                                        @include('components.seatA')
+                                    @endcan
+                                </div>
+                            </td>
                         @endforeach
                     </tr>
                 @endforeach

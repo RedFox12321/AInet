@@ -14,23 +14,27 @@
                 </p>
             </header>
 
-            <form method="POST" action="{{ route('configurations.update', ['configuration' => $configuration]) }}">
+            <form method="POST" action="{{ route('configurations.update', ['configuration' => $configuration]) }}"
+                enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div>
-                    <x-fields.input-label for="ticket_price" value="Ticket Price" />
+                    <x-fields.input-label for="ticket_price" :value="('Ticket Price')" />
                     <x-fields.input class="block mt-1 w-full" name="ticket_price" placeHolder="Ticket Price"
-                        :value="$configuration->ticket_price" />
-                    <x-fields.input-label for="registered_customer_ticket_discount" value="Customer Discount" />
+                        :value="old('ticket_price', $configuration->ticket_price)" />
+                    <x-fields.input-label for="registered_customer_ticket_discount" :value="__('Customer Discount')" />
                     <x-fields.input class="block mt-1 w-full" name="registered_customer_ticket_discount"
-                        placeHolder="Customer Discount" :value="$configuration->registered_customer_ticket_discount" />
+                        placeHolder="Customer Discount" :value="old(
+                            'registered_customer_ticket_discount',
+                            $configuration->registered_customer_ticket_discount,
+                        )" />
                 </div>
                 <div class="flex justify-end items-center mt-6">
-                    <button type="submit">
-                        <x-button-round>
+                    <x-button-round>
+                        <a href="{{ route('configurations.edit') }}">
                             Save
-                        </x-button-round>
-                    </button>
+                        </a>
+                    </x-button-round>
                 </div>
             </form>
         </div>

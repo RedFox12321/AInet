@@ -14,8 +14,6 @@
 
 </div>
 
-
-
 <div class="flex flex-wrap justify-center flex-col">
     <div class="h-max w-full flex fit-content justify-center m-10">
         <x-movies.table :movies="$movies" />

@@ -164,7 +164,7 @@ class ScreeningController extends \Illuminate\Routing\Controller
 
         $htmlMessage = "Screening <a href='$url'><u>#{$newScreening->id}</u></a> has been created successfully!";
 
-        return redirect()->route('screenings.index')
+        return redirect()->route('screening.index')
             ->with('alert-type', 'success')
             ->with('alert-msg', $htmlMessage);
     }
