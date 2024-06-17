@@ -24,9 +24,8 @@ class CustomerController extends \Illuminate\Routing\Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): View | RedirectResponse
+    public function index(Request $request): View|RedirectResponse
     {
-        $filterByStatus;
         $filterByIdName = $request->search;
         $customerQuery = Customer::query();
         $allNull = true;
@@ -49,8 +48,8 @@ class CustomerController extends \Illuminate\Routing\Controller
             ->withQueryString();
 
         return view(
-        'main.customers.index',
-        compact('customers', 'filterByIdName')
+            'main.customers.index',
+            compact('customers', 'filterByIdName')
         );
     }
 
@@ -140,47 +139,8 @@ class CustomerController extends \Illuminate\Routing\Controller
      */
     public function update(CustomerFormRequest $request, Customer $customer): RedirectResponse
     {
-        
+
         $customer->user->update($request->validated());
-
-        // $customer = DB::transaction(function () use ($validatedData, $customer, $request) {
-        //     if (!empty($validatedData['nif']) ) {
-        //         $customer->nif = $validatedData['nif'];
-        //     }
-
-        //     if (!empty($validatedData['payment_type']) ) {
-        //         $customer->payment_type = $validatedData['payment_type'];
-        //     }
-
-        //     if (!empty($validatedData['payment_ref'] )) {
-        //         $customer->payment_ref = $validatedData['payment_ref'];
-        //     }
-        //     $customer->save();
-
-        //     $customer->user->type = 'C';
-        //     $customer->user->name = $validatedData['name'];
-        //     $customer->user->email = $validatedData['email'];
-        //     $customer->user->admin = $validatedData['admin'];
-        //     $customer->user->blocked = $validatedData['blocked'];
-        //     $customer->user->password = bcrypt($validatedData['password']);
-        //     $customer->user->save();
-
-        //     if ($request->hasFile('image_file')) {
-        //         // if ($customer->user->photo_filename && Storage::fileExists("public/photos/{$customer->user->photo_filename}")) {
-        //         //     Storage::delete("public/photos/{$customer->user->photo_filename}");
-        //         // }
-        //         if ($customer->user->imageExists) {
-        //             Storage::delete("public/photos/{$customer->user->photo_filename}");
-        //         }
-
-        //         $path = $request->image_file->store('public/photos');
-        //         $customer->user->photo_filename = basename($path);
-        //         $customer->user->save();
-        //     }
-
-        //     return $customer;
-        // });
-
 
         $url = route('customers.show', ['customer' => $customer]);
 

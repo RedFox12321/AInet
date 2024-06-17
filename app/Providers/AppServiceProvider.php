@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Models\Screening;
+use App\Policies\AdminPolicy;
+use App\Policies\EmployeePolicy;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Gate;
@@ -25,7 +27,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Gate::policy(User::class, AdministrativePolicy::class);
+        Gate::policy(User::class, AdminPolicy::class);
+
+        Gate::policy(User::class, EmployeePolicy::class);
+
 
         Gate::define('useCart', function (?User $user) {
             return $user === null || $user->type == 'C';

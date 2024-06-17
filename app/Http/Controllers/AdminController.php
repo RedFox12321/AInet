@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Policies\AdminPolicy;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -16,7 +17,7 @@ class AdminController extends \Illuminate\Routing\Controller
 
     public function __construct()
     {
-        $this->authorizeResource(User::class,'admin');
+        $this->authorizeResource(User::class, 'admin');
     }
     /* Views */
 
@@ -27,7 +28,7 @@ class AdminController extends \Illuminate\Routing\Controller
     {
         $userQuery = User::query();
 
-        $userQuery->where('type','A');
+        $userQuery->where('type', 'A');
 
         $admins = $userQuery
             ->orderBy('id')
@@ -37,7 +38,7 @@ class AdminController extends \Illuminate\Routing\Controller
         return view(
             'main.admins.index',
             compact('admins')
-    );
+        );
     }
 
     /**

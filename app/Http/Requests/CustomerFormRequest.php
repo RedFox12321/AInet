@@ -21,23 +21,6 @@ class CustomerFormRequest extends FormRequest
      */
     public function rules(): array
     {
-        // $rules = [
-        //     'nif' => 'nullable|digits:9',
-        //     'payType' => 'string|uppercase|in:PAYPAL,MBWAY,VISA'
-        // ];
-
-        // match ($this?->payType) {
-        //     'PAYPAL' => $rules = array_merge($rules, [
-        //         'payRef' => 'required|string|max:255'
-        //     ]),
-        //     'MBWAY' => $rules = array_merge($rules, [
-        //         'payRef' => 'required|digits:9|regex:/^9/'
-        //     ]),
-        //     'VISA' => $rules = array_merge($rules, [
-        //         'payRef' => 'required|digits:16'
-        //     ]),
-        //     null => $rules = $rules
-        // };
         return [
             'blocked' => 'required|in:0,1|digits:1'
         ];

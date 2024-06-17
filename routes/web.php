@@ -22,6 +22,7 @@ use App\Models\Ticket;
 use App\Models\User;
 use App\Models\Customer;
 use App\Models\Purchase;
+use App\Policies\AdminPolicy;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Response;
@@ -40,7 +41,7 @@ Route::middleware('auth')->group(function () {
 
 
 /* ----- Verified users ----- */
-Route::middleware('auth', 'verified')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::view('/dashboard', 'dashboard')->name('dashboard');
 
@@ -91,9 +92,6 @@ Route::middleware('auth', 'verified')->group(function () {
         ->name('movies.image.destroy')
         ->can('update', Movie::class);
 
-    Route::delete('customers/{customer}/image', [CustomerController::class, 'destroyImage'])
-        ->name('customers.image.destroy')
-        ->can('update', Customer::class);
 
     // Configuration
     Route::middleware('can:admin')->group(function () {

@@ -50,11 +50,18 @@
             @endif
         </div>
 
+        <div>
+            <x-input-label for="image_file" :value="__('image_file')" />
+            <x-fields.image name="image_file" label="Profile Image" width="md" deleteTitle="Delete Image"
+                :deleteAllow="$user->imageExists" deleteForm="form_to_delete_image" :imageUrl="$user->imageUrl" readonly="$mode == 'edit'" />
+            <x-input-error class="mt-2" :messages="$errors->get('name')" />
+        </div>
+
         @if ($user?->customer)
             <div>
                 <x-input-label for="nif" :value="__('NIF')" />
                 <x-text-input id="nif" name="nif" type="text" class="mt-1 block w-full" :value="old('nif', $user->customer->nif)"
-                    required autofocus autocomplete="nif" />
+                    autofocus autocomplete="nif" />
                 <x-input-error class="mt-2" :messages="$errors->get('nif')" />
             </div>
             <div>
@@ -69,7 +76,7 @@
             <div>
                 <x-input-label for="payRef" :value="__('Payment Reference')" />
                 <x-text-input id="payRef" name="payRef" type="text" class="mt-1 block w-full" :value="old('payRef', $user->customer->payment_ref)"
-                    required autofocus autocomplete="payRef" />
+                    autofocus autocomplete="payRef" />
                 <x-input-error class="mt-2" :messages="$errors->get('payRef')" />
             </div>
         @endif
@@ -82,5 +89,10 @@
                     class="text-sm text-gray-600 dark:text-gray-400">{{ __('Saved.') }}</p>
             @endif
         </div>
+    </form>
+    <form class="hidden" id="form_to_delete_photo" method="POST"
+        action="{{ route('users.image.destroy', ['user' => $user]) }}">
+        @csrf
+        @method('DELETE')
     </form>
 </section>

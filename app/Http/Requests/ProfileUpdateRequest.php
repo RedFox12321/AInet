@@ -18,8 +18,6 @@ class ProfileUpdateRequest extends FormRequest
         $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
-            'password' => 'required|password|string',
-            'type' => 'required|in:A,E,C',
             'photo_filename' => 'sometimes|image|max:4096',
             'nif' => 'nullable|digits:9',
             'payType' => 'nullable|string|uppercase|in:PAYPAL,MBWAY,VISA'

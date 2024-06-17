@@ -15,17 +15,13 @@ class UserPolicy
     {
         return $user->type == 'A';
     }
-    public function viewPasswordOnly(User $user): bool
-    {
-        return ($user->type == 'E');
-    }
     public function create(User $user): bool
     {
         return $user->type == 'A';
     }
     public function update(User $user): bool
     {
-        return $user->type == 'A';
+        return $user->type == 'A' || $user->type == 'C';
     }
     public function delete(User $user): bool
     {
