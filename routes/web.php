@@ -68,7 +68,6 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::resource('customers', CustomerController::class);
 
 
-
     /* My routes */
     Route::get('purchases/my', [PurchaseController::class, 'myPurchases'])
         ->name('purchases.my')
@@ -95,7 +94,6 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::delete('customers/{customer}/image', [CustomerController::class, 'destroyImage'])
         ->name('customers.image.destroy')
         ->can('update', Customer::class);
-
 
     // Configuration
     Route::middleware('can:admin')->group(function () {
