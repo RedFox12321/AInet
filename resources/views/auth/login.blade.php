@@ -3,7 +3,7 @@
 @section('header-title', 'Login')
 
 @section('main')
-    <div class="flex justify-center items-center h-screen">
+    <div class="flex justify-center items-center flex-col flex-grow h-screen max-h-screen">
         <div class="w-full max-w-md p-8 space-y-8 bg-stone-900 border-black rounded-lg shadow-md">
             <!-- Session Status -->
             <x-auth-session-status class="mb-4" :status="session('status')" />
@@ -45,11 +45,17 @@
                     @endif
 
                     <x-primary-button class="ms-3">
-                        <a href="{{ __('login') }}">Log in</a>
+                        {{ __('login') }}
                     </x-primary-button>
                 </div>
             </form>
         </div>
+        <a href="{{ __('register') }}">
+            <x-secondary-button class="mt-5 items-center flex text-center">
+                <p class="text-rose-400 hover:text-white">Don't have an account? </p>
+                <p class="p-2 text-sm">Register</p>
+            </x-secondary-button>
+        </a>
     </div>
 
 @endsection

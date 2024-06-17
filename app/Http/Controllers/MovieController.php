@@ -141,7 +141,7 @@ class MovieController extends \Illuminate\Routing\Controller
 
         return view(
             'main.movies.create',
-            compact('movie','genres')
+            compact('movie', 'genres')
         );
     }
 
@@ -154,7 +154,7 @@ class MovieController extends \Illuminate\Routing\Controller
 
         return view(
             'main.movies.edit',
-            compact('movie','genres')
+            compact('movie', 'genres')
         );
     }
 
@@ -175,7 +175,7 @@ class MovieController extends \Illuminate\Routing\Controller
 
         $htmlMessage = "Movie <a href='$url'><u>#{$newMovie->id}</u></a> has been created successfully!";
 
-        return redirect()->route('movie.index')
+        return redirect()->route('movies.index')
             ->with('alert-type', 'success')
             ->with('alert-msg', $htmlMessage);
     }
@@ -183,26 +183,24 @@ class MovieController extends \Illuminate\Routing\Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Movie $movie): RedirectResponse
+    public function update(MovieFormRequest $request, Movie $movie): RedirectResponse
     {
-        dd($request->all());
 
+        $movie->update($request->validated());
 
-        // $movie->update($request->validated());
+        if ($request->hasFile('image_file')) {
+            if ($movie->imageExists) {
+                Storage::delete("public/posters/{$movie->poster_filename}");
+            }
 
-        // if ($request->hasFile('image_file')) {
-        //     if ($movie->imageExists) {
-        //         Storage::delete("public/posters/{$movie->poster_filename}");
-        //     }
-
-        //     $request->image_file->storeAs('public/posters', $movie->poster_filename);
-        // }
+            $request->image_file->storeAs('public/posters', $movie->poster_filename);
+        }
 
         $url = route('movies.show', ['movie' => $movie]);
 
         $htmlMessage = "Movie <a href='$url'><u>#{$movie->id}</u></a> has been updated successfully!";
 
-        
+
 
         return redirect()->route('movies.index')
             ->with('alert-type', 'success')

@@ -19,7 +19,7 @@ class TheaterPolicy
     {
         return false;
     }
-    public function view(User $user, Theater $theater): bool
+    public function view(User $user): bool
     {
         return false;
     }
@@ -27,12 +27,12 @@ class TheaterPolicy
     {
         return false;
     }
-    public function update(User $user, Theater $theater): bool
+    public function update(User $user): bool
     {
         return false;
     }
 
-    public function delete(User $user, Theater $theater): bool
+    public function delete(User $user): bool
     {
         return false;
     }
