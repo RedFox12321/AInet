@@ -24,19 +24,19 @@ class MoviePolicy
     {
         return true;
     }
-    public function view(?User $user, Movie $movie): bool
+    public function view(?User $user): bool
     {
-        return $user === null || $user->type == 'C';
+        return true;
     }
-    public function store(User $user): bool
-    {
-        return false;
-    }
-    public function update(User $user, Movie $movie): bool
+    public function create(User $user): bool
     {
         return false;
     }
-    public function delete(User $user, Movie $movie): bool
+    public function update(User $user): bool
+    {
+        return false;
+    }
+    public function delete(User $user): bool
     {
         return false;
     }

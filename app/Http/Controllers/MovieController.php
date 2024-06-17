@@ -136,7 +136,13 @@ class MovieController extends \Illuminate\Routing\Controller
      */
     public function create(): View
     {
-        return view('main.movies.create')->with('movie', new Movie());
+        $genres = Genre::all();
+        $movie = new Movie();
+
+        return view(
+            'main.movies.create',
+            compact('movie','genres')
+        );
     }
 
     /**
@@ -177,25 +183,31 @@ class MovieController extends \Illuminate\Routing\Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(MovieFormRequest $request, Movie $movie): RedirectResponse
+    public function update(Request $request, Movie $movie): RedirectResponse
     {
-        $movie->update($request->validated());
+        dd($request->all());
 
-        if ($request->hasFile('image_file')) {
-            if ($movie->imageExists) {
-                Storage::delete("public/posters/{$movie->poster_filename}");
-            }
 
-            $request->image_file->storeAs('public/posters', $movie->poster_filename);
-        }
+        // $movie->update($request->validated());
+
+        // if ($request->hasFile('image_file')) {
+        //     if ($movie->imageExists) {
+        //         Storage::delete("public/posters/{$movie->poster_filename}");
+        //     }
+
+        //     $request->image_file->storeAs('public/posters', $movie->poster_filename);
+        // }
 
         $url = route('movies.show', ['movie' => $movie]);
 
         $htmlMessage = "Movie <a href='$url'><u>#{$movie->id}</u></a> has been updated successfully!";
 
-        return redirect()->route('movie.index')
+        
+
+        return redirect()->route('movies.index')
             ->with('alert-type', 'success')
             ->with('alert-msg', $htmlMessage);
+
     }
 
     /**
@@ -220,7 +232,7 @@ class MovieController extends \Illuminate\Routing\Controller
             $alertMsg = "It was not possible to delete the movie <a href='$url'><u>#{$movie->id}</u></a> because there was an error with the operation!";
         }
 
-        return redirect()->route('movie.index')
+        return redirect()->route('movies.index')
             ->with('alert-type', $alertType)
             ->with('alert-msg', $alertMsg);
     }

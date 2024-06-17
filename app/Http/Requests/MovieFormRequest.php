@@ -21,13 +21,14 @@ class MovieFormRequest extends FormRequest
      */
     public function rules(): array
     {
+
         return [
             'title' => 'required|string|max:255',
-            'genre_code' => 'required|exists:genre,code',
-            'year' => 'required|date',
+            'genre_code' => 'required|exists:genres,code',
+            'year' => 'required|date_format:Y',
             'poster_filename' => 'sometimes|image|max:4096',
             'synopsis' => 'required|string|min:10|max:65535',
-            'trailer_url' => 'sometimes|'
+            'trailer_url' => 'required|string|max:255'
         ];
     }
 }

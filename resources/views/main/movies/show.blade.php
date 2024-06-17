@@ -27,22 +27,30 @@
                     {{ $movie->synopsis }}</p>
 
                 <!-- Button -->
-                <div class="mt-8 flex justify-center">
-                    <a href="{{ route('screenings.index', ['search' => $movie->title]) }}">
-                        <x-button-round>
-                            See all sessions
-                        </x-button-round>
-                    </a>
-                </div>
+                @can('viewAny', \App\Models\Screening::class)
+                    <div class="mt-8 flex justify-center">
+                        <a href="{{ route('screenings.index', ['search' => $movie->title]) }}">
+                            <x-button-round>
+                                See all sessions
+                            </x-button-round>
+                        </a>
+                    </div>
+                @endcan
             </div>
 
             <!-- Showtimes -->
-            <div class="bg-stone-900 p-8 rounded-[45px] border-2 border-rose-900 shadow-lg">
-                <h2 class="text-2xl font-semibold mb-4">Next Sessions:</h2>
-                <ul class="list-disc list-inside">
-                    <x-screenings.table :screenings="$screenings" />
-                </ul>
-            </div>
+            @can('viewAny', \App\Models\Screening::class)
+                <div class="bg-stone-900 p-8 rounded-[45px] border-2 border-rose-900 shadow-lg">
+                    <h2 class="text-2xl font-semibold mb-4">Next Sessions:</h2>
+                    @if($screenings->count()==0)
+                    <p>No sessions today!</p>
+                    @else
+                    <ul class="list-disc list-inside">
+                        <x-screenings.table :screenings="$screenings" :showHeader="false" :showPrivilege="false" />
+                    </ul>
+                    @endif
+                </div>
+            @endcan
         </div>
     </div>
 
