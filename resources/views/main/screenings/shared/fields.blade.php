@@ -1,5 +1,4 @@
 <form action="{{ $filterAction }}" method="POST">
-    {{-- @include('components.fields.search') --}}
     @csrf
     @method('PUT')
 
