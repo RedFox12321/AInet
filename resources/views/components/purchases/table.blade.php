@@ -13,7 +13,7 @@
             </thead>
             <tbody>
                 @foreach ($purchases as $purchase)
-                    <tr class="border-b border-b-gray-400 bg-zinc-800">
+                    <tr class="@if (!$loop->last) border-b border-b-gray-400 @endif bg-zinc-800">
                             <td class="px-2 py-2 text-center">{{ $purchase->id }}</td>
                             <td class="px-2 py-2 text-center ">{{ $purchase->customer_name }}</td>
                             <td class="px-2 py-2 text-center ">{{ $purchase->tickets->count()}}</td>

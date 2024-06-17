@@ -4,9 +4,18 @@
 
 @section('main')
 
-
-    <div class="w-full flex justify-between mt-5 ">
-        <div class="overflow-hidden rounded-xl border-4 border-rose-950 flex h-max mt-10 ml-5">
+<div class="flex justify-center items-center h-screen">
+    <div class="bg-stone-900 p-8 rounded-[45px] border-2 border-rose-900 shadow-lg">
+        <header>
+            <h2 class="text-3xl font-semibold font-[Khula] text-stone-900 dark:text-stone-300">
+                Edit Screening
+            </h2>
+            <p class="mt-1 text-xl font-[Khula] text-stone-800 dark:text-stone-300">
+                Click on "Submit" button to store the information.
+            </p>
+        </header>
+    <div class="w-full flex flex-col items-center">
+        <div class="overflow-hidden rounded-xl border-4 border-rose-950 flex fit-content mt-5 ml-5">
             <table class="table-auto">
                 <tbody>
                     <tr class="bg-zinc-800">
@@ -22,4 +31,6 @@
         @include('main.screenings.shared.fields', ['filterAction'=>route('screenings.update',['screening'=>$screening])])
 
     </div>
+    </div>
+</div>
 @endsection

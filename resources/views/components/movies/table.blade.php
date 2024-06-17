@@ -18,7 +18,7 @@
             </thead>
             <tbody>
                 @foreach ($movies as $movie)
-                    <tr class="border-b border-b-gray-400 bg-zinc-800">
+                    <tr class="@if (!$loop->last) border-b border-b-gray-400 @endif bg-zinc-800">
                             <td class="px-2 py-2 text-left">{{ $movie->id }}</td>
                             <td class="px-2 py-2 text-center hidden md:table-cell">{{ $movie->title }}</td>
                             <td class="px-2 py-2 text-right hidden lg:table-cell">{{ $movie->genre->name }}</td>

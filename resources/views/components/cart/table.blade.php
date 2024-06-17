@@ -2,9 +2,9 @@
     <table class="table-auto">
         <tbody>
             @foreach($cart as $item)
-            <tr class="bg-stone-700 border-b-2 border-b-stone-200">
+            <tr class="bg-stone-700 @if (!$loop->last) border-b-2 border-b-stone-200 @endif">
                 
-                <td class="px-2 py-2 text-left text-rose-600 border-dotted border-r border-r-black border-r-2">
+                <td class="px-2 py-2 text-left text-rose-600 border-dotted border-r-black border-r-2">
                     <a href="{{ route('screenings.show', ['screening' => $item['screening']]) }}">#{{ $item['screening']->id }}</a>
                 </td>
                 <td class="px-2 py-2 text-center ">{{ $item['screening']->movie->title }}</td>

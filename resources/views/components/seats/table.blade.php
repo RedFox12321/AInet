@@ -12,7 +12,7 @@
             </thead>
             <tbody>
                 @foreach ($rows as $row)
-                    <tr class="border-b border-b-gray-400 bg-zinc-800">
+                    <tr class="@if (!$loop->last) border-b border-b-gray-400 @endif bg-zinc-800">
                         <th class="px-2 py-2 text-left">{{ $row }}</th>
                         @foreach ($numbers as $number)
                             <td class="px-2 py-2 text-center">{{ $number }}</td>
@@ -20,12 +20,8 @@
                     </tr>
 
 
-
-                    @foreach ($seats as $seat)
-                        <td>
                             {{-- <x-table.icon-show class="ps-3 px-0.5" href="{{ route('seats.show', ['seat' => $seat]) }}" /> --}}
-                        </td>
-                    @endforeach
+
                     {{--
                     @if ($showEdit)
                         @can('update', $seat)
