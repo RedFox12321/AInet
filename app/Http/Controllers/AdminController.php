@@ -20,11 +20,11 @@ class AdminController extends Controller
      */
     public function index(): View
     {
-        $userQuery = User::query();
+        $adminQuery = User::query();
 
-        $userQuery->where('type', 'A');
+        $adminQuery->where('type', 'A');
 
-        $admins = $userQuery
+        $admins = $adminQuery
             ->orderBy('id')
             ->paginate(20)
             ->withQueryString();
@@ -38,9 +38,9 @@ class AdminController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user): View
+    public function show(User $admin): View
     {
-        return view('main.admins.show')->with('user', $user);
+        return view('main.admins.show')->with('user', $admin);
     }
 
     /**
@@ -54,9 +54,9 @@ class AdminController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user): View
+    public function edit(User $admin): View
     {
-        return view('main.admins.edit')->with('user', $user);
+        return view('main.admins.edit')->with('user', $admin);
     }
 
 
@@ -84,22 +84,22 @@ class AdminController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(AdminFormRequest $request, User $user): RedirectResponse
+    public function update(AdminFormRequest $request, User $admin): RedirectResponse
     {
-        $user->update($request->validated());
+        $admin->update($request->validated());
 
         if ($request->hasFile('image_file')) {
-            if ($user->imageExists) {
-                Storage::delete("public/photos/{$user->photo_filename}");
+            if ($admin->imageExists) {
+                Storage::delete("public/photos/{$admin->photo_filename}");
             }
 
-            $request->image_file->storeAs('public/photos', $user->photo_filename);
+            $request->image_file->storeAs('public/photos', $admin->photo_filename);
         }
 
 
-        $url = route('admins.show', ['user' => $user]);
+        $url = route('admins.show', ['user' => $admin]);
 
-        $htmlMessage = "Admin <a href='$url'><u>{$user->name}</u></a> has been updated successfully!";
+        $htmlMessage = "Admin <a href='$url'><u>{$admin->name}</u></a> has been updated successfully!";
 
         return redirect()->route('user.index')
             ->with('alert-type', 'success')
@@ -109,22 +109,22 @@ class AdminController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user): RedirectResponse
+    public function destroy(User $admin): RedirectResponse
     {
         try {
-            $url = route('admins.index', ['user' => $user]);
+            $url = route('admins.index', ['user' => $admin]);
 
-            $user->delete();
+            $admin->delete();
 
-            if ($user->imageExists) {
-                Storage::delete("public/photos/{$user->photo_filename}");
+            if ($admin->imageExists) {
+                Storage::delete("public/photos/{$admin->photo_filename}");
             }
 
             $alertType = 'success';
-            $alertMsg = "Admin {$user->name} has been deleted successfully!";
+            $alertMsg = "Admin {$admin->name} has been deleted successfully!";
         } catch (\Exception $error) {
             $alertType = 'danger';
-            $alertMsg = "It was not possible to delete the admin <a href='$url'><u>{$user->name}</u></a> because there was an error with the operation!";
+            $alertMsg = "It was not possible to delete the admin <a href='$url'><u>{$admin->name}</u></a> because there was an error with the operation!";
         }
 
         return redirect()->route('admins.index')
