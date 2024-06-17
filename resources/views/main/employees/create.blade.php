@@ -14,7 +14,7 @@
                 Click on "Submit" button to store the information.
             </p>
         </header>
-        <form action="{{ route('admins.store', ['admin' => $user]) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('employees.store', ['employee' => $user]) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @include('main.employees.shared.fields', ['mode' => 'create'])
         </form>

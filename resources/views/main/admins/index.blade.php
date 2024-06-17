@@ -8,7 +8,14 @@
         $defaultStrokeColor = '#731824';
     @endphp
 
-    <div class="flex justify-center mt-5">
+    <div class="flex justify-center mt-10 flex-col items-center">
+
+        <a href="{{ route('admins.create') }}" class="flex w-max h-max">
+            <x-button-round>
+                Create new admin
+            </x-button-round>
+        </a>
+
         <x-admins.filter-card :filterAction="route('admins.index')" :resetUrl="route('admins.index')" />
     </div>
 
