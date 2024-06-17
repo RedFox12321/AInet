@@ -8,7 +8,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\UserFormRequest;
+use Illuminate\Support\Str;
 use App\Models\User;
+
 
 class UserController extends \Illuminate\Routing\Controller
 {
@@ -62,7 +64,10 @@ class UserController extends \Illuminate\Routing\Controller
         $newUser = User::create($request->validated());
 
         if ($request->hasFile('image_file')) {
-            $request->image_file->storeAs('public/photos', $newUser->photo_filename);
+            $newUser->photo_filename = $newUser->id . "_" . Str::random(40);
+            $newUser->update();
+
+            $request->image_file->storeAs('public/photos/', $newUser->photo_filename);
         }
 
         $url = route('users.show', ['user' => $newUser]);
@@ -86,7 +91,12 @@ class UserController extends \Illuminate\Routing\Controller
                 Storage::delete("public/photos/{$user->photo_filename}");
             }
 
-            $request->image_file->storeAs('public/photos', $user->photo_filename);
+            if ($user->photo_filename) {
+                $user->photo_filename = $user->id . "_" . Str::random(40);
+                $user->update();
+            }
+
+            $request->image_file->storeAs('public/photos/', $user->photo_filename);
         }
 
 
@@ -123,5 +133,20 @@ class UserController extends \Illuminate\Routing\Controller
         return redirect()->route('user.index')
             ->with('alert-type', $alertType)
             ->with('alert-msg', $alertMsg);
+    }
+
+    public function destroyPhoto(User $user): RedirectResponse
+    {
+        if ($user->photo_filename) {
+            if (Storage::fileExists('public/photos/' . $user->photo_filename)) {
+                Storage::delete('public/photos/' . $user->photo_filename);
+            }
+            $user->photo_filename = null;
+            $user->save();
+            return redirect()->back()
+                ->with('alert-type', 'success')
+                ->with('alert-msg', "Photo of user {$user->name} has been deleted.");
+        }
+        return redirect()->back();
     }
 }

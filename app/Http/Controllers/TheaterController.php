@@ -107,13 +107,10 @@ class TheaterController extends \Illuminate\Routing\Controller
         $newTheater = Theater::create($request->validated());
 
         if ($request->hasFile('image_file')) {
-
-            if ($newTheater->photo_filename) {
-                $newTheater->photo_filename = $newTheater->id . "_theater_image.jpg";
-            }
+            $newTheater->photo_filename = $newTheater->id . "_theater_image.jpg";
+            $newTheater->update();
 
             $request->image_file->storeAs('public/theater', $newTheater->photo_filename);
-
         }
 
         $url = route('theaters.show', ['theater' => $newTheater]);
@@ -149,7 +146,7 @@ class TheaterController extends \Illuminate\Routing\Controller
 
         $htmlMessage = "Theater <a href='$url'><u>#{$theater->id}</u></a> has been updated successfully!";
 
-        return redirect()->route('theaters.edit', ['theater' => $theater])
+        return redirect()->route('theater.index')
             ->with('alert-type', 'success')
             ->with('alert-msg', $htmlMessage);
     }
@@ -180,4 +177,20 @@ class TheaterController extends \Illuminate\Routing\Controller
             ->with('alert-type', $alertType)
             ->with('alert-msg', $alertMsg);
     }
+
+    public function destroyPhoto(Theater $theater): RedirectResponse
+    {
+        if ($theater->photo_filename) {
+            if (Storage::fileExists('public/photos/' . $theater->photo_filename)) {
+                Storage::delete('public/photos/' . $theater->photo_filename);
+            }
+            $theater->photo_filename = null;
+            $theater->save();
+            return redirect()->back()
+                ->with('alert-type', 'success')
+                ->with('alert-msg', "Photo of user {$theater->name} has been deleted.");
+        }
+        return redirect()->back();
+    }
+
 }

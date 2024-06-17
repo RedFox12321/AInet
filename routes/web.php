@@ -26,6 +26,7 @@ use App\Policies\AdminPolicy;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Response;
+use Symfony\Component\HttpKernel\Profiler\Profile;
 
 /* Brezee Routes */
 
@@ -91,6 +92,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('movies/{movie}/image', [MovieController::class, 'destroyImage'])
         ->name('movies.image.destroy')
         ->can('update', Movie::class);
+
+    Route::delete('profile/{user}/image', [ProfileController::class, 'destroyImage'])
+        ->name('profile.image.destroy')
+        ->can('update', User::class);
 
 
     // Configuration
