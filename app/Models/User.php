@@ -50,7 +50,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getImageExistsAttribute()
     {
-        return Storage::exists("public/photos/{$this->photo_filename}");
+        return Storage::fileExists("public/photos/{$this->photo_filename}");
     }
 
     public function customer(): HasOne

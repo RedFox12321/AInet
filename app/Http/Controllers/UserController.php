@@ -141,6 +141,7 @@ class UserController extends \Illuminate\Routing\Controller
             if (Storage::fileExists('public/photos/' . $user->photo_filename)) {
                 Storage::delete('public/photos/' . $user->photo_filename);
             }
+
             $user->photo_filename = null;
             $user->update();
             return redirect()->back()

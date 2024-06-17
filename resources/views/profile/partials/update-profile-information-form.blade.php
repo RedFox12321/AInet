@@ -52,8 +52,8 @@
 
         <div>
             <x-fields.image name="image_file" label="Profile Image" width="md" deleteTitle="Delete Image"
-                            :deleteAllow="$user->imageExists" deleteForm="form_to_delete_image" imageUrl="{{ $user->imageUrl }}"
-                            :readonly="false" />
+                :deleteAllow="$user->imageExists" deleteForm="form_to_delete_image" imageUrl="{{ $user->imageUrl }}"
+                :readonly="false" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
@@ -82,33 +82,35 @@
                 <x-input-error class="mt-2" :messages="$errors->get('payRef')" />
             </div>
         @endif
-<div class="mt-5 w-full flex justify-center">
-    <div class="flex items-center gap-4">
-        <x-primary-button>{{ __('Save') }}</x-primary-button>
-
-        @if (session('status') === 'profile-updated')
-            <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
-                class="text-sm text-gray-600 dark:text-gray-400">{{ __('Saved.') }}</p>
-        @endif
-    </div>
-</div>
-        
-    </form>
-    <div class="mt-5 w-full flex justify-end">
-        <form id="form_to_delete_photo" method="POST" action="{{ route('users.image.destroy', ['user' => $user]) }}">
-            @csrf
-            @method('DELETE')
-            @if($user->imageExists)
+        <div class="mt-5 w-full flex justify-center">
             <div class="flex items-center gap-4">
-                <x-danger-button>{{ __('Delete photo') }}</x-danger-button>
+                <x-primary-button>{{ __('Save') }}</x-primary-button>
 
                 @if (session('status') === 'profile-updated')
                     <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
                         class="text-sm text-gray-600 dark:text-gray-400">{{ __('Saved.') }}</p>
                 @endif
             </div>
-            @endif
-        </form>
-    </div>
+        </div>
+
+    </form>
+
+    @if ($user->imageExists)
+        <div class="mt-5 w-full flex justify-end">
+            <form id="form_to_delete_photo" method="POST"
+                action="{{ route('users.image.destroy', ['user' => $user]) }}">
+                @csrf
+                @method('DELETE')
+                <div class="flex items-center gap-4">
+                    <x-danger-button>{{ __('Delete photo') }}</x-danger-button>
+
+                    @if (session('status') === 'profile-updated')
+                        <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
+                            class="text-sm text-gray-600 dark:text-gray-400">{{ __('Saved.') }}</p>
+                    @endif
+                </div>
+            </form>
+        </div>
+    @endif
 
 </section>

@@ -26,7 +26,7 @@ class Movie extends Model
 
     public function getImageExistsAttribute()
     {
-        return Storage::exists("public/posters/{$this->poster_filename}");
+        return Storage::fileExists("public/posters/{$this->poster_filename}");
     }
     public function getImageUrlAttribute()
     {
