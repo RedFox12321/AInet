@@ -9,11 +9,7 @@ class PurchasePolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->type == 'A';
-    }
-    public function viewMy(User $user): bool
-    {
-        return $user->type == 'C';
+        return $user->type == 'A' || $user->type == 'C';
     }
     public function view(User $user, Purchase $purchase): bool
     {

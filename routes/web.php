@@ -63,22 +63,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('users', UserController::class);
 
-    Route::resource('admins', AdminController::class);
-
-    Route::resource('employees', EmployeeController::class);
-
-    Route::resource('customers', CustomerController::class);
-
-
-    /* My routes */
-    Route::get('purchases/my', [PurchaseController::class, 'myPurchases'])
-        ->name('purchases.my')
-        ->can('viewMy', Purchase::class);
-
-    Route::get('tickets/my', [TicketController::class, 'myTickets'])
-        ->name('tickets.my')
-        ->can('viewMy', Ticket::class);
-
 
     /* Destroy photos */
     Route::delete('users/{user}/image', [UserController::class, 'destroyImage'])
@@ -102,6 +86,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware('can:admin')->group(function () {
         Route::get('/configurations/edit', [ConfigurationController::class, 'edit'])->name('configurations.edit');
         Route::put('/configurations', [ConfigurationController::class, 'update'])->name('configurations.update');
+
+        Route::resource('admins', AdminController::class);
+
+        Route::resource('employees', EmployeeController::class);
+
+        Route::resource('customers', CustomerController::class);
     });
 });
 

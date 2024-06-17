@@ -10,14 +10,8 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\EmployeeFormRequest;
 use App\Models\User;
 
-class EmployeeController extends \Illuminate\Routing\Controller
+class EmployeeController extends Controller
 {
-    use AuthorizesRequests;
-
-    public function __construct()
-    {
-        $this->authorizeResource(User::class,'employee');
-    }
     /* Views */
 
     /**
@@ -27,7 +21,7 @@ class EmployeeController extends \Illuminate\Routing\Controller
     {
         $userQuery = User::query();
 
-        $userQuery->where('type','E');
+        $userQuery->where('type', 'E');
 
         $employees = $userQuery
             ->orderBy('id')
@@ -37,7 +31,7 @@ class EmployeeController extends \Illuminate\Routing\Controller
         return view(
             'main.employees.index',
             compact('employees')
-    );
+        );
     }
 
     /**

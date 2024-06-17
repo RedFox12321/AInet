@@ -32,6 +32,13 @@ class TicketController extends \Illuminate\Routing\Controller
         $filterByIdName = $request->search;
         $ticketQuery = Ticket::query();
         $allNull = true;
+        $user = Auth::user();
+
+        if ($user->type == 'C') {
+            $ticketQuery->with('purchase.customer')->whereHas('purchase.customer', function ($query) use ($user) {
+                $query->where('id', $user->id);
+            });
+        }
 
         if ($filterByStatus !== null) {
             $allNull = false;
@@ -63,50 +70,7 @@ class TicketController extends \Illuminate\Routing\Controller
             compact('tickets', 'filterByStatus', 'filterByIdName')
         );
     }
-    public function myTickets(Request $request): View|RedirectResponse
-    {
-        $filterByStatus = $request->query('status');
-        $filterById = $request->search;
-        $ticketQuery = Ticket::query();
-        $allNull = true;
 
-        if ($request->user()?->type == 'C') {
-            $idTickects = $request->user()?->customer?->purchases?->tickets?->pluck('id')?->toArray();
-            if (empty($idTickects)) {
-                $tickets = new Collection;
-                return view(
-                    'main.tickets.my',
-                    compact('tickets', 'filterByStatus', 'filterById')
-                );
-            }
-        }
-
-        $ticketQuery->whereIntegerInRaw('id', $idTickects);
-
-        if ($filterByStatus !== null) {
-            $allNull = false;
-            $ticketQuery->where('status', $filterByStatus);
-        }
-
-        if ($filterById !== null) {
-            $allNull = false;
-            $ticketQuery->where('id', 'LIKE', '%' . $filterById . '%');
-        }
-
-        if ($allNull && $request->query() && !$request?->page) {
-            return redirect()->route('tickets.my');
-        }
-
-        $tickets = $ticketQuery
-            ->orderBy('id', 'desc')
-            ->paginate(20)
-            ->withQueryString();
-
-        return view(
-            'main.tickets.my',
-            compact('tickets', 'filterByStatus', 'filterById')
-        );
-    }
     /**
      * Display the specified resource.
      */

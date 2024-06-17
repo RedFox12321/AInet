@@ -11,14 +11,8 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\AdminFormRequest;
 use App\Models\User;
 
-class AdminController extends \Illuminate\Routing\Controller
+class AdminController extends Controller
 {
-    use AuthorizesRequests;
-
-    public function __construct()
-    {
-        $this->authorizeResource(User::class, 'admin');
-    }
     /* Views */
 
     /**

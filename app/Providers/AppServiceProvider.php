@@ -27,11 +27,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::policy(User::class, AdminPolicy::class);
-
-        Gate::policy(User::class, EmployeePolicy::class);
-
-
         Gate::define('useCart', function (?User $user) {
             return $user === null || $user->type == 'C';
         });
