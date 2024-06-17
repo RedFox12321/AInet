@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TicketFormRequest;
 use App\Notifications\PurchasePaid;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
@@ -114,7 +115,7 @@ class TicketController extends \Illuminate\Routing\Controller
         return view('main.tickets.show')->with('ticket', $ticket);
     }
 
-    public function update(Ticket $ticket, Request $request): RedirectResponse
+    public function update(Ticket $ticket, TicketFormRequest $request): RedirectResponse
     {
         $ticket->update($request->validated());
 

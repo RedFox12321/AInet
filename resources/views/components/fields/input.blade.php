@@ -30,7 +30,7 @@
 <div {{ $attributes->merge(['class' => "$widthClass"]) }}>
     <input id="id_{{ $name }}" name="{{ $name }}" type="{{ $type }}" value="{{ $value }}"
         placeholder="{{ $placeHolder }}"
-        class="w-full h-full pl-8 pr-4 top-0 left-0
+        class="w-full min-w-4 h-full pl-8 pr-4 top-0 left-0
         text-4xl font-normal font-['Khula'] focus:ring-2
         text-black dark:text-gray-200
         bg-white dark:bg-neutral-800

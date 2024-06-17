@@ -95,6 +95,7 @@ class ProfileController extends \Illuminate\Routing\Controller
         Auth::logout();
 
         $user->delete();
+        $user?->customer->delete();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();

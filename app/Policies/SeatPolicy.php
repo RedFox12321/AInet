@@ -20,7 +20,7 @@ class SeatPolicy
     {
         return $user->type == 'C';
     }
-    public function view(?User $user, Seat $seat): bool
+    public function view(?User $user): bool
     {
         return $user->type == 'C';
     }
@@ -28,11 +28,11 @@ class SeatPolicy
     {
         return false;
     }
-    public function update(User $user, Seat $seat): bool
+    public function update(User $user): bool
     {
         return false;
     }
-    public function delete(User $user, Seat $seat): bool
+    public function delete(User $user): bool
     {
         return false;
     }

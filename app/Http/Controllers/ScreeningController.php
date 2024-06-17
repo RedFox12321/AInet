@@ -164,7 +164,7 @@ class ScreeningController extends \Illuminate\Routing\Controller
 
         $htmlMessage = "Screening <a href='$url'><u>#{$newScreening->id}</u></a> has been created successfully!";
 
-        return redirect()->route('screening.index')
+        return redirect()->route('screenings.index')
             ->with('alert-type', 'success')
             ->with('alert-msg', $htmlMessage);
     }
@@ -177,7 +177,7 @@ class ScreeningController extends \Illuminate\Routing\Controller
         $url = route('screenings.show', ['screening' => $screening]);
 
         $hasTickets = DB::scalar(
-            'SELECT count(*) FROM TICKETS WHERE SCREENING_ID = ?',
+            'SELECT count(*) FROM tickets WHERE SCREENING_ID = ?',
             [$screening->id]
         );
 
@@ -212,7 +212,7 @@ class ScreeningController extends \Illuminate\Routing\Controller
             $url = route('screenings.index', ['screening' => $screening]);
 
             $hasTickets = DB::scalar(
-                'SELECT count(*) FROM TICKETS WHERE SCREENING_ID = ?',
+                'SELECT count(*) FROM tickets WHERE SCREENING_ID = ?',
                 [$screening->id]
             );
 

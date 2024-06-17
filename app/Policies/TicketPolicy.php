@@ -12,7 +12,7 @@ class TicketPolicy
     {
         return $user->type == 'A' || $user->type == 'E';
     }
-    public function viewMy(User $user, Ticket $ticket): bool
+    public function viewMy(User $user): bool
     {
         return $user->type == 'C';
     }
@@ -20,7 +20,11 @@ class TicketPolicy
     {
         return $user?->type == 'A' || $user?->type == 'E' || ($user?->type == 'C' && $user->id === $ticket->purchase->customer->id);
     }
-    public function store(User $user, Ticket $ticket): bool
+    public function update(User $user): bool
+    {
+        return $user->type == 'A' || $user->type == 'E';
+    }
+    public function store(User $user): bool
     {
         return $user->type == 'C';
     }

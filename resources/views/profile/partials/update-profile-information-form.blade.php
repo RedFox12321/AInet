@@ -60,22 +60,24 @@
         @if ($user?->customer)
             <div>
                 <x-input-label for="nif" :value="__('NIF')" />
-                <x-text-input id="nif" name="nif" type="text" class="mt-1 block w-full" :value="old('nif', $user->customer->nif)"
+                <x-text-input id="nif" name="nif" type="text" class="mt-1 block w-full" :value="old('nif', $user->customer?->nif)"
                     autofocus autocomplete="nif" />
                 <x-input-error class="mt-2" :messages="$errors->get('nif')" />
             </div>
             <div>
                 <x-input-label for="payType" :value="__('Payment Type')" />
                 <x-fields.select name="payType" :options="[
+                    null => 'Not set',
                     'PAYPAL' => 'PayPal',
                     'MBWAY' => 'MBWay',
                     'VISA' => 'Visa credit card',
-                ]" :value="old('payType', $user->customer->payment_type)" />
+                ]"
+                    value="{{ old('payType', $user->customer?->payment_type) }}" />
                 <x-input-error class="mt-2" :messages="$errors->get('nif')" />
             </div>
             <div>
                 <x-input-label for="payRef" :value="__('Payment Reference')" />
-                <x-text-input id="payRef" name="payRef" type="text" class="mt-1 block w-full" :value="old('payRef', $user->customer->payment_ref)"
+                <x-text-input id="payRef" name="payRef" type="text" class="mt-1 block w-full" :value="old('payRef', $user->customer?->payment_ref)"
                     autofocus autocomplete="payRef" />
                 <x-input-error class="mt-2" :messages="$errors->get('payRef')" />
             </div>
