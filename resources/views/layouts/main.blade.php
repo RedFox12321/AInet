@@ -34,6 +34,14 @@
                                 </x-slot>
                             </x-menu.menu-icon>
 
+                            @can('viewAny', \App\Models\Ticket::class)
+                                <x-menu.menu-icon href="{{ route('tickets.index') }}">
+                                    <x-slot:icon>
+                                        @include('components.menu.tickets-logo')
+                                    </x-slot>
+                                </x-menu.menu-icon>
+                            @endcan
+
                             @can('admin')
                                 <x-menu.submenu :selectable="0" uniqueName="submenu_manage" content="Manage">
                                     <x-menu.submenu-item content="Admins" :selectable="0"
@@ -123,7 +131,8 @@
                                         </x-slot>
                                         @auth
                                             <hr>
-                                            <x-menu.submenu-item content="Profile" :selectable="0" href="#" />
+                                            <x-menu.submenu-item content="Profile" :selectable="0"
+                                                href="{{ route('profile.edit') }}" />
                                             <x-menu.submenu-item content="Change Password" selectable="0"
                                                 href="{{ route('profile.edit.password') }}" />
                                         @endauth
@@ -152,5 +161,4 @@
             </div>
         </main>
     </div>
-    {{-- dropdownzinho dos generos --}}
 </body>

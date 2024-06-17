@@ -1,4 +1,9 @@
-<x-guest-layout>
+@extends('layouts.main')
+
+@section('header-title', 'Login')
+
+@section('main')
+
     <div class="mb-4 text-sm text-stone-600 dark:text-stone-300">
         {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
     </div>
@@ -10,10 +15,8 @@
         <div>
             <x-auth.input-label for="password" :value="__('Password')" />
 
-            <x-auth.text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+            <x-auth.text-input id="password" class="block mt-1 w-full" type="password" name="password" required
+                autocomplete="current-password" />
 
             <x-auth.input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
@@ -24,4 +27,5 @@
             </x-primary-button>
         </div>
     </form>
-</x-guest-layout>
+
+@endsection

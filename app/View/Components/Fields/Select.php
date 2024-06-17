@@ -24,7 +24,7 @@ class Select extends Component
         if (!in_array($this->width, ['full', 'xs', 'sm', 'md', 'lg', 'xl', '1/3', '2/3', '1/4', '2/4', '3/4', '1/5', '2/5', '3/5', '4/5'], true)) {
             $this->width = 'full';
         }
-        $this->label = trim($label) ?: $name;
+        $this->label = trim($label);
     }
 
     /**

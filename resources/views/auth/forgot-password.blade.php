@@ -3,6 +3,7 @@
 @section('header-title', 'Login')
 
 @section('main')
+
     <div class="flex justify-center items-center h-screen">
         <div class="w-full max-w-md p-8 space-y-8 bg-stone-900 border-black rounded-lg shadow-md">
             <div class="mb-4 text-sm text-stone-600 dark:text-stone-300">
@@ -31,4 +32,5 @@
             </form>
         </div>
     </div>
+
 @endsection

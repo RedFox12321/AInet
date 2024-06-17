@@ -3,6 +3,7 @@
 @section('header-title', 'Login')
 
 @section('main')
+
     <div class="flex justify-center items-center h-screen">
         <div class="w-full max-w-md p-8 space-y-8 bg-stone-900 border-black rounded-lg shadow-md">
             <form method="POST" action="{{ route('register') }}">
@@ -57,4 +58,5 @@
             </form>
         </div>
     </div>
+
 @endsection
