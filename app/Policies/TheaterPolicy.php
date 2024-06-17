@@ -23,7 +23,7 @@ class TheaterPolicy
     {
         return false;
     }
-    public function store(User $user): bool
+    public function create(User $user): bool
     {
         return false;
     }

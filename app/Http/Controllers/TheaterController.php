@@ -178,7 +178,7 @@ class TheaterController extends \Illuminate\Routing\Controller
             ->with('alert-msg', $alertMsg);
     }
 
-    public function destroyPhoto(Theater $theater): RedirectResponse
+    public function destroyImage(Theater $theater): RedirectResponse
     {
         if ($theater->photo_filename) {
             if (Storage::fileExists('public/photos/' . $theater->photo_filename)) {

@@ -4,6 +4,6 @@
 
 @section('main')
 
-    @include('main.theaters.shared.fields')
+    @include('main.theaters.shared.fields', ['mode' => 'create'])
 
 @endsection

@@ -110,18 +110,5 @@ class ProfileController extends \Illuminate\Routing\Controller
 
         return Redirect::to('/');
     }
-    public function destroyPhoto(User $user): RedirectResponse
-    {
-        if ($user->photo_filename) {
-            if (Storage::fileExists('public/photos/' . $user->photo_filename)) {
-                Storage::delete('public/photos/' . $user->photo_filename);
-            }
-            $user->photo_filename = null;
-            $user->save();
-            return redirect()->back()
-                ->with('alert-type', 'success')
-                ->with('alert-msg', "Photo of user {$user->name} has been deleted.");
-        }
-        return redirect()->back();
-    }
+    
 }

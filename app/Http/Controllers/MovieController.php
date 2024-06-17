@@ -242,7 +242,7 @@ class MovieController extends \Illuminate\Routing\Controller
             ->with('alert-type', $alertType)
             ->with('alert-msg', $alertMsg);
     }
-    public function destroyPhoto(Movie $movie): RedirectResponse
+    public function destroyImage(Movie $movie): RedirectResponse
     {
         if ($movie->poster_filename) {
             if (Storage::fileExists('public/photos/' . $movie->poster_filename)) {

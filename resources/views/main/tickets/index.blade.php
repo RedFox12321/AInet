@@ -8,7 +8,7 @@
         <div class="h-max w-max flex fit-content justify-left m-10">
 
             <x-tickets.filter-card :filterAction="route('tickets.index')" :resetUrl="route('tickets.index')" :searchField="old('search', $filterByIdName)" :statusField="old('status', $filterByStatus)"
-                placeholder="ID\Customer Name" />
+                placeholder="ID\Customer Name" :theaters="$theaters->pluck('name', 'name')->toArray()" theater="{{ old('theater', $filterByTheater) }}"/>
 
         </div>
 

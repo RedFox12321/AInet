@@ -7,9 +7,10 @@
                     @if (Auth::user()->type != 'C')
                         <th class="px-2 py-2 text-center hidden xl:table-cell">Customer Name</th>
                     @endif
-                    <th class="px-2 py-2 text-center hidden lg:table-cell">Movie</th>
+                    <th class="px-2 py-2 text-center lg:table-cell">Movie</th>
                     <th class="px-2 py-2 text-center">Seat</th>
-                    <th class="px-2 py-2 text-right hidden md:table-cell">Date</th>
+                    <th class="px-2 py-2 text-center">Theater</th>
+                    <th class="px-2 py-2 text-right md:table-cell">Date</th>
                     <th class="px-2 py-2 text-left">Time</th>
                     <th class="px-2 py-2 text-center">Status</th>
                     <th class="px-2 py-2 text-center">View</th>
@@ -31,6 +32,9 @@
                         </td>
                         <td class="px-2 py-2 text-center">
                             {{ $ticket->seat->row }}-{{ $ticket->seat->seat_number }}
+                        </td>
+                        <td class="px-2 py-2 text-center">
+                            {{ $ticket->screening->theater->name}}
                         </td>
                         <td class="px-2 py-2 text-right hidden md:table-cell">{{ $ticket->screening->date }}</td>
                         <td class="px-2 py-2 text-left">{{ $ticket->screening->start_time }}</td>

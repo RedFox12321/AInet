@@ -26,13 +26,13 @@
                                     @include('components.application-logo')
                                 </x-slot>
                             </x-menu.menu-icon>
-
+                            @can('viewAny', \App\Models\Screening::class)
                             <x-menu.menu-icon href="{{ route('screenings.index') }}">
                                 <x-slot:icon>
                                     @include('components.menu.screenings-logo')
                                 </x-slot>
                             </x-menu.menu-icon>
-
+                            @endcan
                             @can('viewAny', \App\Models\Ticket::class)
                                 <x-menu.menu-icon href="{{ route('tickets.index') }}">
                                     <x-slot:icon>
@@ -41,7 +41,7 @@
                                 </x-menu.menu-icon>
                             @endcan
 
-                            @can('viewAny', \App\Models\Ticket::class)
+                            @can('viewAny', \App\Models\Purchase::class)
                                 <x-menu.menu-icon href="{{ route('purchases.index') }}">
                                     <x-slot:icon>
                                         @include('components.menu.purchases-logo')
@@ -140,8 +140,10 @@
                                         </x-slot>
                                         @auth
                                             <hr>
+                                            @if (Auth::user()->type != 'E')
                                             <x-menu.submenu-item content="Profile" :selectable="0"
                                                 href="{{ route('profile.edit') }}" />
+                                            @endif
                                             <x-menu.submenu-item content="Change Password" selectable="0"
                                                 href="{{ route('profile.edit.password') }}" />
                                             <hr>

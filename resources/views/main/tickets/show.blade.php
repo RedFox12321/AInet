@@ -16,6 +16,7 @@
                         <th class="px-2 py-2 text-center">Customer Name</th>
                         <th class="px-2 py-2 text-center">Movie</th>
                         <th class="px-2 py-2 text-center">Seat</th>
+                        <th class="px-2 py-2 text-center">Theater</th>
                         <th class="px-2 py-2 text-right">Date</th>
                         <th class="px-2 py-2 text-left">Time</th>
                         <th class="px-2 py-2 text-center">Status</th>
@@ -23,12 +24,13 @@
                 </thead>
                 <tbody>
 
-                    <tr class="border-b border-b-gray-400 bg-zinc-800">
+                    <tr class="bg-zinc-800">
                         <td class="px-2 py-2 text-center">{{ $ticket->id }}</td>
                         <td class="px-2 py-2 text-center ">{{ $ticket->purchase->customer_name }}</td>
                         <td class="px-2 py-2 text-center ">{{ $ticket->screening->movie->title }}</td>
                         <td class="px-2 py-2 text-center ">{{ $ticket->seat->row }}-{{ $ticket->seat->seat_number }}
                         </td>
+                        <td class="px-2 py-2 text-center">{{ $ticket->screening->theater->name }}</td>
                         <td class="px-2 py-2 text-right">{{ $ticket->screening->date }}</td>
                         <td class="px-2 py-2 text-left">{{ $ticket->screening->start_time }}</td>
                         <td class="px-2 py-2 text-center">{{ $ticket->status }}</td>

@@ -12,6 +12,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
 use App\Models\Ticket;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Theater;
 
 class TicketController extends \Illuminate\Routing\Controller
 {
@@ -30,6 +31,8 @@ class TicketController extends \Illuminate\Routing\Controller
     {
         $filterByStatus = $request->query('status');
         $filterByIdName = $request->search;
+        $filterByTheater = $request->query('theater');
+
         $ticketQuery = Ticket::query();
         $allNull = true;
         $user = Auth::user();
@@ -54,20 +57,29 @@ class TicketController extends \Illuminate\Routing\Controller
                     });
             });
         }
+        if ($filterByTheater !== null) {
+            $allNull = false;
+            $ticketQuery->with('screening.theater')->whereHas('screening.theater', function ($userQuery) use ($filterByTheater) {
+                $userQuery->where('name', 'LIKE', '%' . $filterByTheater . '%');
+            });
+        }
 
         if ($allNull && $request->query() && !$request?->page) {
             return redirect()->route('tickets.index');
         }
 
         $tickets = $ticketQuery
-            ->with('purchase')
+            ->with(['purchase','screening.theater'])
             ->orderBy('id', 'desc')
             ->paginate(20)
             ->withQueryString();
 
+        $theaters = Theater::all();
+
+
         return view(
             'main.tickets.index',
-            compact('tickets', 'filterByStatus', 'filterByIdName')
+            compact('tickets', 'filterByStatus', 'filterByIdName', 'filterByTheater', 'theaters')
         );
     }
 

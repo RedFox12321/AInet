@@ -135,14 +135,14 @@ class UserController extends \Illuminate\Routing\Controller
             ->with('alert-msg', $alertMsg);
     }
 
-    public function destroyPhoto(User $user): RedirectResponse
+    public function destroyImage(User $user): RedirectResponse
     {
         if ($user->photo_filename) {
             if (Storage::fileExists('public/photos/' . $user->photo_filename)) {
                 Storage::delete('public/photos/' . $user->photo_filename);
             }
             $user->photo_filename = null;
-            $user->save();
+            $user->update();
             return redirect()->back()
                 ->with('alert-type', 'success')
                 ->with('alert-msg', "Photo of user {$user->name} has been deleted.");

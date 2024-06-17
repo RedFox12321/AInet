@@ -11,17 +11,19 @@ class FilterCard extends Component
     /**
      * Create a new component instance.
      */
-
-
+    public array $listTheaters;
+    
     public function __construct(
         public string $filterAction,
         public string $resetUrl,
+        public array $theaters,
         public ?string $searchField = null,
         public ?string $statusField = null,
+        public ?string $theater = null,
         public ?string $placeHolder = '',
     ) {
         //
-
+        $this->listTheaters=array_merge([null=>'Any Theater'], $theaters);
 
     }
 

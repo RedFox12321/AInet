@@ -8,7 +8,7 @@
                 <div class="w-full flex justify-center px-5">
 
                     <div>
-                        <x-fields.input name="name" :value="$theater->name" :readonly="($mode == 'show')" />
+                        <x-fields.input name="name" value="{{old('name', $theater?->name)}}" :readonly="($mode == 'show')" />
 
                         <x-fields.image name="image_file" label="Theater Image" width="md" deleteTitle="Delete Image"
                             :deleteAllow="($mode == 'edit') && ($theater->imageExists)" deleteForm="form_to_delete_image" :imageUrl="$theater->imageUrl" :readonly="($mode == 'show')" />
