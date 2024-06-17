@@ -19,11 +19,11 @@ class EmployeeController extends Controller
      */
     public function index(): View
     {
-        $userQuery = User::query();
+        $employeeQuery = User::query();
 
-        $userQuery->where('type', 'E');
+        $employeeQuery->where('type', 'E');
 
-        $employees = $userQuery
+        $employees = $employeeQuery
             ->orderBy('id')
             ->paginate(20)
             ->withQueryString();
@@ -37,9 +37,9 @@ class EmployeeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user): View
+    public function show(User $employee): View
     {
-        return view('main.employees.show')->with('user', $user);
+        return view('main.employees.show')->with('user', $employee);
     }
 
     /**
@@ -53,9 +53,9 @@ class EmployeeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user): View
+    public function edit(User $employee): View
     {
-        return view('main.employees.edit')->with('user', $user);
+        return view('main.employees.edit')->with('user', $employee);
     }
 
 
@@ -83,22 +83,22 @@ class EmployeeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(EmployeeFormRequest $request, User $user): RedirectResponse
+    public function update(EmployeeFormRequest $request, User $employee): RedirectResponse
     {
-        $user->update($request->validated());
+        $employee->update($request->validated());
 
         if ($request->hasFile('image_file')) {
-            if ($user->imageExists) {
-                Storage::delete("public/photos/{$user->photo_filename}");
+            if ($employee->imageExists) {
+                Storage::delete("public/photos/{$employee->photo_filename}");
             }
 
-            $request->image_file->storeAs('public/photos', $user->photo_filename);
+            $request->image_file->storeAs('public/photos', $employee->photo_filename);
         }
 
 
-        $url = route('employees.show', ['user' => $user]);
+        $url = route('employees.show', ['user' => $employee]);
 
-        $htmlMessage = "Employee <a href='$url'><u>{$user->name}</u></a> has been updated successfully!";
+        $htmlMessage = "Employee <a href='$url'><u>{$employee->name}</u></a> has been updated successfully!";
 
         return redirect()->route('user.index')
             ->with('alert-type', 'success')
@@ -108,22 +108,22 @@ class EmployeeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user): RedirectResponse
+    public function destroy(User $employee): RedirectResponse
     {
         try {
-            $url = route('employees.index', ['user' => $user]);
+            $url = route('employees.index', ['user' => $employee]);
 
-            $user->delete();
+            $employee->delete();
 
-            if ($user->imageExists) {
-                Storage::delete("public/photos/{$user->photo_filename}");
+            if ($employee->imageExists) {
+                Storage::delete("public/photos/{$employee->photo_filename}");
             }
 
             $alertType = 'success';
-            $alertMsg = "Employee {$user->name} has been deleted successfully!";
+            $alertMsg = "Employee {$employee->name} has been deleted successfully!";
         } catch (\Exception $error) {
             $alertType = 'danger';
-            $alertMsg = "It was not possible to delete the employee <a href='$url'><u>{$user->name}</u></a> because there was an error with the operation!";
+            $alertMsg = "It was not possible to delete the employee <a href='$url'><u>{$employee->name}</u></a> because there was an error with the operation!";
         }
 
         return redirect()->route('employees.index')
