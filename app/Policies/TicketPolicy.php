@@ -20,7 +20,7 @@ class TicketPolicy
     {
         return $user->type == 'A' || $user->type == 'E';
     }
-    public function store(User $user): bool
+    public function create(User $user): bool
     {
         return $user->type == 'C';
     }
