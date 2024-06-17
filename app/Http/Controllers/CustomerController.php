@@ -61,18 +61,6 @@ class CustomerController extends \Illuminate\Routing\Controller
         return view('main.customers.show')->with('customer', $customer);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(): View
-    {
-        $newCustomer = new Customer();
-        $newUser = new User();
-        $newUser->type = 'C';
-        $newCustomer->user = $newUser;
-
-        return view('main.customers.create')->with('customer', $newCustomer);
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -84,56 +72,6 @@ class CustomerController extends \Illuminate\Routing\Controller
 
 
     /* CRUD operations */
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(CustomerFormRequest $request): RedirectResponse
-    {
-        $validatedData = $request->validated();
-        $newCustomer = DB::transaction(function () use ($validatedData, $request) {
-            $newUser = new User();
-            $newUser->type = 'C';
-            $newUser->name = $validatedData['name'];
-            $newUser->email = $validatedData['email'];
-            $newUser->admin = $validatedData['admin'];
-            $newUser->blocked = 0;
-            $newUser->password = bcrypt($validatedData['password']);
-            $newUser->save();
-
-            $newCustomer = new Customer();
-            $newCustomer->id = $newUser->id;
-            if ($validatedData['nif'] != null) {
-                $newCustomer->nif = $validatedData['nif'];
-            }
-
-            if ($validatedData['payment_type'] != null) {
-                $newCustomer->payment_type = $validatedData['payment_type'];
-            }
-
-            if ($validatedData['payment_ref'] != null) {
-                $newCustomer->payment_ref = $validatedData['payment_ref'];
-            }
-            $newCustomer->save();
-
-            if ($request->hasFile('image_file')) {
-                $path = $request->image_file->store('public/photos');
-                $newUser->photo_filename = basename($path);
-                $newUser->save();
-            }
-
-            return $newCustomer;
-        });
-
-
-        $url = route('customers.show', ['customer' => $newCustomer]);
-
-        $htmlMessage = "Customer <a href='$url'><u>{$newCustomer}</u></a> has been created successfully!";
-
-        return redirect()->route('customer.index')
-            ->with('alert-type', 'success')
-            ->with('alert-msg', $htmlMessage);
-    }
-
     /**
      * Update the specified resource in storage.
      */
@@ -149,36 +87,5 @@ class CustomerController extends \Illuminate\Routing\Controller
         return redirect()->route('customers.index')
             ->with('alert-type', 'success')
             ->with('alert-msg', $htmlMessage);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Customer $customer): RedirectResponse
-    {
-        try {
-            $url = route('customers.index', ['customer' => $customer]);
-
-            DB::transaction(function () use ($customer) {
-                $fileToDelete = $customer->user->photo_filename;
-                $customer->delete();
-                $customer->user->delete();
-                if ($fileToDelete) {
-                    if (Storage::fileExists("public/photos/{$fileToDelete}")) {
-                        Storage::delete("public/photos/{$fileToDelete}");
-                    }
-                }
-            });
-
-            $alertType = 'success';
-            $alertMsg = "Customer #{$customer->id} has been deleted successfully!";
-        } catch (\Exception $error) {
-            $alertType = 'danger';
-            $alertMsg = "It was not possible to delete the customer <a href='$url'><u>#{$customer->id}</u></a> because there was an error with the operation!";
-        }
-
-        return redirect()->route('customer.index')
-            ->with('alert-type', $alertType)
-            ->with('alert-msg', $alertMsg);
     }
 }

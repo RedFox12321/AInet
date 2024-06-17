@@ -11,6 +11,7 @@ use App\Http\Requests\MovieFormRequest;
 use Illuminate\Http\Request;
 use App\Models\Movie;
 use App\Models\Genre;
+use Illuminate\Support\Str;
 
 class MovieController extends \Illuminate\Routing\Controller
 {
@@ -168,7 +169,10 @@ class MovieController extends \Illuminate\Routing\Controller
         $newMovie = Movie::create($request->validated());
 
         if ($request->hasFile('image_file')) {
-            $request->image_file->storeAs('public/posters', $newMovie->poster_filename);
+            $newMovie->poster_filename = $newMovie->id . "_" . Str::random(40);
+            $newMovie->update();
+
+            $request->image_file->storeAs('public/posters/', $newMovie->poster_filename);
         }
 
         $url = route('movies.show', ['movie' => $newMovie]);
@@ -185,7 +189,6 @@ class MovieController extends \Illuminate\Routing\Controller
      */
     public function update(MovieFormRequest $request, Movie $movie): RedirectResponse
     {
-
         $movie->update($request->validated());
 
         if ($request->hasFile('image_file')) {
@@ -193,7 +196,12 @@ class MovieController extends \Illuminate\Routing\Controller
                 Storage::delete("public/posters/{$movie->poster_filename}");
             }
 
-            $request->image_file->storeAs('public/posters', $movie->poster_filename);
+            if (empty($movie->poster_filename)) {
+                $movie->poster_filename = $movie->id . "_" . Str::random(40);
+                $movie->update();
+            }
+
+            $request->image_file->storeAs('public/posters/', $movie->poster_filename);
         }
 
         $url = route('movies.show', ['movie' => $movie]);
@@ -233,5 +241,19 @@ class MovieController extends \Illuminate\Routing\Controller
         return redirect()->route('movies.index')
             ->with('alert-type', $alertType)
             ->with('alert-msg', $alertMsg);
+    }
+    public function destroyPhoto(Movie $movie): RedirectResponse
+    {
+        if ($movie->poster_filename) {
+            if (Storage::fileExists('public/photos/' . $movie->poster_filename)) {
+                Storage::delete('public/photos/' . $movie->poster_filename);
+            }
+            $movie->poster_filename = null;
+            $movie->save();
+            return redirect()->back()
+                ->with('alert-type', 'success')
+                ->with('alert-msg', "Photo of user {$movie->name} has been deleted.");
+        }
+        return redirect()->back();
     }
 }

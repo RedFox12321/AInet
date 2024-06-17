@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
 
 class ProfileController extends \Illuminate\Routing\Controller
 {
@@ -92,14 +93,35 @@ class ProfileController extends \Illuminate\Routing\Controller
 
         $user = $request->user();
 
+        DB::transaction(function () use ($user) {
+            $fileToDelete = $user->photo_filename;
+            $user?->customer->delete();
+            $user->delete();
+            if ($user->photo_filename) {
+                if (Storage::fileExists("public/photos/{$fileToDelete}")) {
+                    Storage::delete("public/photos/{$fileToDelete}");
+                }
+            }
+        });
         Auth::logout();
-
-        $user->delete();
-        $user?->customer->delete();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+    public function destroyPhoto(User $user): RedirectResponse
+    {
+        if ($user->photo_filename) {
+            if (Storage::fileExists('public/photos/' . $user->photo_filename)) {
+                Storage::delete('public/photos/' . $user->photo_filename);
+            }
+            $user->photo_filename = null;
+            $user->save();
+            return redirect()->back()
+                ->with('alert-type', 'success')
+                ->with('alert-msg', "Photo of user {$user->name} has been deleted.");
+        }
+        return redirect()->back();
     }
 }
