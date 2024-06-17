@@ -7,7 +7,7 @@
                 border-b-2 border-transparent hover:text-stone-700 dark:hover:text-stone-700
                 focus:outline-none focus:text-stone-700 dark:focus:text-stone-600
                 hover:rounded-lg
-                hover:bg-rose-300 dark:hover:bg-rose-300 sm:hover:bg-rose-300 dark:sm:hover:bg-rose-300">
+                hover:bg-rose-300 dark:hover:bg-rose-800">
             {{$content}}
             <div>
                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
@@ -22,10 +22,10 @@
         <button data-submenu="{{$uniqueName}}"
             class="grow inline-flex items-center h-16
                 px-3 sm:px-0.5 md:px-1 lg:px-2 pt-1
-                text-4xl font-medium font-['Khula'] text-stone-500 dark:text-stone-900 hover:rounded-lg
-                border-b-2 border-transparent hover:text-stone-700 dark:hover:text-stone-700
-                focus:outline-none focus:text-stone-700 dark:focus:text-stone-600
-                hover:bg-rose-300 dark:hover:bg-rose-300 sm:hover:bg-rose-300 dark:sm:hover:bg-rose-300">
+                text-4xl font-medium font-['Khula'] text-stone-500 dark:text-stone-300 hover:rounded-lg
+                border-b-2 border-transparent hover:text-stone-700 dark:hover:text-stone-100
+                focus:outline-none focus:text-stone-500 dark:focus:text-stone-500
+                hover:bg-rose-800 dark:hover:bg-rose-800 ">
             {{$content}}
             <div>
                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"

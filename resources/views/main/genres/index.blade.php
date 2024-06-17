@@ -7,6 +7,14 @@
 <div class="flex flex-wrap justify-around">
     <div class="h-max w-max flex fit-content justify-left m-10">
 
+        <div class="flex flex-col items-center ">
+            <a href="{{route('genres.create')}}" class="flex w-max h-max mb-5">
+                <x-button-round>
+                    Create new genre
+                </x-button-round>    
+            </a>
+
+
         <x-genres.filter-card
         :filterAction="route('genres.index')"
         :resetUrl="route('genres.index')"
@@ -18,6 +26,7 @@
                      value=App\Models\Genre
                     :options="$listGenre"/> --}}
 
+    </div>
     </div>
 
     <div class="flex flex-col">
