@@ -6,9 +6,17 @@
 
     <div class="flex flex-wrap justify-around">
         <div class="h-max w-max flex fit-content justify-left m-10">
+            @php
+                $placeHolder = 'ID\\Customer Name';
+            @endphp
 
-            <x-purchases.filter-card :filterAction="route('purchases.index')" :resetUrl="route('purchases.index')" :title="old('search', $filterByIdName)" placeHolder="ID\Customer Name" />
-
+            @if (Auth::user()->type == 'C')
+                @php
+                    $placeHolder = 'ID';
+                @endphp
+            @endif
+            <x-purchases.filter-card :filterAction="route('purchases.index')" :resetUrl="route('purchases.index')" :seachField="old('search', $filterByIdName)" :payField="old('payType', $filterByType)"
+                :placeHolder="$placeHolder" />
         </div>
 
         <div class="flex flex-col">

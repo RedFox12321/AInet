@@ -7,7 +7,7 @@
 
                     <x-fields.input name="search" placeHolder="{{ $placeHolder }}" value="{{ $searchField }}" />
 
-                    <x-fields.radio-group name="payType" :options="['PAYPAL' => 'PayPal', 'MBWAY' => 'MBWay', 'VISA' => 'Visa', null => 'All']" :value="old('payType', 'PAYPAL')" />
+                    <x-fields.radio-group name="payType" :options="['' => 'All', 'PAYPAL' => 'PayPal', 'MBWAY' => 'MBWay', 'VISA' => 'Visa']" value="{{ $payField }}" />
 
                     <x-button-round>
                         <button>Search</button>

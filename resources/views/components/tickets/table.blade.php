@@ -4,7 +4,9 @@
             <thead>
                 <tr class="border-b-2 border-b-gray-400 bg-stone-900 ">
                     <th class="px-2 py-2 text-center">ID</th>
-                    <th class="px-2 py-2 text-center hidden xl:table-cell">Customer Name</th>
+                    @if (Auth::user()->type != 'C')
+                        <th class="px-2 py-2 text-center hidden xl:table-cell">Customer Name</th>
+                    @endif
                     <th class="px-2 py-2 text-center hidden lg:table-cell">Movie</th>
                     <th class="px-2 py-2 text-center">Seat</th>
                     <th class="px-2 py-2 text-right hidden md:table-cell">Date</th>
@@ -20,7 +22,10 @@
                 @foreach ($tickets as $ticket)
                     <tr class="border-b border-b-gray-400 bg-zinc-800">
                         <td class="px-2 py-2 text-center">{{ $ticket->id }}</td>
-                        <td class="px-2 py-2 text-center hidden xl:table-cell">{{ $ticket->purchase->customer_name }}
+                        @if (Auth::user()->type != 'C')
+                            <td class="px-2 py-2 text-center hidden xl:table-cell">
+                                {{ $ticket->purchase->customer_name }}
+                        @endif
                         </td>
                         <td class="px-2 py-2 text-center hidden lg:table-cell">{{ $ticket->screening->movie->title }}
                         </td>

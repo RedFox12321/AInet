@@ -8,7 +8,7 @@
 
                     <x-fields.input name="search" placeHolder="{{ $placeHolder }}" value="{{ $searchField }}" />
 
-                    <x-fields.radio-group name="status" :options="['VALID' => 'Valid', 'INVALID' => 'Invalid', null => 'Both']" :value="old('status', 'VALID')" />
+                    <x-fields.radio-group name="status" :options="['VALID' => 'Valid', 'INVALID' => 'Invalid', '' => 'Both']" value="{{ $statusField }}" />
 
                     <x-button-round>
                         <button>Search</button>

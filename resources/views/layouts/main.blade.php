@@ -16,7 +16,7 @@
     <div>
         <main>
             <div>
-                <div class="w-full h-36 relative flex items-center">
+                <div class="w-full h-36 flex items-center fixed t-0 z-30">
 
                     <div
                         class="w-full h-full bg-rose-800 shadow-lg shadow-rose-950 flex justify-between items-center px-4 md:px-8 lg:px-16">
@@ -42,6 +42,14 @@
                                 </x-menu.menu-icon>
                             @endcan
 
+                            @can('viewAny', \App\Models\Ticket::class)
+                                <x-menu.menu-icon href="{{ route('purchases.index') }}">
+                                    <x-slot:icon>
+                                        @include('components.menu.purchases-logo')
+                                    </x-slot>
+                                </x-menu.menu-icon>
+                            @endcan
+
                             @can('admin')
                                 <x-menu.submenu :selectable="0" uniqueName="submenu_manage" content="Manage">
                                     <x-menu.submenu-item content="Admins" :selectable="0"
@@ -62,6 +70,8 @@
                                     <hr>
                                     <x-menu.submenu-item content="Purchases" :selectable="0"
                                         href="{{ route('purchases.index') }}" />
+                                    <x-menu.submenu-item content="Tickets" :selectable="0"
+                                        href="{{ route('tickets.index') }}" />
                                 </x-menu.submenu>
                             @endcan
 
@@ -135,6 +145,11 @@
                                                 href="{{ route('profile.edit') }}" />
                                             <x-menu.submenu-item content="Change Password" selectable="0"
                                                 href="{{ route('profile.edit.password') }}" />
+                                            <hr>
+                                            @can('viewAny', \App\Models\Purchase::class)
+                                                <x-menu.submenu-item content="Purchases" :selectable="0"
+                                                    href="{{ route('purchases.index') }}" />
+                                            @endcan
                                         @endauth
                                         <hr>
                                         <form id="form_to_logout_from_menu" method="POST" action="{{ route('logout') }}"
@@ -149,15 +164,17 @@
                         </ul>
                     </div>
                 </div>
-                @if (session('alert-msg'))
-                    <x-alert type="{{ session('alert-type') ?? 'info' }}">
-                        {!! session('alert-msg') !!}
-                    </x-alert>
-                @endif
-                @if (!$errors->isEmpty())
-                    <x-alert type="warning" message="Operation failed because there are validation errors!" />
-                @endif
-                @yield('main')
+                <div class="mt-36">
+                    @if (session('alert-msg'))
+                        <x-alert type="{{ session('alert-type') ?? 'info' }}">
+                            {!! session('alert-msg') !!}
+                        </x-alert>
+                    @endif
+                    @if (!$errors->isEmpty())
+                        <x-alert type="warning" message="Operation failed because there are validation errors!" />
+                    @endif
+                    @yield('main')
+                </div>
             </div>
         </main>
     </div>

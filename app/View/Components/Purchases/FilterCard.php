@@ -16,6 +16,7 @@ class FilterCard extends Component
         public string $filterAction,
         public string $resetUrl,
         public ?string $searchField = null,
+        public ?string $payField = null,
         public ?string $placeHolder = '',
     ) {
         //

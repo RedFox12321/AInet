@@ -40,7 +40,7 @@ class TicketController extends \Illuminate\Routing\Controller
             });
         }
 
-        if ($filterByStatus !== null) {
+        if ($filterByStatus != null) {
             $allNull = false;
             $ticketQuery->where('status', $filterByStatus);
         }
@@ -83,7 +83,7 @@ class TicketController extends \Illuminate\Routing\Controller
     {
         $ticket->update($request->validated());
 
-        $url = route('tickets.index', ['theater' => $ticket]);
+        $url = route('tickets.show', ['ticket' => $ticket]);
 
         $htmlMessage = "Ticket <a href='$url'><u>#{$ticket->id}</u></a> has been updated successfully!";
 

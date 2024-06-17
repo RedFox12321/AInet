@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Database\Eloquent\Collection;
 use App\Models\Purchase;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use App\Policies\PurchasePolicy;
+use Illuminate\Support\Facades\Auth;
 
 class PurchaseController extends \Illuminate\Routing\Controller
 {
@@ -29,8 +28,15 @@ class PurchaseController extends \Illuminate\Routing\Controller
         $filterByIdName = $request->search;
         $purchaseQuery = Purchase::query();
         $allNull = true;
+        $user = Auth::user();
 
-        if ($filterByType !== null) {
+        if ($user->type == 'C') {
+            $purchaseQuery->with('customer')->whereHas('customer', function ($query) use ($user) {
+                $query->where('id', $user->id);
+            });
+        }
+
+        if ($filterByType != null) {
             $allNull = false;
             $purchaseQuery->where('payment_type', $filterByType);
         }
@@ -55,52 +61,6 @@ class PurchaseController extends \Illuminate\Routing\Controller
         return view(
             'main.purchases.index',
             compact('purchases', 'filterByIdName', 'filterByType')
-        );
-    }
-
-    public function myPurchases(Request $request): View|RedirectResponse
-    {
-        $filterByType = $request->query('payType');
-        $filterById = $request->search;
-        $purchaseQuery = Purchase::query();
-        $allNull = true;
-
-        if ($request->user()?->type == 'C') {
-            $idPurchases = $request->user()?->customer?->purchases?->pluck('id')?->toArray();
-            if (empty($idPurchases)) {
-                $purchases = new Collection;
-                return view(
-                    'main.purchases.my',
-                    compact('purchases', 'filterById', 'filterByType')
-                );
-            }
-        }
-
-        $purchaseQuery->whereIntegerInRaw('id', $idPurchases);
-
-        if ($filterByType !== null) {
-            $allNull = false;
-            $purchaseQuery->where('payment_type', $filterByType);
-        }
-
-        if ($filterById !== null) {
-            $allNull = false;
-            $purchaseQuery->where('id', 'LIKE', '%' . $filterById . '%');
-        }
-
-
-        if ($allNull && $request->query() && !$request?->page) {
-            return redirect()->route('purchases.my');
-        }
-
-        $purchases = $purchaseQuery
-            ->orderBy('id', 'desc')
-            ->paginate(20)
-            ->withQueryString();
-
-        return view(
-            'main.purchases.my',
-            compact('purchases', 'filterById', 'filterByType')
         );
     }
 
