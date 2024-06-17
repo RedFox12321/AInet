@@ -14,7 +14,7 @@
                 Click on "Submit" button to store the information.
             </p>
         </header>
-        <form action="{{ route('employees.update', ['employee' => $employee]) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('employees.update', ['employee' => $user]) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             @include('main.employees.shared.fields', ['mode' => 'edit'])
